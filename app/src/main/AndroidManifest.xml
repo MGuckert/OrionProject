@@ -10,9 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TactiGant20">
         <activity
+            android:name=".ui.settings.SettingsMain"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
