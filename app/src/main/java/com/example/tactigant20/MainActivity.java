@@ -5,6 +5,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.example.tactigant20.ui.settings.HelpActivity;
+import com.example.tactigant20.ui.settings.InfoActivity;
 import com.example.tactigant20.ui.settings.SettingsMain;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ImageView settingsIcon;
+    private ImageView helpIcon;
+    private ImageView infoIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +45,24 @@ public class MainActivity extends AppCompatActivity {
         //Settings button on toolbar
         settingsIcon = findViewById(R.id.settingsIcon);
         settingsIcon.setOnClickListener(view -> openSettings());
+        //Helps button on toolbar
+        helpIcon = findViewById(R.id.helpicon);
+        helpIcon.setOnClickListener(view -> openhelp());
+        //Information button on toolbar
+        infoIcon = findViewById(R.id.infoicon);
+        infoIcon.setOnClickListener(view -> openinfo());
     }
 
     private void openSettings() {
         Intent intent = new Intent(this, SettingsMain.class);
         startActivity(intent);
     }
-
+    private void openhelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
+        startActivity(intent);
+    }
+    private void openinfo(){
+        Intent intent = new Intent(this, InfoActivity.class);
+        startActivity(intent);
+    }
 }

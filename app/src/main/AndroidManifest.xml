@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TactiGant20">
         <activity
+            android:name=".ui.settings.InfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.settings.HelpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.settings.SettingsMain"
             android:exported="false" />
         <activity
