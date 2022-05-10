@@ -45,17 +45,9 @@ public class HomeFragment extends Fragment {
     private View.OnClickListener BlueButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
-            if(!mBlueAdapter.isEnabled()){
-                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(intent,0);
-
-            }
-            if(mBlueAdapter.isEnabled()){
-                mBlueAdapter.disable();
-                alerter("Turning bluetooth OFF");
-
-            }
+            Intent intentOpenBluetoothSettings = new Intent();
+            intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+            startActivity(intentOpenBluetoothSettings);
         }
     };
 
