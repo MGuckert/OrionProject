@@ -53,12 +53,23 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-                Log.d(TAG_HOME,"Appel de onClick dans HomeFragment");
+            Log.d(TAG_HOME,"Appel de onClick dans HomeFragment");
             Intent intentOpenBluetoothSettings = new Intent();
             intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
             startActivity(intentOpenBluetoothSettings);
         }
     };
+
+    // Création d'un fragment (nécessaire pour scroll)
+    public static HomeFragment newInstance(int page, String title) {
+        Log.d(TAG_HOME,"Appel de HomeFragment dans HomeFragment");
+        HomeFragment fragmentMenu = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", page);
+        args.putString("someTitle", title);
+        fragmentMenu.setArguments(args);
+        return fragmentMenu;
+    }
 
     @Override
     public void onDestroyView() {

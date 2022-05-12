@@ -51,8 +51,8 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
         Log.d(TAG_VIBRAS,"appel de onClick dans VibrationsFragment");
         switch (v.getId()) {
             case R.id.buttonMode1:
-                //Toast toast1 = Toast.makeText(getContext(), "Mode 1", Toast.LENGTH_SHORT);
-                //toast1.show();
+                // Toast toast1 = Toast.makeText(getContext(), "Mode 1", Toast.LENGTH_SHORT);
+                // toast1.show();
                 modeVibrationImage.setImageResource(R.drawable.wip_mode_1);
                 break;
             case R.id.buttonMode2:

@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.notifications.NotificationsFragment">
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+    </androidx.viewpager.widget.ViewPager>
+
     <TextView
         android:id="@+id/text_notifications"
         android:layout_width="match_parent"

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
+import com.example.tactigant20.ui.home.HomeFragment;
 
 public class NotificationsFragment extends Fragment {
 
@@ -32,6 +33,17 @@ public class NotificationsFragment extends Fragment {
         final TextView textView = binding.textNotifications;
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
+    }
+
+    // Création d'un fragment (nécessaire pour scroll)
+    public static NotificationsFragment newInstance(int page, String title) {
+        Log.d(TAG_NOTIFS,"Appel de NotificationsFragment dans NotificationsFragment");
+        NotificationsFragment fragmentMenu = new NotificationsFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", page);
+        args.putString("someTitle", title);
+        fragmentMenu.setArguments(args);
+        return fragmentMenu;
     }
 
     @Override
