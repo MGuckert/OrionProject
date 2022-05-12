@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/vibration_dashboard"
-        android:name="com.example.tactigant20.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_vibrations"
+        android:name="com.example.tactigant20.ui.vibrations.VibrationsFragment"
+        android:label="@string/title_vibrations"
+        tools:layout="@layout/fragment_vibrations" />
 
     <fragment
         android:id="@+id/navigation_notifications"

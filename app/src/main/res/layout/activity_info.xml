@@ -10,7 +10,7 @@
         android:id="@+id/infotext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Oui ben la aussi j'ai eu la flemme"
+        android:text="@string/oui_ben_la_aussi_j_ai_eu_la_flemme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

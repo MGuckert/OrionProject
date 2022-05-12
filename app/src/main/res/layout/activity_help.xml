@@ -10,7 +10,7 @@
         android:id="@+id/helptext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mdr t'as cru quoi j'ai la flemme"
+        android:text="@string/mdr_t_as_cru_quoi_j_ai_la_flemme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
