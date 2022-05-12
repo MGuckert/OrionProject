@@ -30,6 +30,7 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
         View root = binding.getRoot();
 
         modeVibrationImage = root.findViewById(R.id.modeVibrationImage);
+        modeVibrationImage.setImageResource(R.drawable.wip_mode_1); // Cas par défaut
 
         // Création des boutons
         Button mode1 = (Button) root.findViewById(R.id.buttonMode1);
