@@ -1,6 +1,7 @@
 package com.example.tactigant20.ui.notifications;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,12 @@ public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
 
+    private static final String TAG_NOTIFS = "DebugNotifsFragment";
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG_NOTIFS,"Appel de onCreate dans NotificationsFragment");
+
         NotificationsViewModel notificationsViewModel =
                 new ViewModelProvider(this).get(NotificationsViewModel.class);
 
@@ -31,6 +36,8 @@ public class NotificationsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG_NOTIFS,"Appel de onDestroyView dans NotificationsFragment");
+
         super.onDestroyView();
         binding = null;
     }

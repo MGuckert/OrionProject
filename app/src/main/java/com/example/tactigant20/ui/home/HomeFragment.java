@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,14 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private FloatingActionButton BlueButton;
     private BluetoothAdapter mBlueAdapter;
+
+    private static final String TAG_HOME = "DebugHomeFragment";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,@Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+
+        Log.d(TAG_HOME,"Appel de onCreate dans HomeFragment");
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -43,8 +49,11 @@ public class HomeFragment extends Fragment {
         return root;
     }
     private View.OnClickListener BlueButtonListener = new View.OnClickListener() {
+
+
         @Override
         public void onClick(View view) {
+                Log.d(TAG_HOME,"Appel de onClick dans HomeFragment");
             Intent intentOpenBluetoothSettings = new Intent();
             intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
             startActivity(intentOpenBluetoothSettings);
@@ -53,10 +62,12 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG_HOME,"Appel de onDestroyView dans MenuFragment");
         super.onDestroyView();
         binding = null;
     }
     public void alerter(String s){
+        Log.d(TAG_HOME,"Appel de alerter dans MenuFragment");
         Toast.makeText(getActivity(),s,Toast.LENGTH_LONG).show();
     }
 }
