@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,8 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
 
     private FragmentVibrationsBinding binding;
 
+    private ImageView modeVibrationImage;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         VibrationsViewModel vibrationsViewModel =
@@ -25,6 +28,8 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
 
         binding = FragmentVibrationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        modeVibrationImage = root.findViewById(R.id.modeVibrationImage);
 
         // Création des boutons
         Button mode1 = (Button) root.findViewById(R.id.buttonMode1);
@@ -41,16 +46,15 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonMode1:
-                Toast toast1 = Toast.makeText(getContext(), "Mode 1", Toast.LENGTH_SHORT);
-                toast1.show();
+                //Toast toast1 = Toast.makeText(getContext(), "Mode 1", Toast.LENGTH_SHORT);
+                //toast1.show();
+                modeVibrationImage.setImageResource(R.drawable.wip_mode_1);
                 break;
             case R.id.buttonMode2:
-                Toast toast2 = Toast.makeText(getContext(), "Mode 2", Toast.LENGTH_SHORT);
-                toast2.show();
+                modeVibrationImage.setImageResource(R.drawable.wip_mode_2);
                 break;
             case R.id.buttonMode3:
-                Toast toast3 = Toast.makeText(getContext(), "Mode 3", Toast.LENGTH_SHORT);
-                toast3.show();
+                modeVibrationImage.setImageResource(R.drawable.wip_mode_3);
                 break;
             default:
                 break;
