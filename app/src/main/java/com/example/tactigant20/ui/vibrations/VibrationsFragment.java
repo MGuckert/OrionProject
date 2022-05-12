@@ -1,6 +1,7 @@
 package com.example.tactigant20.ui.vibrations;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,13 @@ import com.example.tactigant20.databinding.FragmentVibrationsBinding;
 public class VibrationsFragment extends Fragment implements View.OnClickListener {
 
     private FragmentVibrationsBinding binding;
-
     private ImageView modeVibrationImage;
+
+    private static final String TAG_VIBRAS = "DebugVibrasFragment";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG_VIBRAS,"Appel de onCreate dans VibrationsFragment");
         VibrationsViewModel vibrationsViewModel =
                 new ViewModelProvider(this).get(VibrationsViewModel.class);
 
@@ -45,6 +48,7 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
+        Log.d(TAG_VIBRAS,"appel de onClick dans VibrationsFragment");
         switch (v.getId()) {
             case R.id.buttonMode1:
                 //Toast toast1 = Toast.makeText(getContext(), "Mode 1", Toast.LENGTH_SHORT);
@@ -64,6 +68,7 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG_VIBRAS,"appel de onDestroyView dans VibrationsFragment");
         super.onDestroyView();
         binding = null;
     }

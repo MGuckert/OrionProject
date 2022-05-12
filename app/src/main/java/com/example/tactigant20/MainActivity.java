@@ -3,6 +3,7 @@ package com.example.tactigant20;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.tactigant20.ui.settings.HelpActivity;
@@ -25,8 +26,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageView helpIcon;
     private ImageView infoIcon;
 
+    private static final String TAG_MAIN = "DebugMainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG_MAIN,"Appel de onCreate dans MainActivity");
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -47,21 +51,24 @@ public class MainActivity extends AppCompatActivity {
         settingsIcon.setOnClickListener(view -> openSettings());
         //Helps button on toolbar
         helpIcon = findViewById(R.id.helpicon);
-        helpIcon.setOnClickListener(view -> openhelp());
+        helpIcon.setOnClickListener(view -> openHelp());
         //Information button on toolbar
         infoIcon = findViewById(R.id.infoicon);
-        infoIcon.setOnClickListener(view -> openinfo());
+        infoIcon.setOnClickListener(view -> openInfo());
     }
 
     private void openSettings() {
+        Log.d(TAG_MAIN,"appel de openSettings dans MainActivity");
         Intent intent = new Intent(this, SettingsMain.class);
         startActivity(intent);
     }
-    private void openhelp() {
+    private void openHelp() {
+        Log.d(TAG_MAIN,"appel de openHelp dans MainActivity");
         Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
     }
-    private void openinfo(){
+    private void openInfo(){
+        Log.d(TAG_MAIN,"appel de openInfo dans MainActivity");
         Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
     }
