@@ -61,18 +61,18 @@ public class MainActivity extends AppCompatActivity {
         //Information button on toolbar
         infoIcon = findViewById(R.id.infoicon);
         infoIcon.setOnClickListener(view -> openInfo());
-
-        // Paramètres de la notification
+        // Paramètres de la Notification
         builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
                 .setSmallIcon(R.drawable.ic_home_black_24dp)
-                .setContentTitle("Status du bracelet : CONNECTED/DISCONNECTED")
+                .setContentTitle("Status du bracelet : CONNECTED")
                 .setContentText("Batterie: 50 %")
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        // Fais apparaitre la notification
+        //Affiche la notif
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(100, builder.build());
+
     }
 
     private void createNotificationChannel() {
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void cancelNotification(Context ctx, int notifyId) {
-        // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
+        // Supprime la notification (ctx=this et notifyId=100)
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
         nMgr.cancel(notifyId);
