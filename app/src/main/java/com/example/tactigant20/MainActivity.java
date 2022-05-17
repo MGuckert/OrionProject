@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
-        vpPager.setAdapter(adapterViewPager);
+        //ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
+        //adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        //vpPager.setAdapter(adapterViewPager);
 
         // Création de la barre de navigation du bas (bottom_nav_menu)
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
+/*
     // Gestion du scroll horizontal entre fragments
     public static class MyPagerAdapter extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 2;
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     return null;
             }
         }
-    }
+    }*/
 
 
 }

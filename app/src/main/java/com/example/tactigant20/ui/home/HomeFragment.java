@@ -25,8 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
-    private FloatingActionButton BlueButton;
-    private BluetoothAdapter mBlueAdapter;
+    private Button BluetoothButton;
+    // private BluetoothAdapter mBlueAdapter;
 
     private static final String TAG_HOME = "DebugHomeFragment";
 
@@ -41,15 +41,19 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Texte
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        BlueButton=root.findViewById(R.id.bluetoothButton);
-        BlueButton.setOnClickListener(BlueButtonListener);
-        mBlueAdapter=BluetoothAdapter.getDefaultAdapter();
+
+        // Bouton bluetooth
+        BluetoothButton=root.findViewById(R.id.bluetoothButton);
+        BluetoothButton.setOnClickListener(BluetoothButtonListener);
+        // mBlueAdapter=BluetoothAdapter.getDefaultAdapter();
         return root;
     }
-    private View.OnClickListener BlueButtonListener = new View.OnClickListener() {
 
+    // Ce qu'il se passe quand on appuie sur le bouton principal
+    private View.OnClickListener BluetoothButtonListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
