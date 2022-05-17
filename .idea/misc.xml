@@ -19,17 +19,18 @@
         <entry key="..\:/Users/lucas/AndroidStudioProjects/TactiGant-2.0/app/src/main/res/layout/fragment_notifications.xml" value="0.15364583333333334" />
         <entry key="..\:/Users/lucas/AndroidStudioProjects/TactiGant-2.0/app/src/main/res/menu/bottom_nav_menu.xml" value="0.4" />
         <entry key="..\:/Users/mathi/Desktop/Centrale/Projet G1-G2/TactiGant-2.0/app/src/main/res/layout/activity_main.xml" value="0.18659420289855072" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.184" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/activity_help.xml" value="0.11197916666666667" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/activity_info.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/activity_main.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/activity_settings_main.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/fragment_dashboard.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/fragment_home.xml" value="0.1" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/fragment_notifications.xml" value="0.1" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/fragment_vibrations.xml" value="0.25" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/layout/toolbar.xml" value="0.1" />
-        <entry key="..\:/Users/pokro/Desktop/TactiGant-2.0/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/drawable/ic_aideblanc_background.xml" value="0.281" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/drawable/ic_call_background.xml" value="0.281" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.281" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/drawable/ic_message_background.xml" value="0.281" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/layout/adapter_item.xml" value="0.3614583333333333" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/layout/fragment_app_item.xml" value="0.3625" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/layout/fragment_notifications.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/layout/fragment_notifications_list.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/layout/toolbar.xml" value="0.23369565217391305" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/mipmap-anydpi-v26/ic_call.xml" value="0.281" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/mipmap-anydpi-v26/ic_call_round.xml" value="0.1935" />
+        <entry key="..\:/Users/mathi/Desktop/Centrale/TactiGant-2.0/app/src/main/res/mipmap-anydpi-v26/ic_message.xml" value="0.281" />
       </map>
     </option>
   </component>
