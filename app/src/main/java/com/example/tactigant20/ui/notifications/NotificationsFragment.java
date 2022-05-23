@@ -12,12 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
+import com.example.tactigant20.ui.home.HomeFragment;
 
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
 
     private static final String TAG_NOTIFS = "DebugNotifsFragment";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

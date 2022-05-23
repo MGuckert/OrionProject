@@ -1,75 +1,201 @@
 package com.example.tactigant20;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.example.tactigant20.databinding.ActivityMainBinding;
+import com.example.tactigant20.ui.home.HomeFragment;
+import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
 import com.example.tactigant20.ui.settings.InfoActivity;
 import com.example.tactigant20.ui.settings.SettingsMain;
+import com.example.tactigant20.ui.vibrations.VibrationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.viewpager.widget.ViewPager;
 
-import com.example.tactigant20.databinding.ActivityMainBinding;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private ImageView settingsIcon;
-    private ImageView helpIcon;
-    private ImageView infoIcon;
+
+    BottomNavigationView bottomNavigationView;
+
+    //viewPager
+    private ViewPager viewPager;
+
+    //Fragments
+    VibrationsFragment vibrationsFragment;
+    HomeFragment menuFragment;
+    NotificationsFragment notificationsFragment;
+    MenuItem prevMenuItem;
 
     private static final String TAG_MAIN = "DebugMainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG_MAIN,"Appel de onCreate dans MainActivity");
+        Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        //AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-        //        R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-        //        .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        // Création de la toolbar
+        Toolbar topAppBar=findViewById(R.id.topAppBar);
+        setSupportActionBar(topAppBar);
 
-        //Settings button on toolbar
-        settingsIcon = findViewById(R.id.settingsIcon);
-        settingsIcon.setOnClickListener(view -> openSettings());
-        //Helps button on toolbar
-        helpIcon = findViewById(R.id.helpicon);
-        helpIcon.setOnClickListener(view -> openHelp());
-        //Information button on toolbar
-        infoIcon = findViewById(R.id.infoicon);
-        infoIcon.setOnClickListener(view -> openInfo());
+        //Initializing viewPager
+        viewPager = (ViewPager) findViewById(R.id.vpPager);
+
+        // Initializing the bottomNavigationView
+        bottomNavigationView = (BottomNavigationView)findViewById(R.id.nav_view);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.navigation_vibrations:
+                                viewPager.setCurrentItem(0);
+                                break;
+                            case R.id.navigation_home:
+                                viewPager.setCurrentItem(1);
+                                break;
+                            case R.id.navigation_notifications:
+                                viewPager.setCurrentItem(2);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                }
+                else
+                {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                Log.d("page",""+position);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        setupViewPager(viewPager);
     }
 
-    private void openSettings() {
-        Log.d(TAG_MAIN,"appel de openSettings dans MainActivity");
-        Intent intent = new Intent(this, SettingsMain.class);
-        startActivity(intent);
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        vibrationsFragment=new VibrationsFragment();
+        menuFragment=new HomeFragment();
+        notificationsFragment=new NotificationsFragment();
+
+        adapter.addFragment(vibrationsFragment);
+        adapter.addFragment(menuFragment);
+        adapter.addFragment(notificationsFragment);
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
     }
+
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment) {
+            mFragmentList.add(fragment);
+        }
+
+    }
+
+    // Création du menu de la toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG_MAIN,"appel de onCreateOptionsMenu dans MainActivity");
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    // Gestion des boutons
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG_MAIN,"appel de onOptionsItemSelected dans MainActivity");
+        int id = item.getItemId();
+
+        switch(id) { // "switch" au cas où on en rajoute
+            case (R.id.action_help):
+                Log.d(TAG_MAIN,"Action : action_help");
+                openHelp();
+                return true;
+            case (R.id.action_info):
+                Log.d(TAG_MAIN,"Action : action_info");
+                openInfo();
+                return true;
+            case (R.id.action_settings):
+                Log.d(TAG_MAIN,"Action : action_settings");
+                openSettings();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
     private void openHelp() {
-        Log.d(TAG_MAIN,"appel de openHelp dans MainActivity");
+        Log.d(TAG_MAIN, "appel de openHelp dans MainActivity");
         Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
     }
-    private void openInfo(){
-        Log.d(TAG_MAIN,"appel de openInfo dans MainActivity");
+
+    private void openInfo() {
+        Log.d(TAG_MAIN, "appel de openInfo dans MainActivity");
         Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
     }
+
+    private void openSettings() {
+        Log.d(TAG_MAIN, "appel de openSettings dans MainActivity");
+        Intent intent = new Intent(this, SettingsMain.class);
+        startActivity(intent);
+    }
+
 }

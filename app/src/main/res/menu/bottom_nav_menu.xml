@@ -4,7 +4,7 @@
     <item
         android:id="@+id/navigation_vibrations"
         android:icon="@mipmap/ic_vibration_foreground"
-        android:title="Vibrations" />
+        android:title="@string/vibrations" />
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
