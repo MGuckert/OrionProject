@@ -30,6 +30,11 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG_HOME = "DebugHomeFragment";
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,@Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
@@ -63,17 +68,6 @@ public class HomeFragment extends Fragment {
             startActivity(intentOpenBluetoothSettings);
         }
     };
-
-    // Création d'un fragment (nécessaire pour scroll)
-    public static HomeFragment newInstance(int page, String title) {
-        Log.d(TAG_HOME,"Appel de HomeFragment dans HomeFragment");
-        HomeFragment fragmentMenu = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", page);
-        args.putString("someTitle", title);
-        fragmentMenu.setArguments(args);
-        return fragmentMenu;
-    }
 
     @Override
     public void onDestroyView() {

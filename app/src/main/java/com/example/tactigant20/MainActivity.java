@@ -12,23 +12,38 @@ import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
 import com.example.tactigant20.ui.settings.InfoActivity;
 import com.example.tactigant20.ui.settings.SettingsMain;
+import com.example.tactigant20.ui.vibrations.VibrationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-    private FragmentPagerAdapter adapterViewPager;
+    BottomNavigationView bottomNavigationView;
+
+    //viewPager
+    private ViewPager viewPager;
+
+    //Fragments
+    VibrationsFragment vibrationsFragment;
+    HomeFragment menuFragment;
+    NotificationsFragment notificationsFragment;
+    MenuItem prevMenuItem;
 
     private static final String TAG_MAIN = "DebugMainActivity";
 
@@ -36,26 +51,99 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        //ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-        //adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
-        //vpPager.setAdapter(adapterViewPager);
-
-        // Création de la barre de navigation du bas (bottom_nav_menu)
-        BottomNavigationView navView = findViewById(R.id.nav_view);
 
         // Création de la toolbar
         Toolbar topAppBar=findViewById(R.id.topAppBar);
         setSupportActionBar(topAppBar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        //Initializing viewPager
+        viewPager = (ViewPager) findViewById(R.id.vpPager);
 
+        // Initializing the bottomNavigationView
+        bottomNavigationView = (BottomNavigationView)findViewById(R.id.nav_view);
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.navigation_vibrations:
+                                viewPager.setCurrentItem(0);
+                                break;
+                            case R.id.navigation_home:
+                                viewPager.setCurrentItem(1);
+                                break;
+                            case R.id.navigation_notifications:
+                                viewPager.setCurrentItem(2);
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                }
+                else
+                {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                Log.d("page",""+position);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        setupViewPager(viewPager);
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        vibrationsFragment=new VibrationsFragment();
+        menuFragment=new HomeFragment();
+        notificationsFragment=new NotificationsFragment();
+
+        adapter.addFragment(vibrationsFragment);
+        adapter.addFragment(menuFragment);
+        adapter.addFragment(notificationsFragment);
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
+    }
+
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment) {
+            mFragmentList.add(fragment);
+        }
 
     }
 
@@ -109,37 +197,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingsMain.class);
         startActivity(intent);
     }
-
-/*
-    // Gestion du scroll horizontal entre fragments
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
-        private static int NUM_ITEMS = 2;
-
-        public MyPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        // Returns total number of pages
-        @Override
-        public int getCount() {
-            return NUM_ITEMS;
-        }
-
-        // Returns the fragment to display for that page
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0: // Fragment # 0 - This will show FirstFragment
-                    return HomeFragment.newInstance(0, "Page # 1");
-                case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return NotificationsFragment.newInstance(1, "Page # 2");
-                // case 2: // Fragment # 1 - This will show SecondFragment
-                // return VibrationsFragment.newInstance(2, "Page # 3");
-                default:
-                    return null;
-            }
-        }
-    }*/
-
 
 }

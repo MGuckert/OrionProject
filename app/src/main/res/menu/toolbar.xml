@@ -5,20 +5,20 @@
 
     <item
         android:id="@+id/action_help"
-        android:icon="@android:drawable/ic_menu_help"
-        android:title="Help"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/help"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_info"
-        android:icon="@drawable/ic_aideblanc_background"
-        android:title="Infos"
+        android:icon="@mipmap/ic_aideblanc_foreground"
+        android:title="@string/infos"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings_white"
-        android:title="Settings"
-        app:showAsAction="always" />
+        android:title="@string/settings"
+        app:showAsAction="ifRoom" />
 
 </menu>

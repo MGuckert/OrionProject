@@ -20,6 +20,11 @@ public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "DebugNotifsFragment";
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG_NOTIFS,"Appel de onCreate dans NotificationsFragment");
@@ -33,17 +38,6 @@ public class NotificationsFragment extends Fragment {
         final TextView textView = binding.textNotifications;
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
-    }
-
-    // Création d'un fragment (nécessaire pour scroll)
-    public static NotificationsFragment newInstance(int page, String title) {
-        Log.d(TAG_NOTIFS,"Appel de NotificationsFragment dans NotificationsFragment");
-        NotificationsFragment fragmentMenu = new NotificationsFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", page);
-        args.putString("someTitle", title);
-        fragmentMenu.setArguments(args);
-        return fragmentMenu;
     }
 
     @Override
