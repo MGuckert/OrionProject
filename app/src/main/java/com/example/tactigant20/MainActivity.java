@@ -1,6 +1,10 @@
 package com.example.tactigant20;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +22,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
+        createNotificationChannel();
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -110,6 +117,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         setupViewPager(viewPager);
+        // Paramètres de la notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
+                .setSmallIcon(R.drawable.ic_home_black_24dp)
+                .setContentTitle("Status du bracelet : CONNECTED/DISCONNECTED")
+                .setContentText("Batterie: 50 %")
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        // Fais apparaitre la notification
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(100, builder.build());
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -196,6 +214,27 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG_MAIN, "appel de openSettings dans MainActivity");
         Intent intent = new Intent(this, SettingsMain.class);
         startActivity(intent);
+    }
+    public static void cancelNotification(Context ctx, int notifyId) {
+        // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
+        nMgr.cancel(notifyId);
+    }
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Tactigant channel";
+            String description = "Tactigant Channel description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 }
