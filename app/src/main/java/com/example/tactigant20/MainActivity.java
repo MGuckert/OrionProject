@@ -33,8 +33,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -236,5 +241,69 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+    private String queltype(String NomNotif) {
+        // J'ai pas testé cette fonction encore
+        // Retourne le type de vibration associé à la notification "NomNotif" dans le fichier "enregistrement"
+        String filePath = "enregistrement.txt"; // Probablement à changer pour mettre quelque chose de plus précis (si ça ne marche pas comme ça)
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new File(filePath));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = "";
+        String notif = "";
+        String type = "";
+        int i = 0;
+        while (scanner.hasNextLine()) {
+            line = scanner.nextLine();
+            // On extrait l'information concernant la notifs
+            while (line.charAt(i) != ' ') {
+                notif += line.charAt(i);
+                i++;
+            }
+
+            // On inverse la chaine "notif" parce qu'elle a été construite dans le mauvais sens
+            StringBuilder strb = new StringBuilder(notif);
+            notif = strb.reverse().toString();
+            // On verifie si elle correspond à "NomNotifs"
+            if (notif.equals(NomNotif)) {
+                // On extrait l'information concernant le type
+                i = i + 3;
+                while (line.charAt(i) != '\n') {
+                    type += line.charAt(i);
+                    i++;
+                }
+                // On inverse la chaine "type" parce qu'elle a été construite dans le mauvais sens
+                StringBuilder strb2 = new StringBuilder(type);
+                type = strb2.reverse().toString();
+                // On renvoie le type associé à la notification "NomNotif"
+                return type;
+            }
+            i = 0;
+        }
+        return "PAS TROUVE";
+    }
+
+
+    private void stockage(String s, int mode) {
+        // On vient éditer le fichier "enregistrement"
+        //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
+        //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput("enregistrement.txt", mode);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            fos.write(s.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
