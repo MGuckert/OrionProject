@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.ui.home.HomeFragment;
@@ -33,10 +34,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -133,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(100, builder.build());
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -241,48 +247,91 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
-    private String queltype(String NomNotif) {
-        // J'ai pas testé cette fonction encore
-        // Retourne le type de vibration associé à la notification "NomNotif" dans le fichier "enregistrement"
-        String filePath = "enregistrement.txt"; // Probablement à changer pour mettre quelque chose de plus précis (si ça ne marche pas comme ça)
-        Scanner scanner = null;
+    private String quelMode(String NomNotif) {
+        // Retourne le mode de vibration associé à la notification "NomNotif" dans le fichier "enregistrement"
+        FileInputStream inputStream = null;
         try {
-            scanner = new Scanner(new File(filePath));
+            inputStream = openFileInput("enregistrement.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        String line = "";
-        String notif = "";
-        String type = "";
-        int i = 0;
-        while (scanner.hasNextLine()) {
-            line = scanner.nextLine();
-            // On extrait l'information concernant la notifs
-            while (line.charAt(i) != ' ') {
-                notif += line.charAt(i);
-                i++;
+        int content = 0;
+        String notif="";
+        String mode="";
+        Log.d("Storage","Initialisation....");
+        while (true){
+            try {
+                if (!((content=inputStream.read())!=-1)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            // On inverse la chaine "notif" parce qu'elle a été construite dans le mauvais sens
-            StringBuilder strb = new StringBuilder(notif);
-            notif = strb.reverse().toString();
-            // On verifie si elle correspond à "NomNotifs"
-            if (notif.equals(NomNotif)) {
-                // On extrait l'information concernant le type
-                i = i + 3;
-                while (line.charAt(i) != '\n') {
-                    type += line.charAt(i);
-                    i++;
+            //On extrait l'information concernant la notifs
+            if((char)content !=' ') {
+                notif = notif + (char) content;
+            }
+            else{
+                Log.d("Storage","Notifs : "+notif);
+                // On verifie si elle correspond à "NomNotifs"
+                if (notif.equals(NomNotif)) {
+                    Log.d("Storage","Correspond !");
+                    // On avance de 2 caractéres (: ) content
+                    try {
+                        content=inputStream.read();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        content=inputStream.read();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // On extrait l'information concernant le mode
+                    while (true) {
+                        try {
+                            if (!((content = inputStream.read()) != -1)) break;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //On extrait l'information concernant la notifs
+                        if ((char) content != '\n') {
+                            mode = mode + (char) content;
+                        }
+                        else {
+                            Log.d("Storage",mode);
+                            return mode;
+                        }
+                    }
                 }
-                // On inverse la chaine "type" parce qu'elle a été construite dans le mauvais sens
-                StringBuilder strb2 = new StringBuilder(type);
-                type = strb2.reverse().toString();
-                // On renvoie le type associé à la notification "NomNotif"
-                return type;
+                else {
+                    Log.d("Storage","Ne correspond pas !");
+                    try {
+                        content = inputStream.read();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //On finit d'extraire la fin de la ligne qui ne sert plus à rien
+                    while ((char) content != '\n') {
+                        try {
+                            content = inputStream.read();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    notif="";
+                }
             }
-            i = 0;
         }
-        return "PAS TROUVE";
+
+
+
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "UNKNOWN";
+
     }
 
 
