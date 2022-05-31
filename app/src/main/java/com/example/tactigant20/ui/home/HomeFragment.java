@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment {
         BluetoothButton=root.findViewById(R.id.bluetoothButton);
         BluetoothButton.setOnClickListener(BluetoothButtonListener);
         // mBlueAdapter=BluetoothAdapter.getDefaultAdapter();
+
         return root;
     }
 
@@ -62,7 +63,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            Log.d(TAG_HOME,"Appel de onClick dans HomeFragment");
+            Log.d(TAG_HOME,"Appui sur le bouton Bluetooth");
             Intent intentOpenBluetoothSettings = new Intent();
             intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
             startActivity(intentOpenBluetoothSettings);
