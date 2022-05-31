@@ -26,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private Button BluetoothButton;
+    private Button Appsettings;
     // private BluetoothAdapter mBlueAdapter;
 
     private static final String TAG_HOME = "DebugHomeFragment";
@@ -54,6 +55,10 @@ public class HomeFragment extends Fragment {
         BluetoothButton=root.findViewById(R.id.bluetoothButton);
         BluetoothButton.setOnClickListener(BluetoothButtonListener);
         // mBlueAdapter=BluetoothAdapter.getDefaultAdapter();
+
+        //Bouton appsettings
+        Appsettings = root.findViewById(R.id.settingsButton);
+        Appsettings.setOnClickListener(BluetoothButtonListener);
         return root;
     }
 
@@ -63,16 +68,17 @@ public class HomeFragment extends Fragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
+                case(R.id.settingsButton):
+                    Log.d(TAG_HOME,"Appui sur le bouton autorisation settings");
+                    showPermissionDialog();
+                    break;
                 case(R.id.bluetoothButton):
                     Log.d(TAG_HOME,"Appui sur le bouton Bluetooth");
                     Intent intentOpenBluetoothSettings = new Intent();
                     intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
                     startActivity(intentOpenBluetoothSettings);
                     break;
-                case(R.id.appSettings):
-                    Log.d(TAG_HOME,"Appui sur le bouton autorisation settings");
-                    showPermissionDialog();
-                    break;
+
             }
         }
     };
