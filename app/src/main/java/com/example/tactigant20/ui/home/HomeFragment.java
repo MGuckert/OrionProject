@@ -62,10 +62,18 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            Log.d(TAG_HOME,"Appel de onClick dans HomeFragment");
-            Intent intentOpenBluetoothSettings = new Intent();
-            intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
-            startActivity(intentOpenBluetoothSettings);
+            switch (view.getId()){
+                case(R.id.bluetoothButton):
+                    Log.d(TAG_HOME,"Appui sur le bouton Bluetooth");
+                    Intent intentOpenBluetoothSettings = new Intent();
+                    intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+                    startActivity(intentOpenBluetoothSettings);
+                    break;
+                case(R.id.appSettings):
+                    Log.d(TAG_HOME,"Appui sur le bouton autorisation settings");
+                    showPermissionDialog();
+                    break;
+            }
         }
     };
 
@@ -78,5 +86,10 @@ public class HomeFragment extends Fragment {
     public void alerter(String s){
         Log.d(TAG_HOME,"Appel de alerter dans MenuFragment");
         Toast.makeText(getActivity(),s,Toast.LENGTH_LONG).show();
+    }
+
+    //méthode pour lancer app settings
+    public void showPermissionDialog(){
+        getActivity().getApplicationContext().startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }
