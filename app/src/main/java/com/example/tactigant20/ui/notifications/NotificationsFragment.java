@@ -52,8 +52,8 @@ public class NotificationsFragment extends Fragment {
 
         appList = root.findViewById(R.id.appList);
         appList.setTextFilterEnabled(true);
-//        LoadAppInfoTask task = new LoadAppInfoTask();
-//        task.execute();
+        LoadAppInfoTask task = new LoadAppInfoTask();
+        task.execute();
         return root;
     }
 
