@@ -1,5 +1,7 @@
 package com.example.tactigant20.ui.notifications;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -50,8 +52,8 @@ public class NotificationsFragment extends Fragment {
 
         appList = root.findViewById(R.id.appList);
         appList.setTextFilterEnabled(true);
-        LoadAppInfoTask task = new LoadAppInfoTask();
-        task.execute();
+//        LoadAppInfoTask task = new LoadAppInfoTask();
+//        task.execute();
         return root;
     }
 
@@ -70,17 +72,18 @@ public class NotificationsFragment extends Fragment {
             super.onPreExecute();
         }
 
+        @SuppressLint("NewApi")
         @Override
         protected List<AppInfo> doInBackground(Integer... params) {
 
             List<AppInfo> apps = new ArrayList<>();
             PackageManager packageManager = getContext().getPackageManager();
 
-            List<ApplicationInfo> infos = packageManager.getInstalledApplications(0);
+            List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
             System.err.println(infos.size());
 
             for (ApplicationInfo info:infos) {
-                if ((info.flags & ApplicationInfo.FLAG_INSTALLED) == ApplicationInfo.FLAG_INSTALLED) {
+                if (filter(info, packageManager)) {
                     AppInfo app = new AppInfo();
                     app.info = info;
                     app.label = (String) info.loadLabel(packageManager);
@@ -102,7 +105,22 @@ public class NotificationsFragment extends Fragment {
         protected void onPostExecute(List<AppInfo> appInfos) {
             super.onPostExecute(appInfos);
             appList.setAdapter(new AppAdapter(getContext(),appInfos));
+        }
 
+        protected boolean filter(ApplicationInfo appInfo, PackageManager packageManager) {
+            return (appInfo.packageName.equals("com.google.android.apps.docs") ||
+                    appInfo.packageName.equals("com.google.android.gm") ||
+                    appInfo.packageName.equals("com.google.android.googlequicksearchbox") ||
+                    appInfo.packageName.equals("com.google.android.calendar") ||
+                    appInfo.packageName.equals("com.google.android.chrome") ||
+                    appInfo.packageName.equals("com.google.android.apps.deskclock") ||
+                    appInfo.packageName.equals("com.google.android.apps.maps") ||
+                    appInfo.packageName.equals("com.google.android.apps.messaging") ||
+                    appInfo.packageName.equals("com.android.phone") ||
+                    appInfo.packageName.equals("com.google.android.apps.photos") ||
+                    appInfo.packageName.equals("com.google.android.apps.youtube") ||
+                    appInfo.packageName.equals("com.google.android.apps.youtube.music") ||
+                    ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
         }
     }
 }
