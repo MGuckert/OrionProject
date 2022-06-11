@@ -44,17 +44,22 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
 
         TextView title = view.findViewById(R.id.titleTextView);
         title.setText(current.label);
+        TextView vibrationModeTextView = view.findViewById(R.id.vibrationModeTextView);
+        if (current.vibrationMode.equals("NA"))
+            vibrationModeTextView.setText("N/A");
+        else
+            vibrationModeTextView.setText(String.format("Mode %s", current.vibrationMode));
 
-        try {
-            PackageInfo packageInfo = packageManager.getPackageInfo(current.info.packageName, 0);
-
-            if (!TextUtils.isEmpty(current.info.packageName)) {
-                TextView subtitle = view.findViewById(R.id.appSubtitle);
-                subtitle.setText(current.info.packageName);
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            PackageInfo packageInfo = packageManager.getPackageInfo(current.info.packageName, 0);
+//
+//            if (!TextUtils.isEmpty(current.info.packageName)) {
+//                TextView subtitle = view.findViewById(R.id.appSubtitle);
+//                subtitle.setText(current.info.packageName);
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
         ImageView iconImageView = view.findViewById(R.id.iconImage);
         Drawable icon = current.info.loadIcon(packageManager);

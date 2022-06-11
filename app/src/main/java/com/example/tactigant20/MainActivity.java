@@ -1,5 +1,6 @@
 package com.example.tactigant20;
 
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -9,10 +10,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.ui.home.HomeFragment;
+import com.example.tactigant20.ui.notifications.AppAdapter;
+import com.example.tactigant20.ui.notifications.AppInfo;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
 import com.example.tactigant20.ui.settings.InfoActivity;
@@ -76,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(topAppBar);
 
         //Initializing viewPager
-        viewPager = (ViewPager) findViewById(R.id.vpPager);
+        viewPager = findViewById(R.id.vpPager);
 
         // Initializing the bottomNavigationView
-        bottomNavigationView = (BottomNavigationView)findViewById(R.id.nav_view);
+        bottomNavigationView = findViewById(R.id.nav_view);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -353,6 +359,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        // Check which radio button was clicked
+        AppInfo currentItem = this.notificationsFragment.getCurrentItem();
+        Dialog dialog = this.notificationsFragment.getDialog();
+        switch (view.getId()) {
+            case R.id.radioButtonNA:
+                if (checked)
+                    currentItem.vibrationMode = "NA";
+                break;
+            case R.id.radioButtonMode1:
+                if (checked)
+                    currentItem.vibrationMode = "1";
+                break;
+            case R.id.radioButtonMode2:
+                if (checked)
+                    currentItem.vibrationMode = "2";
+                break;
+            case R.id.radioButtonMode3:
+                if (checked)
+                    currentItem.vibrationMode = "3";
+                break;
+        }
+        this.notificationsFragment.setFromIndex(this.notificationsFragment.getCurrentItemPosition(), currentItem);
+        this.notificationsFragment.getAdapter().notifyDataSetChanged();
+        dialog.dismiss();
+    }
 }

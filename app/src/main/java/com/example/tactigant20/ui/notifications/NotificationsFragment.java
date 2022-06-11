@@ -1,7 +1,7 @@
 package com.example.tactigant20.ui.notifications;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,11 +22,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
-import com.example.tactigant20.ui.home.HomeFragment;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -31,9 +31,37 @@ import java.util.List;
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
-    private ListView appList;
+    private List<AppInfo> appList;
+    private ListView appListView;
+    private int currentItemPosition;
+    private AppAdapter adapter;
+
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private RadioGroup vibrationModeRadioGroup;
+    private TextView descriptionTextView;
 
     private static final String TAG_NOTIFS = "DebugNotifsFragment";
+
+    public int getCurrentItemPosition() {
+        return currentItemPosition;
+    }
+
+    public AppInfo getCurrentItem() {
+        return appList.get(currentItemPosition);
+    }
+
+    public AppAdapter getAdapter() {
+        return adapter;
+    }
+
+    public AlertDialog getDialog() {
+        return dialog;
+    }
+
+    public void setFromIndex(int position, AppInfo appInfo) {
+        appList.set(position, appInfo);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,10 +78,27 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        appList = root.findViewById(R.id.appList);
-        appList.setTextFilterEnabled(true);
+        appListView = root.findViewById(R.id.appList);
+        appListView.setTextFilterEnabled(true);
+        appList = new ArrayList<>();
         LoadAppInfoTask task = new LoadAppInfoTask();
         task.execute();
+
+        appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                System.err.println(i);
+                currentItemPosition = i;
+                AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
+                System.err.println(currentItem.label);
+                createNewVibrationModeDialog(currentItem);
+//                TextView vibrationModeTextView = (TextView) root.findViewById(R.id.vibrationModeTextView);
+//                if (currentItem.vibrationMode.equals("NA"))
+//                    vibrationModeTextView.setText("N/A");
+//                else
+//                    vibrationModeTextView.setText(String.format("Mode %s", currentItem.vibrationMode));
+            }
+        });
         return root;
     }
 
@@ -76,7 +121,6 @@ public class NotificationsFragment extends Fragment {
         @Override
         protected List<AppInfo> doInBackground(Integer... params) {
 
-            List<AppInfo> apps = new ArrayList<>();
             PackageManager packageManager = getContext().getPackageManager();
 
             List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -87,24 +131,26 @@ public class NotificationsFragment extends Fragment {
                     AppInfo app = new AppInfo();
                     app.info = info;
                     app.label = (String) info.loadLabel(packageManager);
-                    apps.add(app);
+                    app.vibrationMode = "NA";
+                    appList.add(app);
                 }
             }
 
-            Collections.sort(apps, new Comparator<AppInfo>() {
+            Collections.sort(appList, new Comparator<AppInfo>() {
                 @Override
                 public int compare(AppInfo appInfo1, AppInfo appInfo2) {
                     return appInfo1.label.compareTo(appInfo2.label);
                 }
             });
 
-            return apps;
+            return appList;
         }
 
         @Override
         protected void onPostExecute(List<AppInfo> appInfos) {
             super.onPostExecute(appInfos);
-            appList.setAdapter(new AppAdapter(getContext(),appInfos));
+            adapter = new AppAdapter(getContext(),appInfos);
+            appListView.setAdapter(adapter);
         }
 
         protected boolean filter(ApplicationInfo appInfo, PackageManager packageManager) {
@@ -122,5 +168,29 @@ public class NotificationsFragment extends Fragment {
                     appInfo.packageName.equals("com.google.android.apps.youtube.music") ||
                     ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
         }
+    }
+
+    public void createNewVibrationModeDialog(AppInfo appInfo) {
+        dialogBuilder = new AlertDialog.Builder(this.getContext());
+        final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
+        vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
+        switch (appInfo.vibrationMode) {
+            case "NA":
+                vibrationModeRadioGroup.check(R.id.radioButtonNA);
+                break;
+            case "1":
+                vibrationModeRadioGroup.check(R.id.radioButtonMode1);
+                break;
+            case "2":
+                vibrationModeRadioGroup.check(R.id.radioButtonMode2);
+                break;
+            case "3":
+                vibrationModeRadioGroup.check(R.id.radioButtonMode3);
+                break;
+        }
+        descriptionTextView = vibrationModeDialog.findViewById(R.id.descriptionTextView);
+        dialogBuilder.setView(vibrationModeDialog);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }
