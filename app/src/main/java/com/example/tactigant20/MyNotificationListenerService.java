@@ -38,4 +38,8 @@ public class MyNotificationListenerService extends NotificationListenerService {
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
     }
+
+    public void showToast(String msg){
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
 }
