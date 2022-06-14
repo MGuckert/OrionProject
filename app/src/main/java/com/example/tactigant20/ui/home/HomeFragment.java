@@ -1,8 +1,11 @@
 package com.example.tactigant20.ui.home;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -11,6 +14,8 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelUuid;
 import android.util.Log;
@@ -22,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
@@ -51,9 +57,9 @@ public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,@Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.d(TAG_HOME,"Appel de onCreate dans HomeFragment");
+        Log.d(TAG_HOME, "Appel de onCreate dans HomeFragment");
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -65,54 +71,59 @@ public class HomeFragment extends Fragment {
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         // Bouton bluetooth
-        BluetoothButton=root.findViewById(R.id.bluetoothButton);
+        BluetoothButton = root.findViewById(R.id.bluetoothButton);
         BluetoothButton.setOnClickListener(BluetoothButtonListener);
-        BluetoothSettingsButton=root.findViewById(R.id.ScanBouton);
+        BluetoothSettingsButton = root.findViewById(R.id.ScanBouton);
         BluetoothSettingsButton.setOnClickListener(BluetoothButtonListener);
 
         // Texte de chargement
         TextedeChargement = root.findViewById(R.id.TextedeChargement);
+
         return root;
     }
 
     // Ce qu'il se passe quand on appuie sur le bouton principal
     private View.OnClickListener BluetoothButtonListener = new View.OnClickListener() {
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ScanBouton:
-                    TextedeChargement.setVisibility(View.VISIBLE);
+                    // Demande l'activation de la blueotooth
                     if(!adapter.isEnabled()){
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intent,0);
                     }
+                    Log.d("Bluetooth", "Chargement...");
+                    TextedeChargement.setVisibility(View.VISIBLE);
                     // Filtre
                         if (scanner != null) {
-                            UUID BLP_SERVICE_UUID = UUID.fromString("00001810-0000-1000-8000-00805f9b34fb"); // A changer en fonction de celui de la carte
-                            UUID[] serviceUUIDs = new UUID[]{BLP_SERVICE_UUID};
+                        Log.d("Bluetooth", "Scanner !=null");
+                            String[] peripheralAddresses = new String[]{"4D:BD:7E:5B:D5:71"};
+                            // Build filters list
                             List<ScanFilter> filters = null;
-                            if(serviceUUIDs != null) {
+                            if (peripheralAddresses != null) {
                                 filters = new ArrayList<>();
-                                for (UUID serviceUUID : serviceUUIDs) {
+                                for (String address : peripheralAddresses) {
                                     ScanFilter filter = new ScanFilter.Builder()
-                                            .setServiceUuid(new ParcelUuid(serviceUUID))
+                                            .setDeviceAddress(address)
                                             .build();
                                     filters.add(filter);
                                 }
                             }
                         //Type de scan
-                            ScanSettings scanSettings = new ScanSettings.Builder()
-                                    .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-                                    .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                                    .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
-                                    .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
-                                    .setReportDelay(0L)
-                                    .build();
-                        //scanner.startScan(filters, scanSettings, scanCallback);
+                        ScanSettings scanSettings = new ScanSettings.Builder()
+                                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+                                .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+                                .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
+                                .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
+                                .setReportDelay(0L)
+                                .build();
+                        scanner.startScan(filters, scanSettings, scanCallback);
                         Log.d("Bluetooth", "scan started");
                     }  else {
-                        Log.e("Bluetooth", "could not get scanner object");
+                        Log.d("Bluetooth", "could not get scanner object");
                     }
                     break;
                 case R.id.bluetoothButton:
@@ -121,6 +132,7 @@ public class HomeFragment extends Fragment {
                     intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
                     startActivity(intentOpenBluetoothSettings);
                     break;
+                default: break;
             }
         };
     };
@@ -137,8 +149,10 @@ public class HomeFragment extends Fragment {
     }
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
+
         public void onScanResult(int callbackType, ScanResult result) {
             BluetoothDevice device = result.getDevice();
+            Log.d("Bluetooth","device");
             // ...do whatever you want with this found device
             TextedeChargement.setVisibility(View.INVISIBLE);
         }

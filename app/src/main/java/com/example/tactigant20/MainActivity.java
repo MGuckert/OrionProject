@@ -1,11 +1,16 @@
 package com.example.tactigant20;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -46,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     BottomNavigationView bottomNavigationView;
-
     //viewPager
     private ViewPager viewPager;
 
@@ -242,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private String queltype(String NomNotif) {
-        // J'ai pas testé cette fonction encore
         // Retourne le type de vibration associé à la notification "NomNotif" dans le fichier "enregistrement"
         String filePath = "enregistrement.txt"; // Probablement à changer pour mettre quelque chose de plus précis (si ça ne marche pas comme ça)
         Scanner scanner = null;
