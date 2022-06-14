@@ -49,6 +49,7 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private ActivityMainBinding binding;
 
     BottomNavigationView bottomNavigationView;
@@ -138,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(100, builder.build());
+        // Demande d'activer la bluetooth
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 0);
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -307,7 +314,5 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
 
 }
