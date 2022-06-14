@@ -1,11 +1,16 @@
 package com.example.tactigant20.ui.home;
 
+import static android.bluetooth.BluetoothDevice.TRANSPORT_LE;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
@@ -82,6 +87,7 @@ public class HomeFragment extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ScanBouton:
+                    Log.d("Bluetooth", "Bouton appuyé");
                     TextedeChargement.setVisibility(View.VISIBLE);
 
                     BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -139,6 +145,7 @@ public class HomeFragment extends Fragment {
         public void onScanResult(int callbackType, ScanResult result) {
             BluetoothDevice device = result.getDevice();
             // ...do whatever you want with this found device
+            BluetoothGatt gatt = device.connectGatt(getContext(), true, bluetoothGattCallback, TRANSPORT_LE);
             Log.d("Bluetooth", "1");
         }
 
@@ -152,6 +159,12 @@ public class HomeFragment extends Fragment {
         public void onScanFailed(int errorCode) {
             // Ignore for now
             Log.d("Bluetooth", "3");
+        }
+    };
+    private final BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
+
+        public void  onCharacteristicRead (BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value, int status){
+            Log.d("Bluetooth", "Connecté");
         }
     };
 }
