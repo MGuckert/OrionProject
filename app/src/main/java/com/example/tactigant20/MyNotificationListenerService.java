@@ -28,6 +28,9 @@ public class MyNotificationListenerService extends NotificationListenerService {
         String packageName = sbn.getPackageName();
         Notification notif = sbn.getNotification();
         String category = notif.category;
+        if(category != null)
+            if (!category.equals("sys"))//attention risque de NullPointerException !!!
+                showToast("Notification reçu : "+packageName);
         Log.d(TAG, "notificationPosted");
         Log.i(TAG, "package name : "+packageName);
         Log.i(TAG,"notification : "+notif);
