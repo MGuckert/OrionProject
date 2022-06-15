@@ -1,6 +1,7 @@
 package com.example.tactigant20.ui.home;
 
 import static android.bluetooth.BluetoothDevice.TRANSPORT_LE;
+import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,8 @@ import com.example.tactigant20.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Queue;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
@@ -43,6 +47,10 @@ public class HomeFragment extends Fragment {
     private Button BluetoothSettingsButton;
     private TextView TextedeChargement;
     private static final String TAG_HOME = "DebugHomeFragment";
+
+    private Queue<Runnable> commandQueue;
+    private boolean commandQueueBusy;
+    private ImageView ImageConfirmationConnection;
 
 
     @Override
@@ -75,6 +83,8 @@ public class HomeFragment extends Fragment {
 
         // Texte de chargement
         TextedeChargement = root.findViewById(R.id.TextedeChargement);
+        // Image de confirmation de connexion
+        ImageConfirmationConnection = root.findViewById(R.id.connectionvalide);
         return root;
     }
 
@@ -89,7 +99,6 @@ public class HomeFragment extends Fragment {
                 case R.id.ScanBouton:
                     Log.d("Bluetooth", "Bouton appuyé");
                     TextedeChargement.setVisibility(View.VISIBLE);
-
                     BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
                     BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
 
@@ -147,6 +156,9 @@ public class HomeFragment extends Fragment {
             // ...do whatever you want with this found device
             BluetoothGatt gatt = device.connectGatt(getContext(), true, bluetoothGattCallback, TRANSPORT_LE);
             Log.d("Bluetooth", "1");
+            TextedeChargement.setVisibility(View.INVISIBLE);
+            ImageConfirmationConnection.setVisibility(View.VISIBLE);
+            //gatt.readCharacteristic();
         }
 
         @Override
@@ -163,8 +175,16 @@ public class HomeFragment extends Fragment {
     };
     private final BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
 
-        public void  onCharacteristicRead (BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value, int status){
-            Log.d("Bluetooth", "Connecté");
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicWrite(gatt, characteristic, status);
+            Log.d("Bluetooth", "Characteristic " + characteristic.getUuid() + " written");
+        }
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicRead(gatt, characteristic, status);
+            byte[] value = characteristic.getValue();
+            Log.d("Bluetooth", "Valeur lue : " + value);
         }
     };
 }
