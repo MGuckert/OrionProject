@@ -12,6 +12,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
@@ -45,6 +47,10 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private Button BluetoothButton;
     private Button BluetoothSettingsButton;
+    private Button LectureButton;
+    private Button EcritureButton;
+
+    private BluetoothGatt gatt;
     private TextView TextedeChargement;
     private static final String TAG_HOME = "DebugHomeFragment";
 
@@ -52,6 +58,7 @@ public class HomeFragment extends Fragment {
     private boolean commandQueueBusy;
     private ImageView ImageConfirmationConnection;
 
+    private String btn ="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,8 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
+
         // Texte
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
@@ -80,6 +89,10 @@ public class HomeFragment extends Fragment {
         BluetoothButton.setOnClickListener(BluetoothButtonListener);
         BluetoothSettingsButton = root.findViewById(R.id.ScanBouton);
         BluetoothSettingsButton.setOnClickListener(BluetoothButtonListener);
+        LectureButton = root.findViewById(R.id.LectureBtn);
+        LectureButton.setOnClickListener(BluetoothButtonListener);
+        EcritureButton = root.findViewById(R.id.EcritureBtn);
+        EcritureButton.setOnClickListener(BluetoothButtonListener);
 
         // Texte de chargement
         TextedeChargement = root.findViewById(R.id.TextedeChargement);
@@ -134,6 +147,13 @@ public class HomeFragment extends Fragment {
                     intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
                     startActivity(intentOpenBluetoothSettings);
                     break;
+                case R.id.LectureBtn:
+                    btn="Lecture";
+                    gatt.discoverServices();
+                    break;
+                case R.id.EcritureBtn:
+                    btn="Ecriture";
+                    break;
                 default: break;
             }
         };
@@ -153,12 +173,10 @@ public class HomeFragment extends Fragment {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             BluetoothDevice device = result.getDevice();
+            Log.d("Bluetooth", device.getName());
             // ...do whatever you want with this found device
-            BluetoothGatt gatt = device.connectGatt(getContext(), true, bluetoothGattCallback, TRANSPORT_LE);
-            Log.d("Bluetooth", "1");
-            TextedeChargement.setVisibility(View.INVISIBLE);
-            ImageConfirmationConnection.setVisibility(View.VISIBLE);
-            //gatt.readCharacteristic();
+            gatt = device.connectGatt(getContext(), true, bluetoothGattCallback, TRANSPORT_LE);
+            Log.d("Bluetooth", "Scan réussi");
         }
 
         @Override
@@ -170,21 +188,58 @@ public class HomeFragment extends Fragment {
         @Override
         public void onScanFailed(int errorCode) {
             // Ignore for now
-            Log.d("Bluetooth", "3");
+            Log.d("Bluetooth", "Erreur Scan");
         }
     };
+
     private final BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
 
         @Override
-        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            super.onCharacteristicWrite(gatt, characteristic, status);
-            Log.d("Bluetooth", "Characteristic " + characteristic.getUuid() + " written");
+        public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
+            if(status == GATT_SUCCESS) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    // We successfully connected, proceed with service discovery
+                    TextedeChargement.setVisibility(View.INVISIBLE);
+                    ImageConfirmationConnection.setVisibility(View.VISIBLE);
+                    Log.d("Bluetooth", "CONNECTE");
+
+
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    // We successfully disconnected on our own request
+                    gatt.close();
+                } else {
+                    // We're CONNECTING or DISCONNECTING, ignore for now
+                }
+            } else {
+                // An error happened...figure out what happened!
+                gatt.close();
+            }}
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            Log.d("Bluetooth", "Lecture1");
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                List<BluetoothGattService> services = gatt.getServices();
+                for (BluetoothGattService service : services) {
+                    List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
+                    for (BluetoothGattCharacteristic characteristic : characteristics) {
+                        ///Once you have a characteristic object, you can perform read/write
+                        //operations with it
+                        if(btn=="Lecture") {
+                            gatt.readCharacteristic(characteristic);
+                        }
+                        if (btn=="Ecriture"){
+
+                        }
+                    }
+                }
+            }
         }
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
             byte[] value = characteristic.getValue();
-            Log.d("Bluetooth", "Valeur lue : " + value);
+            Log.d("Bluetooth", String.valueOf(value));
+
         }
     };
 }
