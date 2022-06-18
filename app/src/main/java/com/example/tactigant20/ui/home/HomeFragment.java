@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment {
     private Queue<Runnable> commandQueue;
     private boolean commandQueueBusy;
     private ImageView ImageConfirmationConnection;
+    private ImageView ImageConfirmationDeConnection;
 
     private String btn ="";
 
@@ -98,6 +99,8 @@ public class HomeFragment extends Fragment {
         TextedeChargement = root.findViewById(R.id.TextedeChargement);
         // Image de confirmation de connexion
         ImageConfirmationConnection = root.findViewById(R.id.connectionvalide);
+        // Image d'erreur de connexion
+        ImageConfirmationDeConnection= root.findViewById(R.id.connectioninvalide);
         return root;
     }
 
@@ -111,6 +114,7 @@ public class HomeFragment extends Fragment {
             switch (v.getId()) {
                 case R.id.ScanBouton:
                     Log.d("Bluetooth", "Bouton appuyé");
+                    ImageConfirmationDeConnection.setVisibility(View.INVISIBLE);
                     TextedeChargement.setVisibility(View.VISIBLE);
                     BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
                     BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
@@ -153,6 +157,7 @@ public class HomeFragment extends Fragment {
                     break;
                 case R.id.EcritureBtn:
                     btn="Ecriture";
+                    gatt.discoverServices();
                     break;
                 default: break;
             }
@@ -199,6 +204,7 @@ public class HomeFragment extends Fragment {
             if(status == GATT_SUCCESS) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     // We successfully connected, proceed with service discovery
+                    ImageConfirmationDeConnection.setVisibility(View.INVISIBLE);
                     TextedeChargement.setVisibility(View.INVISIBLE);
                     ImageConfirmationConnection.setVisibility(View.VISIBLE);
                     Log.d("Bluetooth", "CONNECTE");
@@ -206,6 +212,8 @@ public class HomeFragment extends Fragment {
 
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     // We successfully disconnected on our own request
+                    ImageConfirmationConnection.setVisibility(View.INVISIBLE);
+                    ImageConfirmationDeConnection.setVisibility(View.VISIBLE);
                     gatt.close();
                 } else {
                     // We're CONNECTING or DISCONNECTING, ignore for now
