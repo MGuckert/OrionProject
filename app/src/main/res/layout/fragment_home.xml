@@ -18,42 +18,42 @@
         tools:layout_editor_absoluteX="43dp" />
 
     <Button
-        android:id="@+id/bluetoothButton"
+        android:id="@+id/bluetoothSettingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:layout_marginEnd="30dp"
-        android:text="Settings"
+        android:text="@string/settings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.824"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/ScanBouton"
+        android:id="@+id/scanButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="92dp"
-        android:text="Scan"
-        app:layout_constraintEnd_toStartOf="@+id/bluetoothButton"
+        android:text="@string/scan"
+        app:layout_constraintEnd_toStartOf="@+id/bluetoothSettingsButton"
         app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/TextedeChargement"
+        android:id="@+id/texteDeChargement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginTop="172dp"
-        android:text="Chargement..."
+        android:text="@string/chargement"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/connectionvalide"
+        android:id="@+id/connexionValide"
         android:layout_width="243dp"
         android:layout_height="122dp"
         android:layout_marginTop="124dp"
@@ -64,30 +64,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/LectureBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="292dp"
-        android:text="Lecture"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/EcritureBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginTop="292dp"
-        android:layout_marginEnd="30dp"
-        android:text="LED"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
-        android:id="@+id/connectioninvalide"
+        android:id="@+id/connexionInvalide"
         android:layout_width="241dp"
         android:layout_height="303dp"
         android:layout_marginTop="36dp"
@@ -97,11 +75,33 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btndeconnection"
+        android:id="@+id/lectureButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="292dp"
+        android:text="@string/lecture"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/ecritureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="292dp"
+        android:layout_marginEnd="30dp"
+        android:text="@string/led"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/deconnexionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="340dp"
-        android:text="Disconnect"
+        android:text="@string/disconnect"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
