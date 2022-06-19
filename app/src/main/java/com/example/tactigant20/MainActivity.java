@@ -359,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();

@@ -34,6 +34,7 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
 
     @NonNull
     @Override
+    //Fonction permettant de former la liste d'applications à partir de la liste d'AppInfos et du layout d'un item app_item_layout
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         AppInfo current = apps.get(position);
         View view = convertView;
@@ -49,17 +50,6 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
             vibrationModeTextView.setText("N/A");
         else
             vibrationModeTextView.setText(String.format("Mode %s", current.vibrationMode));
-
-//        try {
-//            PackageInfo packageInfo = packageManager.getPackageInfo(current.info.packageName, 0);
-//
-//            if (!TextUtils.isEmpty(current.info.packageName)) {
-//                TextView subtitle = view.findViewById(R.id.appSubtitle);
-//                subtitle.setText(current.info.packageName);
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
 
         ImageView iconImageView = view.findViewById(R.id.iconImage);
         Drawable icon = current.info.loadIcon(packageManager);

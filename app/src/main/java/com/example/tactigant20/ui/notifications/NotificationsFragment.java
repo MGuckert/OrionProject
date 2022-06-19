@@ -110,6 +110,7 @@ public class NotificationsFragment extends Fragment {
         binding = null;
     }
 
+    //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
     class LoadAppInfoTask extends AsyncTask<Integer,Integer, List<AppInfo>> {
 
         @Override
@@ -152,7 +153,7 @@ public class NotificationsFragment extends Fragment {
             adapter = new AppAdapter(getContext(),appInfos);
             appListView.setAdapter(adapter);
         }
-
+        //Fonction filtrant les applications affichées dans la liste (applis de base + toutes les applis installées par l'utilisateur
         protected boolean filter(ApplicationInfo appInfo, PackageManager packageManager) {
             return (appInfo.packageName.equals("com.google.android.apps.docs") ||
                     appInfo.packageName.equals("com.google.android.gm") ||
@@ -169,7 +170,7 @@ public class NotificationsFragment extends Fragment {
                     ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
         }
     }
-
+    //Fonction créant la fenêtre pop-up qui permet de choisir son mode de vibration
     public void createNewVibrationModeDialog(AppInfo appInfo) {
         dialogBuilder = new AlertDialog.Builder(this.getContext());
         final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
