@@ -12,9 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.ui.home.HomeFragment;
+import com.example.tactigant20.ui.notifications.AppAdapter;
 import com.example.tactigant20.ui.notifications.AppInfo;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
@@ -30,19 +33,28 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ActivityMainBinding binding;
 
     BottomNavigationView bottomNavigationView;
 
@@ -62,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
         createNotificationChannel();
         super.onCreate(savedInstanceState);
-        com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Création de la toolbar
@@ -76,19 +88,22 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.nav_view);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                item -> {
-                    switch (item.getItemId()) {
-                        case R.id.navigation_vibrations:
-                            viewPager.setCurrentItem(0);
-                            break;
-                        case R.id.navigation_home:
-                            viewPager.setCurrentItem(1);
-                            break;
-                        case R.id.navigation_notifications:
-                            viewPager.setCurrentItem(2);
-                            break;
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.navigation_vibrations:
+                                viewPager.setCurrentItem(0);
+                                break;
+                            case R.id.navigation_home:
+                                viewPager.setCurrentItem(1);
+                                break;
+                            case R.id.navigation_notifications:
+                                viewPager.setCurrentItem(2);
+                                break;
+                        }
+                        return false;
                     }
-                    return false;
                 });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -117,9 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
         setupViewPager(viewPager);
-
         // Paramètres de la notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
                 .setSmallIcon(R.drawable.ic_home_black_24dp)
@@ -147,13 +160,12 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(1);
     }
 
-    private static class ViewPagerAdapter extends FragmentStatePagerAdapter {
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
-        @NonNull
         @Override
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
@@ -220,16 +232,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingsMain.class);
         startActivity(intent);
     }
-
-    /*
     public static void cancelNotification(Context ctx, int notifyId) {
         // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
-        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
         nMgr.cancel(notifyId);
     }
-
-     */
-
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -245,82 +253,69 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
-    private String quelMode(String NomNotif) {
-        // Retourne le mode de vibration associé à la notification "NomNotif" dans le fichier "enregistrement"
-        FileInputStream inputStream = null;
+
+    private void writeInFile(String s, int mode) {
+        // On vient éditer le fichier "vibration_modes_data"
+        //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
+        //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
+        FileOutputStream fos = null;
         try {
-            inputStream = openFileInput("enregistrement.txt");
+            fos = openFileOutput("vibration_modes_data.txt", mode);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        int content = 0;
-        StringBuilder notif= new StringBuilder();
-        String mode="";
-        Log.d("Storage","Initialisation....");
-        while (true){
-            try {
-                assert inputStream != null;
-                if ((content = inputStream.read()) == -1) break;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //On extrait l'information concernant la notifs
-            if((char)content !=' ') {
-                notif.append((char) content);
-            }
-            else{
-                Log.d("Storage","Notifs : "+notif);
-                // On verifie si elle correspond à "NomNotifs"
-                if (notif.toString().equals(NomNotif)) {
-                    Log.d("Storage","Correspond !");
-                    // On avance de 2 caractéres (: ) content
-                    try {
-                        content=inputStream.read();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        content=inputStream.read();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    // On extrait l'information concernant le mode
-                    while (true) {
-                        try {
-                            if ((content = inputStream.read()) == -1) break;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        //On extrait l'information concernant la notifs
-                        if ((char) content != '\n') {
-                            mode = mode + (char) content;
-                        }
-                        else {
-                            Log.d("Storage",mode);
-                            return mode;
-                        }
-                    }
-                }
-                else {
-                    Log.d("Storage","Ne correspond pas !");
-                    try {
-                        content = inputStream.read();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //On finit d'extraire la fin de la ligne qui ne sert plus à rien
-                    while ((char) content != '\n') {
-                        try {
-                            content = inputStream.read();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    notif = new StringBuilder();
-                }
-            }
+        try {
+            fos.write(s.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
+    private void saveVibrationMode(String packageName, String vibrationMode) {
+        //On sauvegarde le mode de vibration "vibrationMode" pour l'application "packageName"
+        //On lit d'abord le fichier en ajoutant chaque ligne dans une String "fileData" tant que la ligne correspond à l'app n'a pas été trouvée
+        //Si on atteint la fin du fichier, alors on ajoute la ligne adaptée à la fin
+        //Sinon, on remplace la ligne correspondante, puis on rajoute toutes les lignes d'après à fileData; enfin, on utilise writeInFile avec MODE_PRIVATE pour remplacer
+        //le contenu du fichier (seule la ligne correspondante à "packageName" a changé)
+        FileInputStream inputStream = null;
+        try {
+            inputStream = openFileInput("vibration_modes_data.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String fileData = ""; //Chaîne de caractères dans laquelle on stocke les lignes du fichier qu'on ne modifie pas
+        if (inputStream != null) {
+            InputStreamReader inputReader = new InputStreamReader(inputStream);
+            BufferedReader buffReader = new BufferedReader(inputReader);
+
+            String line = null;
+            do {
+                try {
+                    line = buffReader.readLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileData += line + "\n";
+            } while (line != null && (line.length() <= packageName.length() || !line.substring(0,packageName.length()).equals(packageName)));
+            if (line != null) { //Si line n'est pas nulle, c'est que line contient la ligne qui nous intéresse
+                fileData = fileData.substring(0,fileData.length()-line.length()-1); //On la retire de fileData, et on la remplace par celle avec le bon mode de vibration
+                fileData += packageName + " : " + vibrationMode + "\n";
+                do { //On récupère alors les autres lignes
+                    try {
+                        line = buffReader.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (line != null)
+                        fileData += line + "\n";
+                } while (line != null);
+                System.err.println("FileData: \n" + fileData);
+                writeInFile(fileData,MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
+            }
+            else
+                writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
+        }
         try {
             inputStream.close();
         } catch (IOException e) {
@@ -351,8 +346,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
- */
-
     //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
@@ -363,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.radioButtonNA:
                 if (checked)
-                    currentItem.vibrationMode = "NA";
+                    currentItem.vibrationMode = "N";
                 break;
             case R.id.radioButtonMode1:
                 if (checked)
@@ -380,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
         }
         this.notificationsFragment.setFromIndex(this.notificationsFragment.getCurrentItemPosition(), currentItem);
         this.notificationsFragment.getAdapter().notifyDataSetChanged();
+        this.saveVibrationMode(currentItem.info.packageName,currentItem.vibrationMode);
         dialog.dismiss();
     }
 }
