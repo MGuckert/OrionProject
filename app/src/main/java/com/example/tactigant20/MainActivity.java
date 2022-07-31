@@ -244,110 +244,70 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    private String quelMode(String NomNotif) {
-        // Retourne le mode de vibration associé à la notification "NomNotif" dans le fichier "enregistrement"
-        FileInputStream inputStream = null;
-        try {
-            inputStream = openFileInput("enregistrement.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        int content = 0;
-        StringBuilder notif= new StringBuilder();
-        String mode="";
-        Log.d("Storage","Initialisation....");
-        while (true){
-            try {
-                assert inputStream != null;
-                if ((content = inputStream.read()) == -1) break;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //On extrait l'information concernant la notifs
-            if((char)content !=' ') {
-                notif.append((char) content);
-            }
-            else{
-                Log.d("Storage","Notifs : "+notif);
-                // On verifie si elle correspond à "NomNotifs"
-                if (notif.toString().equals(NomNotif)) {
-                    Log.d("Storage","Correspond !");
-                    // On avance de 2 caractéres (: ) content
-                    try {
-                        content=inputStream.read();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        content=inputStream.read();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    // On extrait l'information concernant le mode
-                    while (true) {
-                        try {
-                            if ((content = inputStream.read()) == -1) break;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        //On extrait l'information concernant la notifs
-                        if ((char) content != '\n') {
-                            mode = mode + (char) content;
-                        }
-                        else {
-                            Log.d("Storage",mode);
-                            return mode;
-                        }
-                    }
-                }
-                else {
-                    Log.d("Storage","Ne correspond pas !");
-                    try {
-                        content = inputStream.read();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //On finit d'extraire la fin de la ligne qui ne sert plus à rien
-                    while ((char) content != '\n') {
-                        try {
-                            content = inputStream.read();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    notif = new StringBuilder();
-                }
-            }
-        }
-
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "UNKNOWN";
-
-    }
-
-     */
-
-/*
-    private void stockage(String s, int mode) {
-        // On vient éditer le fichier "enregistrement"
+    private void writeInFile(String s, int mode) {
+        // On vient éditer le fichier "vibration_modes_data"
         //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
         //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
         FileOutputStream fos = null;
         try {
-            fos = openFileOutput("enregistrement.txt", mode);
+            fos = openFileOutput("vibration_modes_data.txt", mode);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         try {
-            assert fos != null;
             fos.write(s.getBytes());
             fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveVibrationMode(String packageName, String vibrationMode) {
+        //On sauvegarde le mode de vibration "vibrationMode" pour l'application "packageName"
+        //On lit d'abord le fichier en ajoutant chaque ligne dans une String "fileData" tant que la ligne correspond à l'app n'a pas été trouvée
+        //Si on atteint la fin du fichier, alors on ajoute la ligne adaptée à la fin
+        //Sinon, on remplace la ligne correspondante, puis on rajoute toutes les lignes d'après à fileData; enfin, on utilise writeInFile avec MODE_PRIVATE pour remplacer
+        //le contenu du fichier (seule la ligne correspondante à "packageName" a changé)
+        FileInputStream inputStream = null;
+        try {
+            inputStream = openFileInput("vibration_modes_data.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String fileData = ""; //Chaîne de caractères dans laquelle on stocke les lignes du fichier qu'on ne modifie pas
+        if (inputStream != null) {
+            InputStreamReader inputReader = new InputStreamReader(inputStream);
+            BufferedReader buffReader = new BufferedReader(inputReader);
+
+            String line = null;
+            do {
+                try {
+                    line = buffReader.readLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileData += line + "\n";
+            } while (line != null && (line.length() <= packageName.length() || !line.substring(0,packageName.length()).equals(packageName)));
+            if (line != null) { //Si line n'est pas nulle, c'est que line contient la ligne qui nous intéresse
+                fileData = fileData.substring(0,fileData.length()-line.length()-1); //On la retire de fileData, et on la remplace par celle avec le bon mode de vibration
+                fileData += packageName + " : " + vibrationMode + "\n";
+                do { //On récupère alors les autres lignes
+                    try {
+                        line = buffReader.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (line != null)
+                        fileData += line + "\n";
+                } while (line != null);
+                System.err.println("FileData: \n" + fileData);
+                writeInFile(fileData,MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
+            }
+            else
+                writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
+        }
+        try {
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -365,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.radioButtonNA:
                 if (checked)
-                    currentItem.vibrationMode = "NA";
+                    currentItem.vibrationMode = "N";
                 break;
             case R.id.radioButtonMode1:
                 if (checked)
@@ -382,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
         }
         this.notificationsFragment.setFromIndex(this.notificationsFragment.getCurrentItemPosition(), currentItem);
         this.notificationsFragment.getAdapter().notifyDataSetChanged();
+        this.saveVibrationMode(currentItem.info.packageName,currentItem.vibrationMode);
         dialog.dismiss();
     }
 }
