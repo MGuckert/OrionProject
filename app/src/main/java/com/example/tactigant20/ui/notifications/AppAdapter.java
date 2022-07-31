@@ -46,7 +46,7 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
         TextView title = view.findViewById(R.id.titleTextView);
         title.setText(current.label);
         TextView vibrationModeTextView = view.findViewById(R.id.vibrationModeTextView);
-        if (current.vibrationMode.equals("NA"))
+        if (current.vibrationMode.equals("N"))
             vibrationModeTextView.setText("N/A");
         else
             vibrationModeTextView.setText(String.format("Mode %s", current.vibrationMode));
