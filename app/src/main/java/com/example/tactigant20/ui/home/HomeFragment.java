@@ -73,8 +73,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
-
         // Boutons pour le Bluetooth
 
         // Lance le scan et se connecte à la carte si possible
@@ -105,6 +103,11 @@ public class HomeFragment extends Fragment {
 
         // Image d'erreur/absence de connexion
         imageConfirmationDeConnection= root.findViewById(R.id.connexionInvalide);
+
+        if (adapter == null || !adapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 1);
+        }
 
         return root;
     }
