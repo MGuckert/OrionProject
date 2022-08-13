@@ -1,7 +1,5 @@
 package com.example.tactigant20.ui.notifications;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
@@ -20,20 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class NotificationsFragment extends Fragment {
@@ -47,36 +36,6 @@ public class NotificationsFragment extends Fragment {
     private AlertDialog dialog;
 
     private static final String TAG_NOTIFS = "DebugNotifsFragment";
-
-    private String loadVibrationMode(String notifName) {
-        FileInputStream inputStream = null;
-        try {
-            inputStream = getContext().openFileInput("vibration_modes_data.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (inputStream != null) {
-            InputStreamReader inputReader = new InputStreamReader(inputStream);
-            BufferedReader buffReader = new BufferedReader(inputReader);
-
-            String line = null;
-            do {
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.err.println(line);
-                int n = notifName.length();
-                if ( line != null && n < line.length()) {
-                    if (line.substring(0, n).equals(notifName)) {
-                        return line.substring(line.length()-2, line.length());
-                    }
-                }
-            } while (line != null);
-        }
-        return "UNKNOWN";
-    }
 
     public int getCurrentItemPosition() {
         return currentItemPosition;
@@ -158,30 +117,13 @@ public class NotificationsFragment extends Fragment {
 
             List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
             System.err.println(infos.size());
-            File vibration_modes_data = new File(getContext().getFilesDir(),"vibration_modes_data.txt");
-            if (!vibration_modes_data.exists()) {
-                try {
-                    getContext().openFileOutput("vibration_modes_data.txt",MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
 
             for (ApplicationInfo info:infos) {
                 if (filter(info, packageManager)) {
                     AppInfo app = new AppInfo();
                     app.info = info;
                     app.label = (String) info.loadLabel(packageManager);
-                    //On cherche si le fichier "vibration_modes_data.txt" existe : si c'est le cas, alors on essaie de lire les données
-                    //Sinon, on affecte aucun mode de vibration aux applications
-                    //On lit les données du fichier pour trouver l'application correspondante
-                    String mode = loadVibrationMode(app.info.packageName);
-                    System.err.println(mode);
-                    if (mode.equals("UNKNOWN"))
-                        app.vibrationMode = "N";
-                    else
-                        app.vibrationMode = mode;
-                    System.err.println(app.info.packageName + " : " + app.vibrationMode);
+                    app.vibrationMode = "NA";
                     appList.add(app);
                 }
             }
@@ -220,7 +162,7 @@ public class NotificationsFragment extends Fragment {
         final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
         RadioGroup vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
         switch (appInfo.vibrationMode) {
-            case "N":
+            case "NA":
                 vibrationModeRadioGroup.check(R.id.radioButtonNA);
                 break;
             case "1":
