@@ -12,12 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.ui.home.HomeFragment;
-import com.example.tactigant20.ui.notifications.AppAdapter;
 import com.example.tactigant20.ui.notifications.AppInfo;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
@@ -33,28 +30,17 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ActivityMainBinding binding;
 
     BottomNavigationView bottomNavigationView;
 
@@ -74,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
         createNotificationChannel();
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Création de la toolbar
@@ -88,22 +74,19 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.nav_view);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.navigation_vibrations:
-                                viewPager.setCurrentItem(0);
-                                break;
-                            case R.id.navigation_home:
-                                viewPager.setCurrentItem(1);
-                                break;
-                            case R.id.navigation_notifications:
-                                viewPager.setCurrentItem(2);
-                                break;
-                        }
-                        return false;
+                item -> {
+                    switch (item.getItemId()) {
+                        case R.id.navigation_vibrations:
+                            viewPager.setCurrentItem(0);
+                            break;
+                        case R.id.navigation_home:
+                            viewPager.setCurrentItem(1);
+                            break;
+                        case R.id.navigation_notifications:
+                            viewPager.setCurrentItem(2);
+                            break;
                     }
+                    return false;
                 });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -160,12 +143,13 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(1);
     }
 
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+    private static class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
@@ -232,10 +216,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingsMain.class);
         startActivity(intent);
     }
+
     public static void cancelNotification(Context ctx, int notifyId) {
         // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
-        String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
+        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(notifyId);
     }
     private void createNotificationChannel() {
@@ -262,23 +246,24 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         int content = 0;
-        String notif="";
+        StringBuilder notif= new StringBuilder();
         String mode="";
         Log.d("Storage","Initialisation....");
         while (true){
             try {
-                if (!((content=inputStream.read())!=-1)) break;
+                assert inputStream != null;
+                if ((content = inputStream.read()) == -1) break;
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //On extrait l'information concernant la notifs
             if((char)content !=' ') {
-                notif = notif + (char) content;
+                notif.append((char) content);
             }
             else{
                 Log.d("Storage","Notifs : "+notif);
                 // On verifie si elle correspond à "NomNotifs"
-                if (notif.equals(NomNotif)) {
+                if (notif.toString().equals(NomNotif)) {
                     Log.d("Storage","Correspond !");
                     // On avance de 2 caractéres (: ) content
                     try {
@@ -294,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                     // On extrait l'information concernant le mode
                     while (true) {
                         try {
-                            if (!((content = inputStream.read()) != -1)) break;
+                            if ((content = inputStream.read()) == -1) break;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -323,12 +308,10 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    notif="";
+                    notif = new StringBuilder();
                 }
             }
         }
-
-
 
         try {
             inputStream.close();
@@ -352,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         try {
+            assert fos != null;
             fos.write(s.getBytes());
             fos.close();
         } catch (IOException e) {

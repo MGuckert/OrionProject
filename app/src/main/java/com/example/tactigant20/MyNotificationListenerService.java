@@ -1,11 +1,7 @@
 package com.example.tactigant20;
 
 import android.app.Notification;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -15,7 +11,7 @@ import android.widget.Toast;
 //pour cela taper dans la barre de recherche des paramètres android "accéder aux notifications"
 public class MyNotificationListenerService extends NotificationListenerService {
     private Context context;
-    private final static String TAG = "NotificationInfo";
+    private final static String TAG_MNLS = "NotificationInfo";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,10 +27,10 @@ public class MyNotificationListenerService extends NotificationListenerService {
         if(category != null)
             if (!category.equals("sys"))//attention risque de NullPointerException !!!
                 showToast("Notification reçu : "+packageName);
-        Log.d(TAG, "notificationPosted");
-        Log.i(TAG, "package name : "+packageName);
-        Log.i(TAG,"notification : "+notif);
-        Log.i(TAG,"category : "+category);
+        Log.d(TAG_MNLS, "notificationPosted");
+        Log.i(TAG_MNLS, "package name : "+packageName);
+        Log.i(TAG_MNLS,"notification : "+notif);
+        Log.i(TAG_MNLS,"category : "+category);
     }
 
     @Override

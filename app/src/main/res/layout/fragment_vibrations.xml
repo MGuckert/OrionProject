@@ -14,7 +14,8 @@
         android:layout_height="250dp"
         android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        tools:ignore="ContentDescription" />
 
     <ScrollView
         android:id="@+id/scrollView"

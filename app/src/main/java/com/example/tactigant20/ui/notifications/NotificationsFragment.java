@@ -10,9 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -36,10 +34,7 @@ public class NotificationsFragment extends Fragment {
     private int currentItemPosition;
     private AppAdapter adapter;
 
-    private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    private RadioGroup vibrationModeRadioGroup;
-    private TextView descriptionTextView;
 
     private static final String TAG_NOTIFS = "DebugNotifsFragment";
 
@@ -84,20 +79,17 @@ public class NotificationsFragment extends Fragment {
         LoadAppInfoTask task = new LoadAppInfoTask();
         task.execute();
 
-        appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                System.err.println(i);
-                currentItemPosition = i;
-                AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
-                System.err.println(currentItem.label);
-                createNewVibrationModeDialog(currentItem);
+        appListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            System.err.println(i);
+            currentItemPosition = i;
+            AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
+            System.err.println(currentItem.label);
+            createNewVibrationModeDialog(currentItem);
 //                TextView vibrationModeTextView = (TextView) root.findViewById(R.id.vibrationModeTextView);
 //                if (currentItem.vibrationMode.equals("NA"))
 //                    vibrationModeTextView.setText("N/A");
 //                else
 //                    vibrationModeTextView.setText(String.format("Mode %s", currentItem.vibrationMode));
-            }
         });
         return root;
     }
@@ -137,12 +129,7 @@ public class NotificationsFragment extends Fragment {
                 }
             }
 
-            Collections.sort(appList, new Comparator<AppInfo>() {
-                @Override
-                public int compare(AppInfo appInfo1, AppInfo appInfo2) {
-                    return appInfo1.label.compareTo(appInfo2.label);
-                }
-            });
+            Collections.sort(appList, (appInfo1, appInfo2) -> appInfo1.label.compareTo(appInfo2.label));
 
             return appList;
         }
@@ -172,9 +159,9 @@ public class NotificationsFragment extends Fragment {
     }
     //Fonction créant la fenêtre pop-up qui permet de choisir son mode de vibration
     public void createNewVibrationModeDialog(AppInfo appInfo) {
-        dialogBuilder = new AlertDialog.Builder(this.getContext());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getContext());
         final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
-        vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
+        RadioGroup vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
         switch (appInfo.vibrationMode) {
             case "NA":
                 vibrationModeRadioGroup.check(R.id.radioButtonNA);
@@ -189,7 +176,7 @@ public class NotificationsFragment extends Fragment {
                 vibrationModeRadioGroup.check(R.id.radioButtonMode3);
                 break;
         }
-        descriptionTextView = vibrationModeDialog.findViewById(R.id.descriptionTextView);
+        TextView descriptionTextView = vibrationModeDialog.findViewById(R.id.descriptionTextView);
         dialogBuilder.setView(vibrationModeDialog);
         dialog = dialogBuilder.create();
         dialog.show();
