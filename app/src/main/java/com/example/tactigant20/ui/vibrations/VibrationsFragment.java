@@ -10,11 +10,12 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentVibrationsBinding;
 
-public class VibrationsFragment extends Fragment{
+public class VibrationsFragment extends Fragment implements View.OnClickListener {
 
     private FragmentVibrationsBinding binding;
     private ImageView modeVibrationImage;
@@ -29,6 +30,8 @@ public class VibrationsFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG_VIBRAS,"Appel de onCreate dans VibrationsFragment");
+        VibrationsViewModel vibrationsViewModel =
+                new ViewModelProvider(this).get(VibrationsViewModel.class);
 
         binding = FragmentVibrationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -38,25 +41,33 @@ public class VibrationsFragment extends Fragment{
 
         // Création des boutons
         Button mode1 = root.findViewById(R.id.buttonMode1);
-        mode1.setOnClickListener(this::clickButtonMode1);
+        mode1.setOnClickListener(this);
         Button mode2 = root.findViewById(R.id.buttonMode2);
-        mode2.setOnClickListener(this::clickButtonMode2);
+        mode2.setOnClickListener(this);
         Button mode3 = root.findViewById(R.id.buttonMode3);
-        mode3.setOnClickListener(this::clickButtonMode3);
+        mode3.setOnClickListener(this);
 
         return root;
     }
 
-    private void clickButtonMode1(View v) {
-        modeVibrationImage.setImageResource(R.drawable.wip_mode_1);
-    }
-
-    private void clickButtonMode2(View v) {
-        modeVibrationImage.setImageResource(R.drawable.wip_mode_2);
-    }
-
-    private void clickButtonMode3(View v) {
-        modeVibrationImage.setImageResource(R.drawable.wip_mode_3);
+    @Override
+    public void onClick(View v) {
+        Log.d(TAG_VIBRAS,"appel de onClick dans VibrationsFragment");
+        switch (v.getId()) {
+            case R.id.buttonMode1:
+                // Toast toast1 = Toast.makeText(getContext(), "Mode 1", Toast.LENGTH_SHORT);
+                // toast1.show();
+                modeVibrationImage.setImageResource(R.drawable.wip_mode_1);
+                break;
+            case R.id.buttonMode2:
+                modeVibrationImage.setImageResource(R.drawable.wip_mode_2);
+                break;
+            case R.id.buttonMode3:
+                modeVibrationImage.setImageResource(R.drawable.wip_mode_3);
+                break;
+            default:
+                break;
+        }
     }
 
 
