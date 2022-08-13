@@ -34,4 +34,13 @@
     <string name="app_title">App title</string>
     <string name="com_package_app">com.package.app</string>
     <string name="app_icon">app icon</string>
+    <string name="text_settings">Settings WIP</string>
+    <string name="vibration_mode">Vibration Mode</string>
+    <string name="scan">Scan</string>
+    <string name="chargement">Chargement…</string>
+    <string name="lecture">Lecture</string>
+    <string name="led">Led</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="n_a">N/A</string>
+    <string name="modes_de_vibration">Modes de vibration</string>
 </resources>
