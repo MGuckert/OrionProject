@@ -23,7 +23,6 @@ import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class NotificationsFragment extends Fragment {
