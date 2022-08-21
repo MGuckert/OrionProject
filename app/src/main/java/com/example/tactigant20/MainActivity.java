@@ -115,7 +115,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         setupViewPager(viewPager);
+
         // Paramètres de la notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
                 .setSmallIcon(R.drawable.ic_home_black_24dp)
@@ -217,11 +219,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /*
     public static void cancelNotification(Context ctx, int notifyId) {
         // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
         NotificationManager nMgr = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(notifyId);
     }
+
+     */
+
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -237,6 +243,8 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+    /*
     private String quelMode(String NomNotif) {
         // Retourne le mode de vibration associé à la notification "NomNotif" dans le fichier "enregistrement"
         FileInputStream inputStream = null;
@@ -323,7 +331,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+     */
 
+/*
     private void stockage(String s, int mode) {
         // On vient éditer le fichier "enregistrement"
         //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
@@ -342,6 +352,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+ */
 
     //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
     public void onRadioButtonClicked(View view) {
