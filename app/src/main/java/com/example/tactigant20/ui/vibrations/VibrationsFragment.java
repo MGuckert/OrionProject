@@ -30,8 +30,6 @@ public class VibrationsFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG_VIBRAS,"Appel de onCreate dans VibrationsFragment");
-        VibrationsViewModel vibrationsViewModel =
-                new ViewModelProvider(this).get(VibrationsViewModel.class);
 
         binding = FragmentVibrationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
