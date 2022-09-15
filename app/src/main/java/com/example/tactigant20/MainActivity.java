@@ -12,12 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.ui.home.HomeFragment;
-import com.example.tactigant20.ui.notifications.AppAdapter;
 import com.example.tactigant20.ui.notifications.AppInfo;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
@@ -33,24 +30,17 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -321,8 +311,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return "UNKNOWN";
 
     }
 
