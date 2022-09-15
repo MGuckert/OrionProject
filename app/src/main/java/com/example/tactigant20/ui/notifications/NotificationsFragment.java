@@ -78,7 +78,7 @@ public class NotificationsFragment extends Fragment {
                 int n = notifName.length();
                 if ( line != null && n < line.length()) {
                     if (line.substring(0, n).equals(notifName)) {
-                        return line.substring(line.length()-2, line.length());
+                        return line.substring(line.length()-1, line.length());
                     }
                 }
             } while (line != null);
