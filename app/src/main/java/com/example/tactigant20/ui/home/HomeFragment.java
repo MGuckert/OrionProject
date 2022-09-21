@@ -3,9 +3,6 @@ package com.example.tactigant20.ui.home;
 import static android.bluetooth.BluetoothDevice.TRANSPORT_LE;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -30,7 +27,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.R;
@@ -104,9 +105,12 @@ public class HomeFragment extends Fragment {
         // Image d'erreur/absence de connexion
         imageConfirmationDeConnection= root.findViewById(R.id.connexionInvalide);
 
+        // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
+        ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {});
         if (adapter == null || !adapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 1);
+            startActivityForResult.launch(enableBtIntent);
         }
 
         return root;
