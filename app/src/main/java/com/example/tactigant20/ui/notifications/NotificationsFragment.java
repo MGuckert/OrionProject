@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -53,12 +54,12 @@ public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "DebugNotifsFragment";
 
-    private String loadVibrationMode(String notifName) {
+    public static String loadVibrationMode(String notifName, Context context) {
         //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier
         // "vibration_modes_data.txt", et "UNKNOWN" si aucune donnée pour cette application n'a été sauvegardée.
         FileInputStream inputStream = null;
         try {
-            inputStream = getContext().openFileInput("vibration_modes_data.txt");
+            inputStream = context.openFileInput("vibration_modes_data.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -178,7 +179,7 @@ public class NotificationsFragment extends Fragment {
                     //On cherche si le fichier "vibration_modes_data.txt" existe : si c'est le cas, alors on essaie de lire les données
                     //Sinon, on affecte aucun ("N/A", correspondant à "N" dans le code) mode de vibration à l'application
                     //On lit les données du fichier pour trouver l'application correspondante
-                    String mode = loadVibrationMode(app.info.packageName);
+                    String mode = loadVibrationMode(app.info.packageName, getContext());
                     if (mode.equals("UNKNOWN"))
                         app.vibrationMode = "N";
                     else

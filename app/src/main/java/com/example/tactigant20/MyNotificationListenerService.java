@@ -7,6 +7,16 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.example.tactigant20.ui.notifications.NotificationsFragment;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 //pour que cela fonctionne correctement il semble qu'il faille autoriser l'application à obtenir toutes les notifications
 //pour cela taper dans la barre de recherche des paramètres android "accéder aux notifications"
 public class MyNotificationListenerService extends NotificationListenerService {
@@ -24,9 +34,10 @@ public class MyNotificationListenerService extends NotificationListenerService {
         String packageName = sbn.getPackageName();
         Notification notif = sbn.getNotification();
         String category = notif.category;
+        String vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
         if(category != null)
             if (!category.equals("sys"))//attention risque de NullPointerException !!!
-                showToast("Notification reçu : "+packageName);
+                showToast("Notification reçu : "+packageName + " Vibration mode : " + vibrationMode);
         Log.d(TAG_MNLS, "notificationPosted");
         Log.i(TAG_MNLS, "package name : "+packageName);
         Log.i(TAG_MNLS,"notification : "+notif);
@@ -38,7 +49,5 @@ public class MyNotificationListenerService extends NotificationListenerService {
         super.onNotificationRemoved(sbn);
     }
 
-    public void showToast(String msg){
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-    }
+    public void showToast(String msg){Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();}
 }
