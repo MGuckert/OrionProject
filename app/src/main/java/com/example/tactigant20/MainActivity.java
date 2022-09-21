@@ -44,12 +44,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final VibrationsFragment vibrationsFragment = new VibrationsFragment();
+    private final HomeFragment homeFragment = new HomeFragment();
+    private final NotificationsFragment notificationsFragment = new NotificationsFragment();
+    private MenuItem prevMenuItem;
 
-    NotificationsFragment notificationsFragment;
-    MenuItem prevMenuItem;
-
-    ViewPager2 myViewPager2;
-    Adapter myAdapter;
+    private ViewPager2 myViewPager2;
 
     private static final String TAG_MAIN = "DebugMainActivity";
 
@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Création du système de swipe
         myViewPager2 = findViewById(R.id.vpPager);
-        myAdapter = new Adapter(getSupportFragmentManager(), getLifecycle());
-        myAdapter.addFragment(new VibrationsFragment());
-        myAdapter.addFragment(new HomeFragment());
-        myAdapter.addFragment(new NotificationsFragment());
+        Adapter myAdapter = new Adapter(getSupportFragmentManager(), getLifecycle());
+        myAdapter.addFragment(vibrationsFragment);
+        myAdapter.addFragment(homeFragment);
+        myAdapter.addFragment(notificationsFragment);
 
         // Création de la barre de navigation du bas
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
@@ -78,29 +78,17 @@ public class MainActivity extends AppCompatActivity {
 
         myViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
             // Cette fonction permet à la BottomNavigationView et au ViewPager2 de considérer l'un et l'autre
             @Override
             public void onPageSelected(int position) {
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
-                }
-                else
-                {
+                } else {
                     bottomNav.getMenu().getItem(0).setChecked(false);
                 }
                 Log.d("page",   ""+position);
                 bottomNav.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNav.getMenu().getItem(position);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
 
             }
 
@@ -146,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
-
 
         @NonNull
         @Override

@@ -92,8 +92,8 @@ public class HomeFragment extends Fragment {
         ecritureButton.setOnClickListener(this::cEcritureButton);
 
         // Se déconnecte de la carte
-        Button deconnection = root.findViewById(R.id.deconnexionButton);
-        deconnection.setOnClickListener(this::cDeconnectionButton);
+        Button deconnectionButton = root.findViewById(R.id.deconnexionButton);
+        deconnectionButton.setOnClickListener(this::cDeconnectionButton);
 
         // Texte de chargement
         texteDeChargement = root.findViewById(R.id.texteDeChargement);
@@ -103,6 +103,11 @@ public class HomeFragment extends Fragment {
 
         // Image d'erreur/absence de connexion
         imageConfirmationDeConnection= root.findViewById(R.id.connexionInvalide);
+
+        if (adapter == null || !adapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 1);
+        }
 
         return root;
     }
