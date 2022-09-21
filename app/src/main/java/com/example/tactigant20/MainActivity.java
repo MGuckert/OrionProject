@@ -19,8 +19,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.ui.home.HomeFragment;
@@ -31,6 +32,7 @@ import com.example.tactigant20.ui.settings.InfoActivity;
 import com.example.tactigant20.ui.settings.SettingsMain;
 import com.example.tactigant20.ui.vibrations.VibrationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -39,25 +41,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    BottomNavigationView bottomNavigationView;
 
-    //viewPager
-    private ViewPager viewPager;
-
-    //Fragments
-    VibrationsFragment vibrationsFragment;
-    HomeFragment menuFragment;
     NotificationsFragment notificationsFragment;
     MenuItem prevMenuItem;
+
+    ViewPager2 myViewPager2;
+    Adapter myAdapter;
 
     private static final String TAG_MAIN = "DebugMainActivity";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
         createNotificationChannel();
         super.onCreate(savedInstanceState);
@@ -68,35 +65,25 @@ public class MainActivity extends AppCompatActivity {
         Toolbar topAppBar=findViewById(R.id.topAppBar);
         setSupportActionBar(topAppBar);
 
-        //Initializing viewPager
-        viewPager = findViewById(R.id.vpPager);
+        // Création du système de swipe
+        myViewPager2 = findViewById(R.id.vpPager);
+        myAdapter = new Adapter(getSupportFragmentManager(), getLifecycle());
+        myAdapter.addFragment(new VibrationsFragment());
+        myAdapter.addFragment(new HomeFragment());
+        myAdapter.addFragment(new NotificationsFragment());
 
-        // Initializing the bottomNavigationView
-        bottomNavigationView = findViewById(R.id.nav_view);
+        // Création de la barre de navigation du bas
+        BottomNavigationView bottomNav = findViewById(R.id.nav_view);
+        bottomNav.setOnItemSelectedListener(navListener);
 
+        myViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
-        bottomNavigationView.setOnItemSelectedListener(
-                item -> {
-                    switch (item.getItemId()) {
-                        case R.id.navigation_vibrations:
-                            viewPager.setCurrentItem(0);
-                            break;
-                        case R.id.navigation_home:
-                            viewPager.setCurrentItem(1);
-                            break;
-                        case R.id.navigation_notifications:
-                            viewPager.setCurrentItem(2);
-                            break;
-                    }
-                    return false;
-                });
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
+            // Cette fonction permet à la BottomNavigationView et au ViewPager2 de considérer l'un et l'autre
             @Override
             public void onPageSelected(int position) {
                 if (prevMenuItem != null) {
@@ -104,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                    bottomNav.getMenu().getItem(0).setChecked(false);
                 }
-                Log.d("page",""+position);
-                bottomNavigationView.getMenu().getItem(position).setChecked(true);
-                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+                Log.d("page",   ""+position);
+                bottomNav.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNav.getMenu().getItem(position);
 
             }
 
@@ -116,8 +103,13 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
+
         });
-        setupViewPager(viewPager);
+
+        myViewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+        myViewPager2.setAdapter(myAdapter);
+        myViewPager2.setCurrentItem(1,false); // On commence sur HomeFragment
+
         // Paramètres de la notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
                 .setSmallIcon(R.drawable.ic_home_black_24dp)
@@ -125,47 +117,54 @@ public class MainActivity extends AppCompatActivity {
                 .setContentText("Batterie: 50 %")
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        // Fais apparaitre la notification
+        // Fait apparaitre la notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(100, builder.build());
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        vibrationsFragment=new VibrationsFragment();
-        menuFragment=new HomeFragment();
-        notificationsFragment=new NotificationsFragment();
+    private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
-        adapter.addFragment(vibrationsFragment);
-        adapter.addFragment(menuFragment);
-        adapter.addFragment(notificationsFragment);
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);
-    }
-
-    private static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
+        int itemId = item.getItemId();
+        if (itemId == R.id.navigation_vibrations) {
+            myViewPager2.setCurrentItem(0);
+        } else if (itemId == R.id.navigation_home) {
+            myViewPager2.setCurrentItem(1);
+        } else if (itemId == R.id.navigation_notifications) {
+            myViewPager2.setCurrentItem(2);
         }
+
+        return true;
+    };
+
+    // Ceci permet au "swiping" de savoir comment alterner entre les fragments
+    public static class Adapter extends FragmentStateAdapter {
+
+        private final ArrayList<Fragment> fragmentList = new ArrayList<>();
+
+        public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+
+
         @NonNull
         @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
+        public Fragment createFragment(int position) {
+            Log.d(TAG_MAIN, "Appel de createFragment dans Adapter");
+            return fragmentList.get(position);
         }
 
         public void addFragment(Fragment fragment) {
-            mFragmentList.add(fragment);
+            Log.d(TAG_MAIN, "Appel de addFragment dans Adapter");
+            fragmentList.add(fragment);
         }
 
+        @Override
+        public int getItemCount() {
+            Log.d(TAG_MAIN, "Appel de getItemcount dans Adapter");
+            return fragmentList.size();
+        }
     }
 
     // Création du menu de la toolbar
@@ -346,24 +345,28 @@ public class MainActivity extends AppCompatActivity {
         // Check which radio button was clicked
         AppInfo currentItem = this.notificationsFragment.getCurrentItem();
         Dialog dialog = this.notificationsFragment.getDialog();
-        switch (view.getId()) {
-            case R.id.radioButtonNA:
-                if (checked)
-                    currentItem.vibrationMode = "N";
-                break;
-            case R.id.radioButtonMode1:
-                if (checked)
-                    currentItem.vibrationMode = "1";
-                break;
-            case R.id.radioButtonMode2:
-                if (checked)
-                    currentItem.vibrationMode = "2";
-                break;
-            case R.id.radioButtonMode3:
-                if (checked)
-                    currentItem.vibrationMode = "3";
-                break;
+        int boutonRadio = view.getId();
+        if (boutonRadio == R.id.radioButtonNA) {
+            if (checked) {
+                currentItem.vibrationMode = "N";
+            }
         }
+        if (boutonRadio == R.id.radioButtonMode1) {
+            if (checked) {
+                currentItem.vibrationMode = "1";
+            }
+        }
+        if (boutonRadio == R.id.radioButtonMode2) {
+            if (checked) {
+                currentItem.vibrationMode = "2";
+            }
+        }
+        if (boutonRadio == R.id.radioButtonMode3) {
+            if (checked) {
+                currentItem.vibrationMode = "3";
+            }
+        }
+
         this.notificationsFragment.setFromIndex(this.notificationsFragment.getCurrentItemPosition(), currentItem);
         this.notificationsFragment.getAdapter().notifyDataSetChanged();
         this.saveVibrationMode(currentItem.info.packageName,currentItem.vibrationMode);
