@@ -3,7 +3,6 @@ package com.example.tactigant20;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,16 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
-
-import com.example.tactigant20.databinding.ActivityMainBinding;
-import com.example.tactigant20.ui.home.HomeFragment;
-import com.example.tactigant20.ui.notifications.AppInfo;
-import com.example.tactigant20.ui.notifications.NotificationsFragment;
-import com.example.tactigant20.ui.settings.HelpActivity;
-import com.example.tactigant20.ui.settings.InfoActivity;
-import com.example.tactigant20.ui.settings.SettingsMain;
-import com.example.tactigant20.ui.vibrations.VibrationsFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +22,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.tactigant20.databinding.ActivityMainBinding;
+import com.example.tactigant20.ui.home.HomeFragment;
+import com.example.tactigant20.ui.notifications.AppInfo;
+import com.example.tactigant20.ui.notifications.NotificationsFragment;
+import com.example.tactigant20.ui.settings.HelpActivity;
+import com.example.tactigant20.ui.settings.InfoActivity;
+import com.example.tactigant20.ui.settings.SettingsMain;
+import com.example.tactigant20.ui.vibrations.VibrationsFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,8 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ActivityMainBinding binding;
 
     BottomNavigationView bottomNavigationView;
 
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
         createNotificationChannel();
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Création de la toolbar
@@ -77,23 +74,21 @@ public class MainActivity extends AppCompatActivity {
         // Initializing the bottomNavigationView
         bottomNavigationView = findViewById(R.id.nav_view);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.navigation_vibrations:
-                                viewPager.setCurrentItem(0);
-                                break;
-                            case R.id.navigation_home:
-                                viewPager.setCurrentItem(1);
-                                break;
-                            case R.id.navigation_notifications:
-                                viewPager.setCurrentItem(2);
-                                break;
-                        }
-                        return false;
+
+        bottomNavigationView.setOnItemSelectedListener(
+                item -> {
+                    switch (item.getItemId()) {
+                        case R.id.navigation_vibrations:
+                            viewPager.setCurrentItem(0);
+                            break;
+                        case R.id.navigation_home:
+                            viewPager.setCurrentItem(1);
+                            break;
+                        case R.id.navigation_notifications:
+                            viewPager.setCurrentItem(2);
+                            break;
                     }
+                    return false;
                 });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -150,12 +145,13 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(1);
     }
 
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+    private static class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
@@ -222,12 +218,17 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingsMain.class);
         startActivity(intent);
     }
+
+    /*
     public static void cancelNotification(Context ctx, int notifyId) {
         // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
         nMgr.cancel(notifyId);
     }
+
+     */
+
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -255,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         try {
+            assert fos != null;
             fos.write(s.getBytes());
             fos.close();
         } catch (IOException e) {
@@ -274,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        String fileData = ""; //Chaîne de caractères dans laquelle on stocke les lignes du fichier qu'on ne modifie pas
+        StringBuilder fileData = new StringBuilder(); //Chaîne de caractères dans laquelle on stocke les lignes du fichier qu'on ne modifie pas
         if (inputStream != null) {
             InputStreamReader inputReader = new InputStreamReader(inputStream);
             BufferedReader buffReader = new BufferedReader(inputReader);
@@ -286,11 +288,11 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                fileData += line + "\n";
-            } while (line != null && (line.length() <= packageName.length() || !line.substring(0,packageName.length()).equals(packageName)));
+                fileData.append(line).append("\n");
+            } while (line != null && (line.length() <= packageName.length() || !line.startsWith(packageName)));
             if (line != null) { //Si line n'est pas nulle, c'est que line contient la ligne qui nous intéresse
-                fileData = fileData.substring(0,fileData.length()-line.length()-1); //On la retire de fileData, et on la remplace par celle avec le bon mode de vibration
-                fileData += packageName + " : " + vibrationMode + "\n";
+                fileData = new StringBuilder(fileData.substring(0, fileData.length() - line.length() - 1)); //On la retire de fileData, et on la remplace par celle avec le bon mode de vibration
+                fileData.append(packageName).append(" : ").append(vibrationMode).append("\n");
                 do { //On récupère alors les autres lignes
                     try {
                         line = buffReader.readLine();
@@ -298,15 +300,16 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     if (line != null)
-                        fileData += line + "\n";
+                        fileData.append(line).append("\n");
                 } while (line != null);
                 System.err.println("FileData: \n" + fileData);
-                writeInFile(fileData,MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
+                writeInFile(fileData.toString(),MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
             }
             else
                 writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
         }
         try {
+            assert inputStream != null;
             inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -314,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+/*
     private void stockage(String s, int mode) {
         // On vient éditer le fichier "enregistrement"
         //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
@@ -333,6 +336,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+ */
 
     //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
     public void onRadioButtonClicked(View view) {

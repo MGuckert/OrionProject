@@ -73,29 +73,27 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
-
         // Boutons pour le Bluetooth
 
         // Lance le scan et se connecte à la carte si possible
         Button scanButton = root.findViewById(R.id.scanButton);
-        scanButton.setOnClickListener(BluetoothButtonListener);
+        scanButton.setOnClickListener(this::cScanButton);
 
         // Ouvre les paramètres Bluetooth
         Button bluetoothSettingsButton = root.findViewById(R.id.bluetoothSettingsButton);
-        bluetoothSettingsButton.setOnClickListener(BluetoothButtonListener);
+        bluetoothSettingsButton.setOnClickListener(this::cBluetoothSettingsButton);
 
         // Lit les informations de la carte
         Button lectureButton = root.findViewById(R.id.lectureButton);
-        lectureButton.setOnClickListener(BluetoothButtonListener);
+        lectureButton.setOnClickListener(this::cLectureButton);
 
         // Envoie des informations à la carte
         Button ecritureButton = root.findViewById(R.id.ecritureButton);
-        ecritureButton.setOnClickListener(BluetoothButtonListener);
+        ecritureButton.setOnClickListener(this::cEcritureButton);
 
         // Se déconnecte de la carte
         Button deconnection = root.findViewById(R.id.deconnexionButton);
-        deconnection.setOnClickListener(BluetoothButtonListener);
+        deconnection.setOnClickListener(this::cDeconnectionButton);
 
         // Texte de chargement
         texteDeChargement = root.findViewById(R.id.texteDeChargement);
@@ -109,81 +107,99 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    // Ce qu'il se passe quand on appuie sur le bouton principal
-    private final View.OnClickListener BluetoothButtonListener = new View.OnClickListener() {
 
-        @SuppressLint("MissingPermission")
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.scanButton:
-                    Log.d(TAG_HOME_BLE, "Bouton pressé");
-                    imageConfirmationDeConnection.setVisibility(View.INVISIBLE);
-                    texteDeChargement.setVisibility(View.VISIBLE);
 
-                    adapter = BluetoothAdapter.getDefaultAdapter();
-                    scanner = adapter.getBluetoothLeScanner();
 
-                    if (scanner != null) {
-                        String[] peripheralAddresses = new String[]{"94:3C:C6:06:CC:1E"}; // MAC du dispositif
 
-                        // Liste des filtres
-                        List<ScanFilter> filters;
-                        // Toujours vrai ?
-                        filters = new ArrayList<>();
-                        for (String address : peripheralAddresses) {
-                            ScanFilter filter = new ScanFilter.Builder()
-                                    .setDeviceAddress(address)
-                                    .build();
-                            filters.add(filter);
-                        }
-                        // Paramètres de scan
-                        ScanSettings scanSettings = new ScanSettings.Builder()
-                                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-                                .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                                .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
-                                .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
-                                .setReportDelay(0L)
-                                .build();
-                        scanner.startScan(filters, scanSettings, scanCallback);
 
-                        Log.d(TAG_HOME_BLE, "Scan lancé");
-                    }  else {
-                        Log.e(TAG_HOME_BLE, "ERREUR : Impossible d'obtenir un scanner (onClick)");
-                    }
-                    break;
-                case R.id.bluetoothSettingsButton:
-                    Log.d(TAG_HOME, "Bouton paramètres Bluetooth pressé");
-                    Intent intentOpenBluetoothSettings = new Intent();
-                    intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
-                    startActivity(intentOpenBluetoothSettings);
-                    break;
-                case R.id.lectureButton:
-                    Log.d(TAG_HOME, "Bouton lecture pressé");
-                    if(ValeurDeConnexion) {
-                        btn="Lecture";
-                        gatt.discoverServices();
-                    }
-                    break;
-                case R.id.ecritureButton:
-                    Log.d(TAG_HOME, "Bouton écriture pressé");
-                    if(ValeurDeConnexion) {
-                        btn="Ecriture";
-                        gatt.discoverServices();
-                    }
-                    break;
-                case R.id.deconnexionButton:
-                    Log.d(TAG_HOME, "Bouton déconnexion pressé");
-                    if(ValeurDeConnexion) {
-                        gatt.disconnect();
-                        scanner.stopScan(scanCallback);
-                    }
-                    break;
-                default: break;
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void cScanButton(View v) {
+        Log.d(TAG_HOME_BLE, "Bouton pressé");
+        imageConfirmationDeConnection.setVisibility(View.INVISIBLE);
+        texteDeChargement.setVisibility(View.VISIBLE);
+
+        adapter = BluetoothAdapter.getDefaultAdapter();
+        scanner = adapter.getBluetoothLeScanner();
+
+        if (scanner != null) {
+            String[] peripheralAddresses = new String[]{"94:3C:C6:06:CC:1E"}; // MAC du dispositif
+
+            // Liste des filtres
+            List<ScanFilter> filters;
+            // Toujours vrai ?
+            filters = new ArrayList<>();
+            for (String address : peripheralAddresses) {
+                ScanFilter filter = new ScanFilter.Builder()
+                        .setDeviceAddress(address)
+                        .build();
+                filters.add(filter);
+            }
+            // Paramètres de scan
+            ScanSettings scanSettings = new ScanSettings.Builder()
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+                    .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+                    .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
+                    .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
+                    .setReportDelay(0L)
+                    .build();
+            try {
+                scanner.startScan(filters, scanSettings, scanCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG_HOME_BLE, "SecurityException dans cScanButton");
+            }
+
+            Log.d(TAG_HOME_BLE, "Scan lancé");
+        }  else {
+            Log.e(TAG_HOME_BLE, "ERREUR : Impossible d'obtenir un scanner (onClick)");
+        }
+    }
+
+    private void cBluetoothSettingsButton(View v) {
+        Log.d(TAG_HOME, "Bouton paramètres Bluetooth pressé");
+        Intent intentOpenBluetoothSettings = new Intent();
+        intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+        startActivity(intentOpenBluetoothSettings);
+    }
+
+    private void cLectureButton(View v) {
+        Log.d(TAG_HOME, "Bouton lecture pressé");
+        if(ValeurDeConnexion) {
+            btn="Lecture";
+            try {
+                gatt.discoverServices();
+            } catch (SecurityException e) {
+                Log.e(TAG_HOME_BLE, "SecurityException dans cLectureButton");
             }
         }
-    };
+    }
+
+    private void cEcritureButton(View v) {
+        Log.d(TAG_HOME, "Bouton écriture pressé");
+        if(ValeurDeConnexion) {
+            btn="Ecriture";
+            try {
+                gatt.discoverServices();
+            } catch (SecurityException e) {
+                Log.e(TAG_HOME_BLE, "SecurityException dans cEcritureButton");
+            }
+        }
+    }
+
+    private void cDeconnectionButton(View v) {
+        Log.d(TAG_HOME, "Bouton déconnexion pressé");
+        if(ValeurDeConnexion) {
+            try {
+                gatt.disconnect();
+                scanner.stopScan(scanCallback);
+            } catch (SecurityException e) {
+                Log.e(TAG_HOME_BLE, "SecurityException dans cDeconnectionButton");
+            }
+
+        }
+    }
 
     @Override
     public void onDestroyView() {
