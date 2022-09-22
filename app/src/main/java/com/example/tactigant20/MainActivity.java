@@ -319,13 +319,13 @@ public class MainActivity extends AppCompatActivity {
  */
 
     //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
-    public void onRadioButtonClicked(View view) {
+    public void onRadioButtonClicked(View v) {
         // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
+        boolean checked = ((RadioButton) v).isChecked();
         // Check which radio button was clicked
         AppInfo currentItem = this.notificationsFragment.getCurrentItem();
         Dialog dialog = this.notificationsFragment.getDialog();
-        int boutonRadio = view.getId();
+        int boutonRadio = v.getId();
         if (boutonRadio == R.id.radioButtonNA) {
             if (checked) {
                 currentItem.setVibrationMode("N");

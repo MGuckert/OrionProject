@@ -13,8 +13,6 @@ public class NotificationsViewModel extends ViewModel {
     private final MutableLiveData<String> mText;
 
     public NotificationsViewModel() {
-        Log.d(TAG_NOTIFS_VIEW,"Construction de NotificationsViewModel");
-
         mText = new MutableLiveData<>();
         mText.setValue("This is notifications fragment");
     }

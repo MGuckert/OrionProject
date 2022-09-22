@@ -1,9 +1,8 @@
 package com.example.tactigant20.ui.settings;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tactigant20.R;
 

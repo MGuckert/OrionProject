@@ -51,7 +51,6 @@ public class NotificationsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG_NOTIFS,"Appel de onCreate dans NotificationsFragment");
 
         //NotificationsViewModel notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
 
@@ -76,7 +75,6 @@ public class NotificationsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG_NOTIFS,"Appel de onDestroyView dans NotificationsFragment");
 
         super.onDestroyView();
         binding = null;
@@ -134,8 +132,6 @@ public class NotificationsFragment extends Fragment {
     public void setFromIndex(int position, AppInfo appInfo) {
         appList.set(position, appInfo);
     }
-
-
 
     //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
     class LoadAppInfoTask extends AsyncTask<Integer,Integer, List<AppInfo>> {
