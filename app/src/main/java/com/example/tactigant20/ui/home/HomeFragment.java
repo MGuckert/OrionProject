@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.tactigant20.MyNotificationListenerService;
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentHomeBinding;
 
@@ -53,10 +54,10 @@ public class HomeFragment extends Fragment {
     private ImageView imageConfirmationConnection;
     private ImageView imageConfirmationDeconnection;
 
-    private String btn ="";
+    public static String Mode ="";
 
     private boolean valeurDeConnexion = false;
-    private BluetoothGatt gatt;
+    private static BluetoothGatt gatt;
     private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
 
@@ -84,14 +85,6 @@ public class HomeFragment extends Fragment {
         // Ouvre les paramètres Bluetooth
         Button bluetoothSettingsButton = root.findViewById(R.id.bluetoothSettingsButton);
         bluetoothSettingsButton.setOnClickListener(this::cBluetoothSettingsButton);
-
-        // Lit les informations de la carte
-        Button lectureButton = root.findViewById(R.id.lectureButton);
-        lectureButton.setOnClickListener(this::cLectureButton);
-
-        // Envoie des informations à la carte
-        Button ecritureButton = root.findViewById(R.id.ecritureButton);
-        ecritureButton.setOnClickListener(this::cEcritureButton);
 
         // Se déconnecte de la carte
         Button deconnectionButton = root.findViewById(R.id.deconnexionButton);
@@ -164,30 +157,6 @@ public class HomeFragment extends Fragment {
         Intent intentOpenBluetoothSettings = new Intent();
         intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
         startActivity(intentOpenBluetoothSettings);
-    }
-
-    private void cLectureButton(View v) {
-        Log.d(TAG_HOME, "Bouton lecture pressé");
-        if(valeurDeConnexion) {
-            btn="Lecture";
-            try {
-                gatt.discoverServices();
-            } catch (SecurityException e) {
-                Log.e(TAG_HOME_BLE, "SecurityException dans cLectureButton");
-            }
-        }
-    }
-
-    private void cEcritureButton(View v) {
-        Log.d(TAG_HOME, "Bouton écriture pressé");
-        if(valeurDeConnexion) {
-            btn="Ecriture";
-            try {
-                gatt.discoverServices();
-            } catch (SecurityException e) {
-                Log.e(TAG_HOME_BLE, "SecurityException dans cEcritureButton");
-            }
-        }
     }
 
     private void cDeconnectionButton(View v) {
@@ -275,7 +244,7 @@ public class HomeFragment extends Fragment {
                     List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
                     for (BluetoothGattCharacteristic characteristic : characteristics) {
                         // On parcourt l'ensemble des caractéristiques trouvées
-                        if(btn.equals("Lecture")) {
+                        if(Mode.equals("Lecture")) {
                             Log.d(TAG_HOME_BLE, "On reçoit quelque chose de la carte !");
                             characteristic.getValue();
                             try {
@@ -284,14 +253,20 @@ public class HomeFragment extends Fragment {
                                 Log.e(TAG_HOME_BLE, "SecurityException dans onServicesDiscovered");
                             }
                         }
-                        if (btn.equals("Ecriture")) {
-                            Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");
-                            characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
-                            characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-                            try {
-                                gatt.writeCharacteristic(characteristic);
-                            } catch (SecurityException e) {
-                                Log.e(TAG_HOME_BLE, "SecurityException dans onServicesDiscovered");
+                        if (Mode.equals("Ecriture")) {
+                            switch(MyNotificationListenerService.vibrationMode) {
+                                case "1":
+                                Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");
+                                characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
+                                characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+                                try {
+                                    gatt.writeCharacteristic(characteristic);
+                                } catch (SecurityException e) {
+                                    Log.e(TAG_HOME_BLE, "SecurityException dans onServicesDiscovered");
+                                }
+                                case "2":
+                                case "3":
+                                    break;
                             }
                         }
                     }
@@ -322,4 +297,9 @@ public class HomeFragment extends Fragment {
             Log.d(TAG_HOME_BLE, "UUID de la caractéristique : " + characteristic.getUuid());
         }
     };
+
+    public static BluetoothGatt getGatt() {
+        return gatt;
+    }
+
 }
