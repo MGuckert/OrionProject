@@ -1,3 +1,4 @@
+// Inutile pour l'instant
 package com.example.tactigant20.ui.notifications;
 
 import android.util.Log;

@@ -3,7 +3,6 @@ package com.example.tactigant20.ui.home;
 import static android.bluetooth.BluetoothDevice.TRANSPORT_LE;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -213,12 +212,15 @@ public class HomeFragment extends Fragment {
     // Obtention d'appareil BLE
     private final ScanCallback scanCallback = new ScanCallback() {
         @RequiresApi(api = Build.VERSION_CODES.M)
-        @SuppressLint("MissingPermission")
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             BluetoothDevice device = result.getDevice();
-            Log.d(TAG_HOME_BLE, "Obtention de l'appareil BLE " + device.getName());
-            gatt = device.connectGatt(getContext(), true, bluetoothGattCallback, TRANSPORT_LE);
+            try {
+                Log.d(TAG_HOME_BLE, "Obtention de l'appareil BLE " + device.getName());
+                gatt = device.connectGatt(getContext(), true, bluetoothGattCallback, TRANSPORT_LE);
+            } catch (SecurityException e) {
+                Log.e(TAG_HOME_BLE, "SecurityException dans ScanCallBack");
+            }
             Log.d(TAG_HOME_BLE, "Scan réussi");
         }
 
@@ -230,7 +232,6 @@ public class HomeFragment extends Fragment {
 
     private final BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
 
-        @SuppressLint("MissingPermission")
         @Override
         public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
             if(status == GATT_SUCCESS) {
@@ -248,13 +249,21 @@ public class HomeFragment extends Fragment {
                     valeurDeConnexion =false;
                     imageConfirmationConnection.setVisibility(View.INVISIBLE);
                     imageConfirmationDeconnection.setVisibility(View.VISIBLE);
-                    gatt.close();
+                    try {
+                        gatt.close();
+                    } catch (SecurityException e) {
+                        Log.e(TAG_HOME_BLE, "SecurityException dans ScanCallBack");
+                    }
                     Log.d(TAG_HOME_BLE, "DECONNECTE");
                 }
 
             } else {
                 Log.e(TAG_HOME_BLE, "ERREUR : pas de connexion établie (onConnectionStateChange)");
-                gatt.close();
+                try {
+                    gatt.close();
+                } catch (SecurityException e) {
+                    Log.e(TAG_HOME_BLE, "SecurityException dans ScanCallBack");
+                }
             }}
 
 
