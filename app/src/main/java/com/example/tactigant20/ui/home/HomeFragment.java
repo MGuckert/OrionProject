@@ -33,6 +33,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.tactigant20.MyNotificationListenerService;
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentHomeBinding;
 
@@ -43,7 +44,7 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
-    private BluetoothGatt gatt;
+    private static BluetoothGatt gatt;
     private TextView texteDeChargement;
     private static final String TAG_HOME = "DebugHomeFragment";
     private static final String TAG_HOME_BLE = "Bluetooth";
@@ -51,7 +52,7 @@ public class HomeFragment extends Fragment {
     private ImageView imageConfirmationConnection;
     private ImageView imageConfirmationDeConnection;
 
-    private String btn ="";
+    public static String btn ="";
     private boolean ValeurDeConnexion = false;
 
     private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -84,14 +85,7 @@ public class HomeFragment extends Fragment {
         // Ouvre les paramètres Bluetooth
         Button bluetoothSettingsButton = root.findViewById(R.id.bluetoothSettingsButton);
         bluetoothSettingsButton.setOnClickListener(BluetoothButtonListener);
-
-        // Lit les informations de la carte
-        Button lectureButton = root.findViewById(R.id.lectureButton);
-        lectureButton.setOnClickListener(BluetoothButtonListener);
-
-        // Envoie des informations à la carte
-        Button ecritureButton = root.findViewById(R.id.ecritureButton);
-        ecritureButton.setOnClickListener(BluetoothButtonListener);
+        
 
         // Se déconnecte de la carte
         Button deconnection = root.findViewById(R.id.deconnexionButton);
@@ -158,20 +152,6 @@ public class HomeFragment extends Fragment {
                     Intent intentOpenBluetoothSettings = new Intent();
                     intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
                     startActivity(intentOpenBluetoothSettings);
-                    break;
-                case R.id.lectureButton:
-                    Log.d(TAG_HOME, "Bouton lecture pressé");
-                    if(ValeurDeConnexion) {
-                        btn="Lecture";
-                        gatt.discoverServices();
-                    }
-                    break;
-                case R.id.ecritureButton:
-                    Log.d(TAG_HOME, "Bouton écriture pressé");
-                    if(ValeurDeConnexion) {
-                        btn="Ecriture";
-                        gatt.discoverServices();
-                    }
                     break;
                 case R.id.deconnexionButton:
                     Log.d(TAG_HOME, "Bouton déconnexion pressé");
@@ -270,10 +250,19 @@ public class HomeFragment extends Fragment {
                             gatt.readCharacteristic(characteristic);
                         }
                         if (btn.equals("Ecriture")) {
-                            Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");
-                            characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
-                            characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-                            gatt.writeCharacteristic(characteristic);
+                            switch(MyNotificationListenerService.vibrationMode){
+                                case "1":
+                                    Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");
+                                    characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
+                                    characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+                                    gatt.writeCharacteristic(characteristic);
+                                    break;
+                                case "2":
+                                    break;
+                                case "3":
+                                    break;
+                            }
+
                         }
                     }
                 }
@@ -303,4 +292,8 @@ public class HomeFragment extends Fragment {
             Log.d(TAG_HOME_BLE, "UUID de la caractéristique : " + characteristic.getUuid());
         }
     };
+
+    public static BluetoothGatt GetGatt(){
+        return gatt;
+    }
 }

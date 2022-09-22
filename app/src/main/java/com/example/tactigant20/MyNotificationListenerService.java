@@ -1,6 +1,8 @@
 package com.example.tactigant20;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.tactigant20.ui.home.HomeFragment;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 
 import java.io.BufferedReader;
@@ -22,22 +25,30 @@ import java.io.InputStreamReader;
 public class MyNotificationListenerService extends NotificationListenerService {
     private Context context;
     private final static String TAG_MNLS = "NotificationInfo";
+    private BluetoothGatt gatt;
+    public static String vibrationMode;
+
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
         String packageName = sbn.getPackageName();
         Notification notif = sbn.getNotification();
         String category = notif.category;
-        String vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
+        vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
+        gatt = HomeFragment.GetGatt();
+        HomeFragment.btn = "Ecriture";
         if(category != null)
-            if (!category.equals("sys"))//attention risque de NullPointerException !!!
-                showToast("Notification reçu : "+packageName + " Vibration mode : " + vibrationMode);
+            if (!category.equals("sys")) {//attention risque de NullPointerException !!!
+                showToast("Notification reçu : " + packageName + " Vibration mode : " + vibrationMode);
+                gatt.discoverServices();
+            }
         Log.d(TAG_MNLS, "notificationPosted");
         Log.i(TAG_MNLS, "package name : "+packageName);
         Log.i(TAG_MNLS,"notification : "+notif);
