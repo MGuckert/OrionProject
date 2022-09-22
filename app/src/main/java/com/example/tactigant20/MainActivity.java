@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 myViewPager2;
 
-    private static final String TAG_MAIN = "DebugMainActivity";
+    private static final String TAG_MAIN = "debug_main_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {

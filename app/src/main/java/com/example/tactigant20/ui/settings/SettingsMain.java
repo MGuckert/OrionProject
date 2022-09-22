@@ -9,7 +9,7 @@ import com.example.tactigant20.R;
 
 public class SettingsMain extends AppCompatActivity {
 
-    private static final String TAG_SETTINGS = "DebugSettingsActivity";
+    private static final String TAG_SETTINGS = "debug_settings_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

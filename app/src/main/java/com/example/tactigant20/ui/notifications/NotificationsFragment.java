@@ -46,7 +46,7 @@ public class NotificationsFragment extends Fragment {
 
     private AlertDialog dialog;
 
-    private static final String TAG_NOTIFS = "DebugNotifsFragment";
+    private static final String TAG_NOTIFS = "debug_notifs_fragment";
 
     public static String loadVibrationMode(String notifName, Context context) {
         //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier

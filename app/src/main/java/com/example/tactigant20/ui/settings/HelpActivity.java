@@ -8,7 +8,7 @@ import android.util.Log;
 import com.example.tactigant20.R;
 public class HelpActivity extends AppCompatActivity {
 
-    private static final String TAG_HELP = "DebugHelpActivity";
+    private static final String TAG_HELP = "debug_help_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

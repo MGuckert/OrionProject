@@ -10,7 +10,7 @@ public class NotificationsViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    private static final String TAG_NOTIFS_VIEW = "DebugNotifsViewModel";
+    private static final String TAG_NOTIFS_VIEW = "debug_notifs_viewmodel";
 
     public NotificationsViewModel() {
         Log.d(TAG_NOTIFS_VIEW,"Construction de NotificationsViewModel");

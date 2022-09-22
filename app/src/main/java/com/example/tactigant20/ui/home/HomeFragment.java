@@ -46,8 +46,8 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private BluetoothGatt gatt;
     private TextView texteDeChargement;
-    private static final String TAG_HOME = "DebugHomeFragment";
-    private static final String TAG_HOME_BLE = "Bluetooth";
+    private static final String TAG_HOME = "debug_home_fragment";
+    private static final String TAG_HOME_BLE = "debug_bluetooth";
 
     private ImageView imageConfirmationConnection;
     private ImageView imageConfirmationDeConnection;

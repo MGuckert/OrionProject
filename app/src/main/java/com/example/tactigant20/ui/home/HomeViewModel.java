@@ -12,7 +12,7 @@ public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    private static final String TAG_HOME_VIEW = "DebugHomeViewModel";
+    private static final String TAG_HOME_VIEW = "debug_home_view_model";
 
 
     public HomeViewModel() {

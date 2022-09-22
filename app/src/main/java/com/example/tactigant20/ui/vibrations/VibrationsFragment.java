@@ -19,7 +19,7 @@ public class VibrationsFragment extends Fragment {
     private FragmentVibrationsBinding binding;
     private ImageView modeVibrationImage;
 
-    private static final String TAG_VIBRAS = "DebugVibrasFragment";
+    private static final String TAG_VIBRAS = "debug_vibras_fragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

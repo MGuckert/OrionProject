@@ -8,7 +8,7 @@ import android.util.Log;
 import com.example.tactigant20.R;
 public class InfoActivity extends AppCompatActivity {
 
-    private static final String TAG_INFO = "DebugInfoActivity";
+    private static final String TAG_INFO = "debug_info_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
