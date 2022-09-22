@@ -210,12 +210,6 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-/*
-    public void alerter(String s) {
-        Toast.makeText(getActivity(),s,Toast.LENGTH_LONG).show();
-    }
- */
-
     // Obtention d'appareil BLE
     private final ScanCallback scanCallback = new ScanCallback() {
         @RequiresApi(api = Build.VERSION_CODES.M)
