@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
     private ImageView imageConfirmationConnection;
     private ImageView imageConfirmationDeConnection;
 
-    public static String btn ="";
+    public static String Mode ="";
     private boolean ValeurDeConnexion = false;
 
     private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment {
         // Ouvre les paramètres Bluetooth
         Button bluetoothSettingsButton = root.findViewById(R.id.bluetoothSettingsButton);
         bluetoothSettingsButton.setOnClickListener(BluetoothButtonListener);
-        
+
 
         // Se déconnecte de la carte
         Button deconnection = root.findViewById(R.id.deconnexionButton);
@@ -244,12 +244,12 @@ public class HomeFragment extends Fragment {
                     List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
                     for (BluetoothGattCharacteristic characteristic : characteristics) {
                         // On parcourt l'ensemble des caractéristiques trouvées
-                        if(btn.equals("Lecture")) {
+                        if(Mode.equals("Lecture")) {
                             Log.d(TAG_HOME_BLE, "On reçoit quelque chose de la carte !");
                             characteristic.getValue();
                             gatt.readCharacteristic(characteristic);
                         }
-                        if (btn.equals("Ecriture")) {
+                        if (Mode.equals("Ecriture")) {
                             switch(MyNotificationListenerService.vibrationMode){
                                 case "1":
                                     Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");

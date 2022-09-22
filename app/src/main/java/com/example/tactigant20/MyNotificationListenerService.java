@@ -43,7 +43,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
         String category = notif.category;
         vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
         gatt = HomeFragment.GetGatt();
-        HomeFragment.btn = "Ecriture";
+        HomeFragment.Mode = "Ecriture";
         if(category != null)
             if (!category.equals("sys")) {//attention risque de NullPointerException !!!
                 showToast("Notification reçu : " + packageName + " Vibration mode : " + vibrationMode);
