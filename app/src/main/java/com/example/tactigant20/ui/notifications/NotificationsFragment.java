@@ -171,7 +171,7 @@ public class NotificationsFragment extends Fragment {
                     //Sinon, on affecte aucun ("N/A", correspondant à "N" dans le code) mode de vibration à l'application
                     //On lit les données du fichier pour trouver l'application correspondante
                     if (getContext() == null) {
-                        Log.e(TAG_NOTIFS, "getCOntext() renvoie null dans NotificationsFragment");
+                        Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
                     } else {
                         String mode = loadVibrationMode(app.getInfo().packageName, getContext());
                         if (mode.equals("UNKNOWN"))
