@@ -39,7 +39,7 @@
             android:name=".ui.settings.HelpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.settings.SettingsMain"
+            android:name=".ui.settings.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

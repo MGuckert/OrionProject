@@ -4,20 +4,28 @@ import android.content.pm.ApplicationInfo;
 
 //Objet application (avec ses informations, son nom, et son mode de vibration)
 public class AppInfo {
-    public ApplicationInfo info;
-    public String label;
-    public String vibrationMode;
+    private ApplicationInfo info;
+    private String label;
+    private String vibrationMode;
 
     public ApplicationInfo getInfo() {
-        return info;
+        return this.info;
     }
 
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     public String getVibrationMode() {
-        return vibrationMode;
+        return this.vibrationMode;
+    }
+
+    public void setInfo(ApplicationInfo info) {
+        this.info = info;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public void setVibrationMode(String vibrationMode) {

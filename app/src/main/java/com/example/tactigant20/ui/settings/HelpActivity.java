@@ -1,18 +1,17 @@
 package com.example.tactigant20.ui.settings;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.util.Log;
-
 import com.example.tactigant20.R;
+
 public class HelpActivity extends AppCompatActivity {
 
-    private static final String TAG_HELP = "DebugHelpActivity";
+    private static final String TAG_HELP = "debug_help_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG_HELP,"Appel de onCreate dans HelpActivity");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);

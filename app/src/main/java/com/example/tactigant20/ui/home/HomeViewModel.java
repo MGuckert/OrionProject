@@ -10,12 +10,11 @@ import androidx.lifecycle.ViewModel;
 
 public class HomeViewModel extends ViewModel {
 
+    private static final String TAG_HOME_VIEW = "debug_home_view_model";
+
     private final MutableLiveData<String> mText;
 
-    private static final String TAG_HOME_VIEW = "DebugHomeViewModel";
-
-
-    public HomeViewModel() {
+public HomeViewModel() {
         Log.d("TAG_HOME_VIEW","Construction de HomeViewModel dans HomeViewModel");
 
         mText = new MutableLiveData<>();

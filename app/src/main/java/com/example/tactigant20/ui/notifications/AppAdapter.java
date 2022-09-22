@@ -23,6 +23,7 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
     LayoutInflater layoutInflater;
     PackageManager packageManager;
     List<AppInfo> apps;
+
     public AppAdapter(Context context, List<AppInfo> apps) {
         super(context, R.layout.app_item_layout,apps);
         layoutInflater = LayoutInflater.from(context);
@@ -35,25 +36,25 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
     //Fonction permettant de former la liste d'applications à partir de la liste d'AppInfos et du layout d'un item app_item_layout
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         AppInfo current = apps.get(position);
-        View view = convertView;
+        View v = convertView;
 
-        if (view==null) {
-            view = layoutInflater.inflate(R.layout.app_item_layout, parent, false);
+        if (v==null) {
+            v = layoutInflater.inflate(R.layout.app_item_layout, parent, false);
         }
 
-        TextView title = view.findViewById(R.id.titleTextView);
-        title.setText(current.label);
-        TextView vibrationModeTextView = view.findViewById(R.id.vibrationModeTextView);
-        if (current.vibrationMode.equals("N"))
+        TextView title = v.findViewById(R.id.titleTextView);
+        title.setText(current.getLabel());
+        TextView vibrationModeTextView = v.findViewById(R.id.vibrationModeTextView);
+        if (current.getVibrationMode().equals("N"))
             vibrationModeTextView.setText("N/A");
         else
-            vibrationModeTextView.setText(String.format("Mode %s", current.vibrationMode));
+            vibrationModeTextView.setText(String.format("Mode %s", current.getVibrationMode()));
 
-        ImageView iconImageView = view.findViewById(R.id.iconImage);
-        Drawable icon = current.info.loadIcon(packageManager);
+        ImageView iconImageView = v.findViewById(R.id.iconImage);
+        Drawable icon = current.getInfo().loadIcon(packageManager);
 
         iconImageView.setImageDrawable(icon);
 
-        return view;
+        return v;
     }
 }

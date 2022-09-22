@@ -1,3 +1,4 @@
+// Inutile pour l'instant
 package com.example.tactigant20.ui.notifications;
 
 import android.util.Log;
@@ -8,13 +9,11 @@ import androidx.lifecycle.ViewModel;
 
 public class NotificationsViewModel extends ViewModel {
 
+    private static final String TAG_NOTIFS_VIEW = "debug_notifs_viewmodel";
+
     private final MutableLiveData<String> mText;
 
-    private static final String TAG_NOTIFS_VIEW = "DebugNotifsViewModel";
-
     public NotificationsViewModel() {
-        Log.d(TAG_NOTIFS_VIEW,"Construction de NotificationsViewModel");
-
         mText = new MutableLiveData<>();
         mText.setValue("This is notifications fragment");
     }
