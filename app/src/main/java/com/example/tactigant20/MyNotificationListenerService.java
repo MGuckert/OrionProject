@@ -17,13 +17,14 @@ public class MyNotificationListenerService extends NotificationListenerService {
 
     private final static String TAG_MNLS = "debug_mnls";
 
-    private final Context context = getApplicationContext();
+    private Context context;
 
     public static String vibrationMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
     }
 
     @Override
