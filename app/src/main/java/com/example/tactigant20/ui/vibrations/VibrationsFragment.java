@@ -16,10 +16,10 @@ import com.example.tactigant20.databinding.FragmentVibrationsBinding;
 
 public class VibrationsFragment extends Fragment {
 
+    private static final String TAG_VIBRAS = "debug_vibras_fragment";
+
     private FragmentVibrationsBinding binding;
     private ImageView modeVibrationImage;
-
-    private static final String TAG_VIBRAS = "debug_vibras_fragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,6 @@ public class VibrationsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG_VIBRAS,"Appel de onCreate dans VibrationsFragment");
 
         binding = FragmentVibrationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -48,22 +47,22 @@ public class VibrationsFragment extends Fragment {
     }
 
     private void cMode1Button(View v) {
-        // Toast toast1 = Toast.makeText(getContext(), "Mode 1", Toast.LENGTH_SHORT);
-        // toast1.show();
+        Log.d(TAG_VIBRAS, "Mode 1");
         modeVibrationImage.setImageResource(R.drawable.wip_mode_1);
     }
 
     private void cMode2Button(View v) {
+        Log.d(TAG_VIBRAS, "Mode 2");
         modeVibrationImage.setImageResource(R.drawable.wip_mode_2);
     }
 
     private void cMode3Button(View v) {
+        Log.d(TAG_VIBRAS, "Mode 3");
         modeVibrationImage.setImageResource(R.drawable.wip_mode_3);
     }
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG_VIBRAS,"appel de onDestroyView dans VibrationsFragment");
         super.onDestroyView();
         binding = null;
     }

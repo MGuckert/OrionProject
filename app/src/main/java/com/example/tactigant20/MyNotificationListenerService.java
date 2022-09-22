@@ -12,12 +12,14 @@ import com.example.tactigant20.ui.notifications.NotificationsFragment;
 //pour que cela fonctionne correctement il semble qu'il faille autoriser l'application à obtenir toutes les notifications
 //pour cela taper dans la barre de recherche des paramètres android "accéder aux notifications"
 public class MyNotificationListenerService extends NotificationListenerService {
-    private Context context;
-    private final static String TAG_MNLS = "NotificationInfo";
+
+    private final static String TAG_MNLS = "debug_mnls";
+
+    private final Context context = getApplicationContext();
+
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
     }
 
     @Override
@@ -29,7 +31,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
         String vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
         if(category != null)
             if (!category.equals("sys"))//attention risque de NullPointerException !!!
-                showToast("Notification reçu : "+packageName + " Vibration mode : " + vibrationMode);
+                showToast("Notification reçue : "+ packageName + " Vibration mode : " + vibrationMode);
         Log.d(TAG_MNLS, "notificationPosted");
         Log.i(TAG_MNLS, "package name : "+packageName);
         Log.i(TAG_MNLS,"notification : "+notif);
@@ -41,5 +43,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
         super.onNotificationRemoved(sbn);
     }
 
-    public void showToast(String msg){Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();}
+    public void showToast(String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
 }

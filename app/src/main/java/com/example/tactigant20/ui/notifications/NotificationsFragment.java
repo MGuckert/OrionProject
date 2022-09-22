@@ -15,11 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
@@ -34,19 +32,55 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 public class NotificationsFragment extends Fragment {
+
+    private static final String TAG_NOTIFS = "debug_notifs_fragment";
 
     private FragmentNotificationsBinding binding;
     private List<AppInfo> appList;
     private ListView appListView;
     private int currentItemPosition;
     private AppAdapter adapter;
-
     private AlertDialog dialog;
 
-    private static final String TAG_NOTIFS = "debug_notifs_fragment";
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG_NOTIFS,"Appel de onCreate dans NotificationsFragment");
+
+        //NotificationsViewModel notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
+
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+        appListView = root.findViewById(R.id.appList);
+        appListView.setTextFilterEnabled(true);
+        appList = new ArrayList<>();
+        LoadAppInfoTask task = new LoadAppInfoTask();
+        task.execute();
+
+        appListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            System.err.println(i);
+            currentItemPosition = i;
+            AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
+            System.err.println(currentItem.getLabel());
+            createNewVibrationModeDialog(currentItem);
+        });
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG_NOTIFS,"Appel de onDestroyView dans NotificationsFragment");
+
+        super.onDestroyView();
+        binding = null;
+    }
 
     public static String loadVibrationMode(String notifName, Context context) {
         //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier
@@ -101,44 +135,7 @@ public class NotificationsFragment extends Fragment {
         appList.set(position, appInfo);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG_NOTIFS,"Appel de onCreate dans NotificationsFragment");
-
-        NotificationsViewModel notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
-
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        appListView = root.findViewById(R.id.appList);
-        appListView.setTextFilterEnabled(true);
-        appList = new ArrayList<>();
-        LoadAppInfoTask task = new LoadAppInfoTask();
-        task.execute();
-
-        appListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            System.err.println(i);
-            currentItemPosition = i;
-            AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
-            System.err.println(currentItem.label);
-            createNewVibrationModeDialog(currentItem);
-        });
-        return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        Log.d(TAG_NOTIFS,"Appel de onDestroyView dans NotificationsFragment");
-
-        super.onDestroyView();
-        binding = null;
-    }
 
     //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
     class LoadAppInfoTask extends AsyncTask<Integer,Integer, List<AppInfo>> {
@@ -160,9 +157,7 @@ public class NotificationsFragment extends Fragment {
             if (!vibration_modes_data.exists()) {
                 try {
                     requireContext().openFileOutput("vibration_modes_data.txt",MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
+                } catch (FileNotFoundException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -170,21 +165,25 @@ public class NotificationsFragment extends Fragment {
             for (ApplicationInfo info:infos) {
                 if (filter(info)) {
                     AppInfo app = new AppInfo();
-                    app.info = info;
-                    app.label = (String) info.loadLabel(packageManager);
+                    app.setInfo(info);
+                    app.setLabel((String) info.loadLabel(packageManager));
                     //On cherche si le fichier "vibration_modes_data.txt" existe : si c'est le cas, alors on essaie de lire les données
                     //Sinon, on affecte aucun ("N/A", correspondant à "N" dans le code) mode de vibration à l'application
                     //On lit les données du fichier pour trouver l'application correspondante
-                    String mode = loadVibrationMode(app.info.packageName, getContext());
-                    if (mode.equals("UNKNOWN"))
-                        app.vibrationMode = "N";
-                    else
-                        app.vibrationMode = mode;
-                    appList.add(app);
+                    if (getContext() == null) {
+                        Log.e(TAG_NOTIFS, "getCOntext() renvoie null dans NotificationsFragment");
+                    } else {
+                        String mode = loadVibrationMode(app.getInfo().packageName, getContext());
+                        if (mode.equals("UNKNOWN"))
+                            app.setVibrationMode("N");
+                        else
+                            app.setVibrationMode(mode);
+                        appList.add(app);
+                    }
                 }
             }
 
-            Collections.sort(appList, Comparator.comparing(appInfo -> appInfo.label));
+            Collections.sort(appList, Comparator.comparing(AppInfo::getLabel));
 
             return appList;
         }
@@ -217,7 +216,7 @@ public class NotificationsFragment extends Fragment {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getContext());
         final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
         RadioGroup vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
-        switch (appInfo.vibrationMode) {
+        switch (appInfo.getVibrationMode()) {
             case "N":
                 vibrationModeRadioGroup.check(R.id.radioButtonNA);
                 break;
@@ -231,7 +230,6 @@ public class NotificationsFragment extends Fragment {
                 vibrationModeRadioGroup.check(R.id.radioButtonMode3);
                 break;
         }
-        TextView descriptionTextView = vibrationModeDialog.findViewById(R.id.descriptionTextView);
         dialogBuilder.setView(vibrationModeDialog);
         dialog = dialogBuilder.create();
         dialog.show();

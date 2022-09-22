@@ -12,7 +12,6 @@ public class InfoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG_INFO,"Appel de onCreate dans InfoActivity");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);

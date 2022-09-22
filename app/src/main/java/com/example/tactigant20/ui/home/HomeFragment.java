@@ -43,18 +43,21 @@ import java.util.List;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
-    private FragmentHomeBinding binding;
-    private BluetoothGatt gatt;
-    private TextView texteDeChargement;
+
     private static final String TAG_HOME = "debug_home_fragment";
     private static final String TAG_HOME_BLE = "debug_bluetooth";
 
+    private FragmentHomeBinding binding;
+
+    private TextView texteDeChargement;
+
     private ImageView imageConfirmationConnection;
-    private ImageView imageConfirmationDeConnection;
+    private ImageView imageConfirmationDeconnection;
 
     private String btn ="";
-    private boolean ValeurDeConnexion = false;
 
+    private boolean valeurDeConnexion = false;
+    private BluetoothGatt gatt;
     private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
 
@@ -68,7 +71,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.d(TAG_HOME, "Appel de onCreate dans HomeFragment");
         // HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -103,7 +105,7 @@ public class HomeFragment extends Fragment {
         imageConfirmationConnection = root.findViewById(R.id.connexionValide);
 
         // Image d'erreur/absence de connexion
-        imageConfirmationDeConnection= root.findViewById(R.id.connexionInvalide);
+        imageConfirmationDeconnection = root.findViewById(R.id.connexionInvalide);
 
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
         ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
@@ -116,18 +118,10 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-
-
-
-
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void cScanButton(View v) {
         Log.d(TAG_HOME_BLE, "Bouton pressé");
-        imageConfirmationDeConnection.setVisibility(View.INVISIBLE);
+        imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
         texteDeChargement.setVisibility(View.VISIBLE);
 
         adapter = BluetoothAdapter.getDefaultAdapter();
@@ -175,7 +169,7 @@ public class HomeFragment extends Fragment {
 
     private void cLectureButton(View v) {
         Log.d(TAG_HOME, "Bouton lecture pressé");
-        if(ValeurDeConnexion) {
+        if(valeurDeConnexion) {
             btn="Lecture";
             try {
                 gatt.discoverServices();
@@ -187,7 +181,7 @@ public class HomeFragment extends Fragment {
 
     private void cEcritureButton(View v) {
         Log.d(TAG_HOME, "Bouton écriture pressé");
-        if(ValeurDeConnexion) {
+        if(valeurDeConnexion) {
             btn="Ecriture";
             try {
                 gatt.discoverServices();
@@ -199,7 +193,7 @@ public class HomeFragment extends Fragment {
 
     private void cDeconnectionButton(View v) {
         Log.d(TAG_HOME, "Bouton déconnexion pressé");
-        if(ValeurDeConnexion) {
+        if(valeurDeConnexion) {
             try {
                 gatt.disconnect();
                 scanner.stopScan(scanCallback);
@@ -212,14 +206,12 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG_HOME,"Appel de onDestroyView dans HomeFragment");
         super.onDestroyView();
         binding = null;
     }
 
 /*
     public void alerter(String s) {
-        Log.d(TAG_HOME,"Appel de alerter dans HomeFragment");
         Toast.makeText(getActivity(),s,Toast.LENGTH_LONG).show();
     }
  */
@@ -236,15 +228,6 @@ public class HomeFragment extends Fragment {
             Log.d(TAG_HOME_BLE, "Scan réussi");
         }
 
-        /*
-        // Inutile ?
-        @Override
-        public void onBatchScanResults(List<ScanResult> results) {
-            // Ignore for now
-            Log.d(TAG_HOME_BLE, "Appel de onBatchScanResults");
-        }
-        */
-
         @Override
         public void onScanFailed(int errorCode) {
             Log.e(TAG_HOME_BLE, "ERREUR : scan (onScanFailed)");
@@ -259,18 +242,18 @@ public class HomeFragment extends Fragment {
             if(status == GATT_SUCCESS) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     // On s'est connecté à un appareil
-                    imageConfirmationDeConnection.setVisibility(View.INVISIBLE);
+                    imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
                     texteDeChargement.setVisibility(View.INVISIBLE);
-                    ValeurDeConnexion=true;
+                    valeurDeConnexion =true;
                     imageConfirmationConnection.setVisibility(View.VISIBLE);
                     Log.d(TAG_HOME_BLE, "CONNECTE");
 
 
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     // On s'est déconnecté d'un appareil
-                    ValeurDeConnexion=false;
+                    valeurDeConnexion =false;
                     imageConfirmationConnection.setVisibility(View.INVISIBLE);
-                    imageConfirmationDeConnection.setVisibility(View.VISIBLE);
+                    imageConfirmationDeconnection.setVisibility(View.VISIBLE);
                     gatt.close();
                     Log.d(TAG_HOME_BLE, "DECONNECTE");
                 }
@@ -280,7 +263,7 @@ public class HomeFragment extends Fragment {
                 gatt.close();
             }}
 
-        @SuppressLint("MissingPermission")
+
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -292,13 +275,21 @@ public class HomeFragment extends Fragment {
                         if(btn.equals("Lecture")) {
                             Log.d(TAG_HOME_BLE, "On reçoit quelque chose de la carte !");
                             characteristic.getValue();
-                            gatt.readCharacteristic(characteristic);
+                            try {
+                                gatt.readCharacteristic(characteristic);
+                            } catch (SecurityException e) {
+                                Log.e(TAG_HOME_BLE, "SecurityException dans onServicesDiscovered");
+                            }
                         }
                         if (btn.equals("Ecriture")) {
                             Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");
                             characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
                             characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-                            gatt.writeCharacteristic(characteristic);
+                            try {
+                                gatt.writeCharacteristic(characteristic);
+                            } catch (SecurityException e) {
+                                Log.e(TAG_HOME_BLE, "SecurityException dans onServicesDiscovered");
+                            }
                         }
                     }
                 }

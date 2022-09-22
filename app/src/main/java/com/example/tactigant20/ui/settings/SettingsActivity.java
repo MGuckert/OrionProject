@@ -7,15 +7,14 @@ import android.util.Log;
 
 import com.example.tactigant20.R;
 
-public class SettingsMain extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG_SETTINGS = "debug_settings_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG_SETTINGS,"Appel de onCreate dans SettingsMain");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings_main);
+        setContentView(R.layout.activity_settings);
     }
 }

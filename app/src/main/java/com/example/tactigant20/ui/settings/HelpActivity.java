@@ -12,7 +12,6 @@ public class HelpActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG_HELP,"Appel de onCreate dans HelpActivity");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);

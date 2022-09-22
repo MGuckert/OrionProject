@@ -29,7 +29,7 @@ import com.example.tactigant20.ui.notifications.AppInfo;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
 import com.example.tactigant20.ui.settings.InfoActivity;
-import com.example.tactigant20.ui.settings.SettingsMain;
+import com.example.tactigant20.ui.settings.SettingsActivity;
 import com.example.tactigant20.ui.vibrations.VibrationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -44,18 +44,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG_MAIN = "debug_main_activity";
+
+    private ViewPager2 myViewPager2;
     private final VibrationsFragment vibrationsFragment = new VibrationsFragment();
     private final HomeFragment homeFragment = new HomeFragment();
     private final NotificationsFragment notificationsFragment = new NotificationsFragment();
     private MenuItem prevMenuItem;
 
-    private ViewPager2 myViewPager2;
-
-    private static final String TAG_MAIN = "debug_main_activity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
-        Log.d(TAG_MAIN, "Appel de onCreate dans MainActivity");
         createNotificationChannel();
         super.onCreate(savedInstanceState);
         com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -138,18 +136,15 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            Log.d(TAG_MAIN, "Appel de createFragment dans Adapter");
             return fragmentList.get(position);
         }
 
         public void addFragment(Fragment fragment) {
-            Log.d(TAG_MAIN, "Appel de addFragment dans Adapter");
             fragmentList.add(fragment);
         }
 
         @Override
         public int getItemCount() {
-            Log.d(TAG_MAIN, "Appel de getItemcount dans Adapter");
             return fragmentList.size();
         }
     }
@@ -157,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
     // Création du menu de la toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG_MAIN,"appel de onCreateOptionsMenu dans MainActivity");
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
@@ -165,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
     // Gestion des boutons
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG_MAIN,"appel de onOptionsItemSelected dans MainActivity");
         int id = item.getItemId();
 
         switch(id) { // "switch" au cas où on en rajoute
@@ -201,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openSettings() {
         Log.d(TAG_MAIN, "appel de openSettings dans MainActivity");
-        Intent intent = new Intent(this, SettingsMain.class);
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
@@ -335,28 +328,28 @@ public class MainActivity extends AppCompatActivity {
         int boutonRadio = view.getId();
         if (boutonRadio == R.id.radioButtonNA) {
             if (checked) {
-                currentItem.vibrationMode = "N";
+                currentItem.setVibrationMode("N");
             }
         }
         if (boutonRadio == R.id.radioButtonMode1) {
             if (checked) {
-                currentItem.vibrationMode = "1";
+                currentItem.setVibrationMode("1");
             }
         }
         if (boutonRadio == R.id.radioButtonMode2) {
             if (checked) {
-                currentItem.vibrationMode = "2";
+                currentItem.setVibrationMode("2");
             }
         }
         if (boutonRadio == R.id.radioButtonMode3) {
             if (checked) {
-                currentItem.vibrationMode = "3";
+                currentItem.setVibrationMode("3");
             }
         }
 
         this.notificationsFragment.setFromIndex(this.notificationsFragment.getCurrentItemPosition(), currentItem);
         this.notificationsFragment.getAdapter().notifyDataSetChanged();
-        this.saveVibrationMode(currentItem.info.packageName,currentItem.vibrationMode);
+        this.saveVibrationMode(currentItem.getInfo().packageName,currentItem.getVibrationMode());
         dialog.dismiss();
     }
 }

@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel;
 
 public class NotificationsViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
-
     private static final String TAG_NOTIFS_VIEW = "debug_notifs_viewmodel";
+
+    private final MutableLiveData<String> mText;
 
     public NotificationsViewModel() {
         Log.d(TAG_NOTIFS_VIEW,"Construction de NotificationsViewModel");
