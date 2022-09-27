@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         // Création de la toolbar
         Toolbar topAppBar=findViewById(R.id.topAppBar);
         setSupportActionBar(topAppBar);
-
         //Initializing viewPager
         viewPager = findViewById(R.id.vpPager);
 
