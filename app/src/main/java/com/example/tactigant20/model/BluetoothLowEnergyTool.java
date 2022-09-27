@@ -23,6 +23,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.tactigant20.MyNotificationListenerService;
 
+import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
 
-    private Context mContext;
+    private WeakReference<Context> mContext;
 
     private final String mAdresseMAC;
     private String mMode ="";
@@ -47,7 +48,7 @@ public class BluetoothLowEnergyTool {
     private final ScanCallback mScanCallback;
 
     public BluetoothLowEnergyTool(Context mContext, String mAdresseMAC) {
-        this.mContext = mContext;
+        this.mContext = new WeakReference<>(mContext);
 
         this.mAdresseMAC = mAdresseMAC;
 
@@ -169,7 +170,7 @@ public class BluetoothLowEnergyTool {
         };
     }
 
-    public Context getContext() {
+    public WeakReference<Context> getContext() {
         return this.mContext;
     }
 
@@ -181,7 +182,7 @@ public class BluetoothLowEnergyTool {
         return this.mGatt;
     }
 
-    public void setContext(Context mContext) {
+    public void setContext(WeakReference<Context> mContext) {
         this.mContext = mContext;
     }
 

@@ -25,7 +25,6 @@ import com.example.tactigant20.model.BluetoothLowEnergyTool;
 public class HomeFragment extends Fragment {
 
     private static final String TAG_HOME = "debug_home_fragment";
-    private static final String TAG_BLE = "debug_bluetooth";
 
     private TextView texteDeChargement;
 
@@ -33,7 +32,6 @@ public class HomeFragment extends Fragment {
     private ImageView imageConfirmationDeconnection;
 
     public static String Mode ="";
-
 
     private static BluetoothLowEnergyTool myBLET;
 
@@ -96,7 +94,7 @@ public class HomeFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void cScanButton(View v) {
-        Log.d(TAG_BLE, "Bouton pressé");
+        Log.d(TAG_HOME, "Bouton Scan pressé");
         myBLET.scan();
     }
 
@@ -112,17 +110,15 @@ public class HomeFragment extends Fragment {
         myBLET.disconnect();
     }
 
-
-
-
-    @SuppressWarnings("InfiniteLoopStatement")
+    @SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
     public class CustomUIThread extends Thread {
         @Override
         public void run() {
             Log.d(TAG_HOME, "Lancement du thread");
 
             while(true) {
-                try {
+                Log.d(TAG_HOME, "\nmValeurDeChargement : " + myBLET.getValeurDeChargement() +"\nmValeurDeConnection : " + myBLET.getValeurDeConnexion());
+            try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
