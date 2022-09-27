@@ -34,7 +34,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
         Notification notif = sbn.getNotification();
         String category = notif.category;
         vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
-        BluetoothGatt gatt = HomeFragment.getGatt();
+        BluetoothGatt gatt = HomeFragment.getMyBLET().getGatt();
         HomeFragment.Mode = "Ecriture";
         if(category != null) {
             if (!category.equals("sys")) { //attention risque de NullPointerException !!!
@@ -42,7 +42,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
                 try {
                     gatt.discoverServices();
                 } catch (SecurityException e) {
-                    Log.e(TAG_MNLS, "SecurityError dans MNLS");
+                    e.printStackTrace();
                 }
             }
         }

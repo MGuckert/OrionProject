@@ -34,16 +34,17 @@ public class BluetoothLowEnergyTool {
 
     private Context mContext;
 
-    private String mAdresseMAC;
+    private final String mAdresseMAC;
     private String mMode ="";
+    private boolean mValeurDeChargement = false;
     private boolean mValeurDeConnexion = false;
     private BluetoothGatt mGatt;
-    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-    private BluetoothLeScanner mScanner = mAdapter.getBluetoothLeScanner();
+    private final BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
+    private final BluetoothLeScanner mScanner = mAdapter.getBluetoothLeScanner();
 
-    private BluetoothGattCallback mBluetoothGattCallback;
+    private final BluetoothGattCallback mBluetoothGattCallback;
 
-    private ScanCallback mScanCallback;
+    private final ScanCallback mScanCallback;
 
     public BluetoothLowEnergyTool(Context mContext, String mAdresseMAC) {
         this.mContext = mContext;
@@ -54,6 +55,7 @@ public class BluetoothLowEnergyTool {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
+                mValeurDeChargement = false;
                 BluetoothDevice device = result.getDevice();
                 try {
                     Log.d(TAG_BLE, "Obtention de l'appareil BLE : " + device.getName());
@@ -66,6 +68,7 @@ public class BluetoothLowEnergyTool {
 
             @Override
             public void onScanFailed(int errorCode) {
+                mValeurDeChargement = false;
                 Log.e(TAG_BLE, "ERREUR de scan | code : "+ errorCode);
             }
         };
@@ -100,7 +103,7 @@ public class BluetoothLowEnergyTool {
                     try {
                         gatt.close();
                     } catch (SecurityException e) {
-                        Log.e(TAG_BLE, "SecurityException dans ScanCallBack");
+                        e.printStackTrace();
                     }
                 }}
 
@@ -117,7 +120,7 @@ public class BluetoothLowEnergyTool {
                                 try {
                                     gatt.readCharacteristic(characteristic);
                                 } catch (SecurityException e) {
-                                    Log.e(TAG_BLE, "SecurityException dans onServicesDiscovered");
+                                    e.printStackTrace();
                                 }
                             }
                             if (mMode.equals("Ecriture")) {
@@ -129,7 +132,7 @@ public class BluetoothLowEnergyTool {
                                         try {
                                             gatt.writeCharacteristic(characteristic);
                                         } catch (SecurityException e) {
-                                            Log.e(TAG_BLE, "SecurityException dans onServicesDiscovered");
+                                            e.printStackTrace();
                                         }
                                     case "2":
                                     case "3":
@@ -170,14 +173,6 @@ public class BluetoothLowEnergyTool {
         return this.mContext;
     }
 
-    public String getAdresseMAC() {
-        return this.mAdresseMAC;
-    }
-
-    public String getMode() {
-        return this.mMode;
-    }
-
     public boolean getValeurDeConnexion() {
         return this.mValeurDeConnexion;
     }
@@ -186,63 +181,16 @@ public class BluetoothLowEnergyTool {
         return this.mGatt;
     }
 
-    public BluetoothAdapter getAdapter() {
-        return this.mAdapter;
-    }
-
-    public BluetoothLeScanner getScanner() {
-        return this.mScanner;
-    }
-
-    public BluetoothGattCallback getBluetoothGattCallback() {
-        return this.mBluetoothGattCallback;
-    }
-
-    public ScanCallback getScanCallback() {
-        return this.mScanCallback;
-    }
-
     public void setContext(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void setAdresseMAC(String mAdresseMAC) {
-        this.mAdresseMAC = mAdresseMAC;
-    }
-
-    public void setMode(String mMode) {
-        this.mMode = mMode;
-    }
-
-    public void setValeurDeConnexion(boolean mValeurDeConnexion) {
-        this.mValeurDeConnexion = mValeurDeConnexion;
-    }
-
-    public void setGatt(BluetoothGatt mGatt) {
-        this.mGatt = mGatt;
-    }
-
-    public void setAdapter(BluetoothAdapter mAdapter) {
-        this.mAdapter = mAdapter;
-    }
-
-    public void setScanner(BluetoothLeScanner mScanner) {
-        this.mScanner = mScanner;
-    }
-
-    public void setBluetoothGattCallback(BluetoothGattCallback mBluetoothGattCallback) {
-        this.mBluetoothGattCallback = mBluetoothGattCallback;
-    }
-
-    public void setScanCallback(ScanCallback mScanCallback) {
-        this.mScanCallback = mScanCallback;
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void Scan() {
-
+    public void scan() {
+        this.mValeurDeChargement = true;
         if (this.mScanner != null) {
-            String[] peripheralAddresses = new String[]{"94:3C:C6:06:CC:1E"}; // MAC du dispositif
+            String[] peripheralAddresses = new String[]{this.mAdresseMAC}; // MAC du dispositif
 
             // Liste des filtres
             List<ScanFilter> filters;
@@ -265,7 +213,7 @@ public class BluetoothLowEnergyTool {
             try {
                 this.mScanner.startScan(filters, scanSettings, mScanCallback);
             } catch (SecurityException e) {
-                Log.e(TAG_BLE, "SecurityException dans scan");
+                e.printStackTrace();
             }
 
             Log.d(TAG_BLE, "Scan lancé");
@@ -280,14 +228,14 @@ public class BluetoothLowEnergyTool {
                 this.mGatt.disconnect();
                 this.mScanner.stopScan(mScanCallback);
             } catch (SecurityException e) {
-                Log.e(TAG_BLE, "SecurityException dans disconnect");
+                e.printStackTrace();
             }
         }
     }
 
-
-
-
+    public boolean getValeurDeChargement() {
+        return this.mValeurDeChargement;
+    }
 
 }
 
