@@ -45,9 +45,7 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private static final String TAG_HOME = "debug_home_fragment";
-    private static final String TAG_HOME_BLE = "debug_bluetooth";
-
-    private FragmentHomeBinding binding;
+    private static final String TAG_BLE = "debug_bluetooth";
 
     private TextView texteDeChargement;
 
@@ -73,7 +71,7 @@ public class HomeFragment extends Fragment {
 
         // HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        com.example.tactigant20.databinding.FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         // Boutons pour le Bluetooth
@@ -112,7 +110,7 @@ public class HomeFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void cScanButton(View v) {
-        Log.d(TAG_HOME_BLE, "Bouton pressé");
+        Log.d(TAG_BLE, "Bouton pressé");
         imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
         texteDeChargement.setVisibility(View.VISIBLE);
 
@@ -143,12 +141,12 @@ public class HomeFragment extends Fragment {
             try {
                 scanner.startScan(filters, scanSettings, scanCallback);
             } catch (SecurityException e) {
-                Log.e(TAG_HOME_BLE, "SecurityException dans cScanButton");
+                Log.e(TAG_BLE, "SecurityException dans cScanButton");
             }
 
-            Log.d(TAG_HOME_BLE, "Scan lancé");
+            Log.d(TAG_BLE, "Scan lancé");
         }  else {
-            Log.e(TAG_HOME_BLE, "ERREUR : Impossible d'obtenir un scanner (onClick)");
+            Log.e(TAG_BLE, "ERREUR : Impossible d'obtenir un scanner (onClick)");
         }
     }
 
@@ -166,16 +164,10 @@ public class HomeFragment extends Fragment {
                 gatt.disconnect();
                 scanner.stopScan(scanCallback);
             } catch (SecurityException e) {
-                Log.e(TAG_HOME_BLE, "SecurityException dans cDeconnectionButton");
+                Log.e(TAG_BLE, "SecurityException dans cDeconnectionButton");
             }
 
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 
     // Obtention d'appareil BLE
@@ -185,17 +177,17 @@ public class HomeFragment extends Fragment {
         public void onScanResult(int callbackType, ScanResult result) {
             BluetoothDevice device = result.getDevice();
             try {
-                Log.d(TAG_HOME_BLE, "Obtention de l'appareil BLE " + device.getName());
+                Log.d(TAG_BLE, "Obtention de l'appareil BLE " + device.getName());
                 gatt = device.connectGatt(getContext(), true, bluetoothGattCallback, TRANSPORT_LE);
             } catch (SecurityException e) {
-                Log.e(TAG_HOME_BLE, "SecurityException dans ScanCallBack");
+                Log.e(TAG_BLE, "SecurityException dans ScanCallBack");
             }
-            Log.d(TAG_HOME_BLE, "Scan réussi");
+            Log.d(TAG_BLE, "Scan réussi");
         }
 
         @Override
         public void onScanFailed(int errorCode) {
-            Log.e(TAG_HOME_BLE, "ERREUR : scan (onScanFailed)");
+            Log.e(TAG_BLE, "ERREUR : scan (onScanFailed)");
         }
     };
 
@@ -208,30 +200,30 @@ public class HomeFragment extends Fragment {
                     // On s'est connecté à un appareil
                     imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
                     texteDeChargement.setVisibility(View.INVISIBLE);
-                    valeurDeConnexion =true;
+                    valeurDeConnexion = true;
                     imageConfirmationConnection.setVisibility(View.VISIBLE);
-                    Log.d(TAG_HOME_BLE, "CONNECTE");
+                    Log.d(TAG_BLE, "CONNECTE");
 
 
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     // On s'est déconnecté d'un appareil
-                    valeurDeConnexion =false;
+                    valeurDeConnexion = false;
                     imageConfirmationConnection.setVisibility(View.INVISIBLE);
                     imageConfirmationDeconnection.setVisibility(View.VISIBLE);
                     try {
                         gatt.close();
                     } catch (SecurityException e) {
-                        Log.e(TAG_HOME_BLE, "SecurityException dans ScanCallBack");
+                        Log.e(TAG_BLE, "SecurityException dans ScanCallBack");
                     }
-                    Log.d(TAG_HOME_BLE, "DECONNECTE");
+                    Log.d(TAG_BLE, "DECONNECTE");
                 }
 
             } else {
-                Log.e(TAG_HOME_BLE, "ERREUR : pas de connexion établie (onConnectionStateChange)");
+                Log.e(TAG_BLE, "ERREUR : pas de connexion établie (onConnectionStateChange)");
                 try {
                     gatt.close();
                 } catch (SecurityException e) {
-                    Log.e(TAG_HOME_BLE, "SecurityException dans ScanCallBack");
+                    Log.e(TAG_BLE, "SecurityException dans ScanCallBack");
                 }
             }}
 
@@ -245,24 +237,24 @@ public class HomeFragment extends Fragment {
                     for (BluetoothGattCharacteristic characteristic : characteristics) {
                         // On parcourt l'ensemble des caractéristiques trouvées
                         if(Mode.equals("Lecture")) {
-                            Log.d(TAG_HOME_BLE, "On reçoit quelque chose de la carte !");
+                            Log.d(TAG_BLE, "On reçoit quelque chose de la carte !");
                             characteristic.getValue();
                             try {
                                 gatt.readCharacteristic(characteristic);
                             } catch (SecurityException e) {
-                                Log.e(TAG_HOME_BLE, "SecurityException dans onServicesDiscovered");
+                                Log.e(TAG_BLE, "SecurityException dans onServicesDiscovered");
                             }
                         }
                         if (Mode.equals("Ecriture")) {
                             switch(MyNotificationListenerService.vibrationMode) {
                                 case "1":
-                                Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");
+                                Log.d(TAG_BLE, "On envoie quelque chose à la carte !");
                                 characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
                                 characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
                                 try {
                                     gatt.writeCharacteristic(characteristic);
                                 } catch (SecurityException e) {
-                                    Log.e(TAG_HOME_BLE, "SecurityException dans onServicesDiscovered");
+                                    Log.e(TAG_BLE, "SecurityException dans onServicesDiscovered");
                                 }
                                 case "2":
                                 case "3":
@@ -279,14 +271,14 @@ public class HomeFragment extends Fragment {
         public void onCharacteristicRead(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic, int status) {
             // Vérification que ça a fonctionné
             if (status != GATT_SUCCESS) {
-                Log.e(TAG_HOME_BLE, String.format(Locale.FRENCH,"ERREUR de lecture pour la caractéristique : %s ; statut : %d (onCharacteristicRead)", characteristic.getUuid(), status));
+                Log.e(TAG_BLE, String.format(Locale.FRENCH,"ERREUR de lecture pour la caractéristique : %s ; statut : %d (onCharacteristicRead)", characteristic.getUuid(), status));
                 return;
             }
 
             // Traitement de la caractéristique pour la rendre lisible (byte -> String)
             byte[] value = characteristic.getValue();
             String s = new String(value, StandardCharsets.UTF_8);
-            Log.d(TAG_HOME_BLE, "La carte nous envoie : \"" + s + "\"");
+            Log.d(TAG_BLE, "La carte nous envoie : \"" + s + "\"");
 
         }
 
@@ -294,7 +286,7 @@ public class HomeFragment extends Fragment {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-            Log.d(TAG_HOME_BLE, "UUID de la caractéristique : " + characteristic.getUuid());
+            Log.d(TAG_BLE, "UUID de la caractéristique : " + characteristic.getUuid());
         }
     };
 
