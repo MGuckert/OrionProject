@@ -18,7 +18,7 @@ public class VibrationsTool {
     private WeakReference<Context> mContext;
 
     public VibrationsTool(Context mContext) {
-        this.mContext = new WeakReference<>(mContext);
+        this.mContext = new WeakReference<>(mContext); // En pratique toujours MainActivity
     }
 
     public String loadVibrationMode(String notifName, Context context) {
