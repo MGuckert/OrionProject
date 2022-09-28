@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
+import com.example.tactigant20.model.AppAdapter;
+import com.example.tactigant20.model.AppInfo;
 
 import java.io.BufferedReader;
 import java.io.File;

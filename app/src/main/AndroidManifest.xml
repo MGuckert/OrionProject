@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TactiGant20">
         <service
-            android:name=".MyNotificationListenerService"
+            android:name=".model.MyNotificationListenerService"
             android:label="@string/service_name"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">

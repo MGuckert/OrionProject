@@ -1,4 +1,4 @@
-package com.example.tactigant20;
+package com.example.tactigant20.model;
 
 import android.app.Notification;
 import android.bluetooth.BluetoothGatt;
@@ -16,9 +16,7 @@ import com.example.tactigant20.ui.notifications.NotificationsFragment;
 public class MyNotificationListenerService extends NotificationListenerService {
 
     private final static String TAG_MNLS = "debug_mnls";
-
     private Context context;
-
     public static String vibrationMode;
 
     @Override

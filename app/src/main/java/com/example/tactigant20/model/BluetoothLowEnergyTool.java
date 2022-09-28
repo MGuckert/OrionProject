@@ -21,8 +21,6 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.tactigant20.MyNotificationListenerService;
-
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -40,8 +38,8 @@ public class BluetoothLowEnergyTool {
     private boolean mValeurDeChargement = false;
     private boolean mValeurDeConnexion = false;
     private BluetoothGatt mGatt;
-    private final BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-    private final BluetoothLeScanner mScanner = mAdapter.getBluetoothLeScanner();
+    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
+    private BluetoothLeScanner mScanner = mAdapter.getBluetoothLeScanner();
 
     private final BluetoothGattCallback mBluetoothGattCallback;
 
@@ -224,7 +222,9 @@ public class BluetoothLowEnergyTool {
     }
 
     public void disconnect() {
-        if (mValeurDeConnexion) {
+        this.mValeurDeChargement = false;
+        if (this.mValeurDeConnexion) {
+            this.mValeurDeConnexion = false;
             try {
                 this.mGatt.disconnect();
                 this.mScanner.stopScan(mScanCallback);
@@ -238,5 +238,16 @@ public class BluetoothLowEnergyTool {
         return this.mValeurDeChargement;
     }
 
+    public BluetoothAdapter getAdapter() {
+        return this.mAdapter;
+    }
+
+    public void setAdapter(BluetoothAdapter mAdapter) {
+        this.mAdapter = mAdapter;
+    }
+
+    public void setScanner(BluetoothLeScanner mScanner) {
+        this.mScanner = mScanner;
+    }
 }
 

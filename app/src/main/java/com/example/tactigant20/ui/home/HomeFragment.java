@@ -1,5 +1,6 @@
 package com.example.tactigant20.ui.home;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -73,18 +76,20 @@ public class HomeFragment extends Fragment {
         // Image d'erreur/absence de connexion
         imageConfirmationDeconnection = root.findViewById(R.id.connexionInvalide);
 
-        /*
+        myBLET = new BluetoothLowEnergyTool(this.getContext(), "94:3C:C6:06:CC:1E");
+
+
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
-        ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {});
+
         if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
+            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(), result -> {});
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult.launch(enableBtIntent);
+            //TODO : solve not work after Bluetooth Activate Intent
         }
-
-         */
-
-         myBLET = new BluetoothLowEnergyTool(this.getContext(), "94:3C:C6:06:CC:1E");
+        myBLET.setAdapter(BluetoothAdapter.getDefaultAdapter());
+        myBLET.setScanner(myBLET.getAdapter().getBluetoothLeScanner());
 
         CustomUIThread myCustomUIThread = new CustomUIThread();
         myCustomUIThread.start();
