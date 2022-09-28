@@ -117,7 +117,7 @@ public class BluetoothLowEnergyTool {
                                 }
                             }
                             if (mMode.equals("Ecriture")) {
-                                switch(MyNotificationListenerService.vibrationMode) {
+                                switch(MyNotificationListenerService.mVibrationMode) {
                                     case "1":
                                         Log.d(TAG_BLE, "On envoie quelque chose à la carte !");
                                         characteristic.setValue("Allume"); // On envoie cette chaîne à la carte

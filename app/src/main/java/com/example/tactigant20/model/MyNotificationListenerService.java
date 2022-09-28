@@ -16,13 +16,14 @@ import com.example.tactigant20.ui.home.HomeFragment;
 public class MyNotificationListenerService extends NotificationListenerService {
 
     private final static String TAG_MNLS = "debug_mnls";
-    private Context context;
-    public static String vibrationMode;
+
+    private Context mContext;
+    public static String mVibrationMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
+        mContext = getApplicationContext();
     }
 
     @Override
@@ -31,12 +32,12 @@ public class MyNotificationListenerService extends NotificationListenerService {
         String packageName = sbn.getPackageName();
         Notification notif = sbn.getNotification();
         String category = notif.category;
-        vibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
+        mVibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
         BluetoothGatt gatt = HomeFragment.getMyBLET().getGatt();
         HomeFragment.Mode = "Ecriture";
         if(category != null) {
             if (!category.equals("sys")) { //attention risque de NullPointerException !!!
-                showToast("Notification reçue : " + packageName + " Vibration mode : " + vibrationMode);
+                showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
                 try {
                     gatt.discoverServices();
                 } catch (SecurityException e) {
@@ -57,6 +58,6 @@ public class MyNotificationListenerService extends NotificationListenerService {
     }
 
     public void showToast(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 }
