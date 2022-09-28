@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        myVibrationsTool = new VibrationsTool(this.getApplicationContext());
+        myVibrationsTool = new VibrationsTool(this);
 
         // Création de la toolbar
         Toolbar topAppBar=findViewById(R.id.topAppBar);
