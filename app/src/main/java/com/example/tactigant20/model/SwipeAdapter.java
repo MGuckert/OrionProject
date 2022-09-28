@@ -1,4 +1,4 @@
-package com.example.tactigant20;
+package com.example.tactigant20.model;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

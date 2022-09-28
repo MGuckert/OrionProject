@@ -4,7 +4,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -19,17 +18,14 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,38 +78,7 @@ public class NotificationsFragment extends Fragment {
         binding = null;
     }
 
-    public static String loadVibrationMode(String notifName, Context context) {
-        //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier
-        // "vibration_modes_data.txt", et "UNKNOWN" si aucune donnée pour cette application n'a été sauvegardée.
-        FileInputStream inputStream = null;
-        try {
-            inputStream = context.openFileInput("vibration_modes_data.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (inputStream != null) {
-            InputStreamReader inputReader = new InputStreamReader(inputStream);
-            BufferedReader buffReader = new BufferedReader(inputReader);
 
-            String line = null;
-            do { //On lit le fichier ligne par ligne, en comparant le début de chaque ligne avec "notifName" :
-                // s'il est identique, on est sur la bonne ligne, et on peut renvoyer le mode de vibration écrit !
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.err.println(line);
-                int n = notifName.length();
-                if ( line != null && n < line.length()) {
-                    if (line.substring(0, n).equals(notifName)) {
-                        return line.substring(line.length()-1);
-                    }
-                }
-            } while (line != null);
-        }
-        return "UNKNOWN";
-    }
 
     public int getCurrentItemPosition() {
         return currentItemPosition;
@@ -171,7 +136,7 @@ public class NotificationsFragment extends Fragment {
                     if (getContext() == null) {
                         Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
                     } else {
-                        String mode = loadVibrationMode(app.getInfo().packageName, getContext());
+                        String mode = MainActivity.getMyVibrationsTool().loadVibrationMode(app.getInfo().packageName, getContext());
                         if (mode.equals("UNKNOWN"))
                             app.setVibrationMode("N");
                         else

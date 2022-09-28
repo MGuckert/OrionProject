@@ -20,6 +20,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.model.AppInfo;
+import com.example.tactigant20.model.SwipeAdapter;
 import com.example.tactigant20.ui.home.HomeFragment;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
@@ -28,13 +29,6 @@ import com.example.tactigant20.ui.settings.SettingsActivity;
 import com.example.tactigant20.ui.vibrations.VibrationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private final HomeFragment homeFragment = new HomeFragment();
     private final NotificationsFragment notificationsFragment = new NotificationsFragment();
     private MenuItem prevMenuItem;
+
+    private static VibrationsTool myVibrationsTool;
 
     private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
@@ -66,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        myVibrationsTool = new VibrationsTool(this.getApplicationContext());
 
         // Création de la toolbar
         Toolbar topAppBar=findViewById(R.id.topAppBar);
@@ -115,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(100, builder.build());
 
     }
-
-
-
 
     // Création du menu de la toolbar
     @Override
@@ -193,77 +188,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void writeInFile(String s, int mode) {
-        // On vient éditer le fichier "vibration_modes_data"
-        //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
-        //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput("vibration_modes_data.txt", mode);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            assert fos != null;
-            fos.write(s.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void saveVibrationMode(String packageName, String vibrationMode) {
-        //On sauvegarde le mode de vibration "vibrationMode" pour l'application "packageName"
-        //On lit d'abord le fichier en ajoutant chaque ligne dans une String "fileData" tant que la ligne correspond à l'app n'a pas été trouvée
-        //Si on atteint la fin du fichier, alors on ajoute la ligne adaptée à la fin
-        //Sinon, on remplace la ligne correspondante, puis on rajoute toutes les lignes d'après à fileData; enfin, on utilise writeInFile avec MODE_PRIVATE pour remplacer
-        //le contenu du fichier (seule la ligne correspondante à "packageName" a changé)
-        FileInputStream inputStream = null;
-        try {
-            inputStream = openFileInput("vibration_modes_data.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        StringBuilder fileData = new StringBuilder(); //Chaîne de caractères dans laquelle on stocke les lignes du fichier qu'on ne modifie pas
-        if (inputStream != null) {
-            InputStreamReader inputReader = new InputStreamReader(inputStream);
-            BufferedReader buffReader = new BufferedReader(inputReader);
 
-            String line = null;
-            do {
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                fileData.append(line).append("\n");
-            } while (line != null && (line.length() <= packageName.length() || !line.startsWith(packageName)));
-            if (line != null) { //Si line n'est pas nulle, c'est que line contient la ligne qui nous intéresse
-                fileData = new StringBuilder(fileData.substring(0, fileData.length() - line.length() - 1)); //On la retire de fileData, et on la remplace par celle avec le bon mode de vibration
-                fileData.append(packageName).append(" : ").append(vibrationMode).append("\n");
-                do { //On récupère alors les autres lignes
-                    try {
-                        line = buffReader.readLine();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (line != null)
-                        fileData.append(line).append("\n");
-                } while (line != null);
-                System.err.println("FileData: \n" + fileData);
-                writeInFile(fileData.toString(),MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
-            }
-            else
-                writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
-        }
-        try {
-            assert inputStream != null;
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-    }
 
 /*
     private void stockage(String s, int mode) {
@@ -318,7 +245,11 @@ public class MainActivity extends AppCompatActivity {
 
         this.notificationsFragment.setFromIndex(this.notificationsFragment.getCurrentItemPosition(), currentItem);
         this.notificationsFragment.getAdapter().notifyDataSetChanged();
-        this.saveVibrationMode(currentItem.getInfo().packageName,currentItem.getVibrationMode());
+        myVibrationsTool.saveVibrationMode(currentItem.getInfo().packageName,currentItem.getVibrationMode());
         dialog.dismiss();
+    }
+
+    public static VibrationsTool getMyVibrationsTool() {
+        return myVibrationsTool;
     }
 }
