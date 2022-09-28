@@ -18,7 +18,8 @@ public class VibrationsTool {
     private WeakReference<Context> mContext;
 
     public VibrationsTool(Context mContext) {
-        this.mContext = new WeakReference<>(mContext);    }
+        this.mContext = new WeakReference<>(mContext);
+    }
 
     public String loadVibrationMode(String notifName, Context context) {
         //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier
