@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment {
             Log.d(TAG_HOME, "Lancement du thread");
 
             while(true) {
-                Log.d(TAG_HOME, "\nmValeurDeChargement : " + myBLET.getValeurDeChargement() +"\nmValeurDeConnection : " + myBLET.getValeurDeConnexion());
+                //Log.d(TAG_HOME, "\nmValeurDeChargement : " + myBLET.getValeurDeChargement() +"\nmValeurDeConnection : " + myBLET.getValeurDeConnexion());
             try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

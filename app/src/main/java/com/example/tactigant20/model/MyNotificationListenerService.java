@@ -28,6 +28,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        Log.d(TAG_MNLS, "DEBUG 1");
         super.onNotificationPosted(sbn);
         String packageName = sbn.getPackageName();
         Notification notif = sbn.getNotification();
@@ -37,6 +38,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
         HomeFragment.getMyBLET().setMode("Ecriture");
         if(category != null) {
             if (!category.equals("sys")) { //attention risque de NullPointerException !!!
+                Log.d(TAG_MNLS, "DEBUG 2");
                 showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
                 try {
                     gatt.discoverServices();
