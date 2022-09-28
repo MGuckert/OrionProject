@@ -34,8 +34,6 @@ public class HomeFragment extends Fragment {
     private ImageView imageConfirmationConnection;
     private ImageView imageConfirmationDeconnection;
 
-    public static String Mode ="";
-
     private static BluetoothLowEnergyTool myBLET;
 
     @Override

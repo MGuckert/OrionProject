@@ -34,7 +34,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
         String category = notif.category;
         mVibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
         BluetoothGatt gatt = HomeFragment.getMyBLET().getGatt();
-        HomeFragment.Mode = "Ecriture";
+        HomeFragment.getMyBLET().setMode("Ecriture");
         if(category != null) {
             if (!category.equals("sys")) { //attention risque de NullPointerException !!!
                 showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
