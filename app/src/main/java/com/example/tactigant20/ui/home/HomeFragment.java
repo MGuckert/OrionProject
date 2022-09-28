@@ -41,6 +41,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        myBLET = new BluetoothLowEnergyTool("94:3C:C6:06:CC:1E", this.getContext());
+
+        // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
+        if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
+            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(), result -> {});
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult.launch(enableBtIntent);
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -54,15 +65,12 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         // Boutons pour le Bluetooth
-
         // Lance le scan et se connecte à la carte si possible
         Button scanButton = root.findViewById(R.id.scanButton);
         scanButton.setOnClickListener(this::cScanButton);
-
         // Ouvre les paramètres Bluetooth
         Button bluetoothSettingsButton = root.findViewById(R.id.bluetoothSettingsButton);
         bluetoothSettingsButton.setOnClickListener(this::cBluetoothSettingsButton);
-
         // Se déconnecte de la carte
         Button deconnectionButton = root.findViewById(R.id.deconnexionButton);
         deconnectionButton.setOnClickListener(this::cDeconnectionButton);
@@ -76,17 +84,6 @@ public class HomeFragment extends Fragment {
         // Image d'erreur/absence de connexion
         imageConfirmationDeconnection = root.findViewById(R.id.connexionInvalide);
 
-        myBLET = new BluetoothLowEnergyTool("94:3C:C6:06:CC:1E", this.getContext());
-
-
-        // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
-
-        if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
-            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(), result -> {});
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult.launch(enableBtIntent);
-        }
 
         CustomUIThread myCustomUIThread = new CustomUIThread();
         myCustomUIThread.start();

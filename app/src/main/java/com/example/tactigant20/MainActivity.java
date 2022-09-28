@@ -12,20 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
-import com.example.tactigant20.ui.home.HomeFragment;
 import com.example.tactigant20.model.AppInfo;
+import com.example.tactigant20.ui.home.HomeFragment;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
 import com.example.tactigant20.ui.settings.InfoActivity;
@@ -40,7 +35,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,6 +45,20 @@ public class MainActivity extends AppCompatActivity {
     private final HomeFragment homeFragment = new HomeFragment();
     private final NotificationsFragment notificationsFragment = new NotificationsFragment();
     private MenuItem prevMenuItem;
+
+    private final NavigationBarView.OnItemSelectedListener navListener = item -> {
+
+        int itemId = item.getItemId();
+        if (itemId == R.id.navigation_vibrations) {
+            myViewPager2.setCurrentItem(0);
+        } else if (itemId == R.id.navigation_home) {
+            myViewPager2.setCurrentItem(1);
+        } else if (itemId == R.id.navigation_notifications) {
+            myViewPager2.setCurrentItem(2);
+        }
+
+        return true;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -65,15 +73,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Création du système de swipe
         myViewPager2 = findViewById(R.id.vpPager);
-        Adapter myAdapter = new Adapter(getSupportFragmentManager(), getLifecycle());
-        myAdapter.addFragment(vibrationsFragment);
-        myAdapter.addFragment(homeFragment);
-        myAdapter.addFragment(notificationsFragment);
+        SwipeAdapter mySwipeAdapter = new SwipeAdapter(getSupportFragmentManager(), getLifecycle());
+        mySwipeAdapter.addFragment(vibrationsFragment);
+        mySwipeAdapter.addFragment(homeFragment);
+        mySwipeAdapter.addFragment(notificationsFragment);
 
         // Création de la barre de navigation du bas
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         bottomNav.setOnItemSelectedListener(navListener);
-
         myViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
             // Cette fonction permet à la BottomNavigationView et au ViewPager2 de considérer l'un et l'autre
@@ -91,9 +98,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
         myViewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-        myViewPager2.setAdapter(myAdapter);
+        myViewPager2.setAdapter(mySwipeAdapter);
         myViewPager2.setCurrentItem(1,false); // On commence sur HomeFragment
 
         // Paramètres de la notification
@@ -110,44 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
-        int itemId = item.getItemId();
-        if (itemId == R.id.navigation_vibrations) {
-            myViewPager2.setCurrentItem(0);
-        } else if (itemId == R.id.navigation_home) {
-            myViewPager2.setCurrentItem(1);
-        } else if (itemId == R.id.navigation_notifications) {
-            myViewPager2.setCurrentItem(2);
-        }
 
-        return true;
-    };
-
-    // Ceci permet au "swiping" de savoir comment alterner entre les fragments
-    public static class Adapter extends FragmentStateAdapter {
-
-        private final ArrayList<Fragment> fragmentList = new ArrayList<>();
-
-        public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
-            super(fragmentManager, lifecycle);
-        }
-
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            return fragmentList.get(position);
-        }
-
-        public void addFragment(Fragment fragment) {
-            fragmentList.add(fragment);
-        }
-
-        @Override
-        public int getItemCount() {
-            return fragmentList.size();
-        }
-    }
 
     // Création du menu de la toolbar
     @Override
