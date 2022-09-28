@@ -17,14 +17,14 @@ public class MyNotificationListenerService extends NotificationListenerService {
 
     private final static String TAG_MNLS = "debug_mnls";
 
-    private Context mContext;
+    private Context context;
 
-    public static String mVibrationMode;
+    public static String vibrationMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = getApplicationContext();
+        context = getApplicationContext();
     }
 
     @Override
@@ -33,12 +33,12 @@ public class MyNotificationListenerService extends NotificationListenerService {
         String packageName = sbn.getPackageName();
         Notification notif = sbn.getNotification();
         String category = notif.category;
-        mVibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
+        vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
         BluetoothGatt gatt = HomeFragment.getGatt();
         HomeFragment.Mode = "Ecriture";
         if(category != null) {
             if (!category.equals("sys")) { //attention risque de NullPointerException !!!
-                showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
+                showToast("Notification reçue : " + packageName + " Vibration mode : " + vibrationMode);
                 try {
                     gatt.discoverServices();
                 } catch (SecurityException e) {
@@ -59,6 +59,6 @@ public class MyNotificationListenerService extends NotificationListenerService {
     }
 
     public void showToast(String msg) {
-        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 }

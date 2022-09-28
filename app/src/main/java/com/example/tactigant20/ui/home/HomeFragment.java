@@ -254,7 +254,7 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         if (Mode.equals("Ecriture")) {
-                            switch(MyNotificationListenerService.mVibrationMode) {
+                            switch(MyNotificationListenerService.vibrationMode) {
                                 case "1":
                                 Log.d(TAG_HOME_BLE, "On envoie quelque chose à la carte !");
                                 characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
