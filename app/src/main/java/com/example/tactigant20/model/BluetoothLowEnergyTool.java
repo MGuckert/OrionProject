@@ -31,24 +31,22 @@ public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
 
-    private WeakReference<Context> mContext;
-
     private final String mAdresseMAC;
-    private String mMode ="";
+    private final ScanCallback mScanCallback;
+    private final BluetoothGattCallback mBluetoothGattCallback;
+
+    private String mMode ="Lecture";
+    private WeakReference<Context> mContext;
     private boolean mValeurDeChargement = false;
     private boolean mValeurDeConnexion = false;
     private BluetoothGatt mGatt;
     private BluetoothAdapter mAdapter;
     private BluetoothLeScanner mScanner;
 
-    private final BluetoothGattCallback mBluetoothGattCallback;
-
-    private final ScanCallback mScanCallback;
-
-    public BluetoothLowEnergyTool(Context mContext, String mAdresseMAC) {
-        this.mContext = new WeakReference<>(mContext);
-
+    public BluetoothLowEnergyTool(String mAdresseMAC, Context mContext) {
         this.mAdresseMAC = mAdresseMAC;
+
+        this.mContext = new WeakReference<>(mContext);
 
         this.mScanCallback = new ScanCallback() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -60,7 +58,7 @@ public class BluetoothLowEnergyTool {
                     Log.d(TAG_BLE, "Obtention de l'appareil BLE : " + device.getName());
                     mGatt = device.connectGatt(mContext, true, mBluetoothGattCallback, TRANSPORT_LE);
                 } catch (SecurityException e) {
-                    Log.e(TAG_BLE, "SecurityException dans ScanCallBack");
+                    e.printStackTrace();
                 }
                 Log.d(TAG_BLE, "Scan réussi");
             }
@@ -79,20 +77,16 @@ public class BluetoothLowEnergyTool {
                 if(status == GATT_SUCCESS) {
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
                         // On s'est connecté à un appareil
-
                         mValeurDeConnexion = true;
-
                         Log.d(TAG_BLE, "CONNECTE");
-
 
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                         // On s'est déconnecté d'un appareil
                         mValeurDeConnexion = false;
-
                         try {
                             gatt.close();
                         } catch (SecurityException e) {
-                            Log.e(TAG_BLE, "SecurityException dans ScanCallBack");
+                            e.printStackTrace();
                         }
                         Log.d(TAG_BLE, "DECONNECTE");
                     }
@@ -172,12 +166,20 @@ public class BluetoothLowEnergyTool {
         return this.mContext;
     }
 
+    public boolean getValeurDeChargement() {
+        return this.mValeurDeChargement;
+    }
+
     public boolean getValeurDeConnexion() {
         return this.mValeurDeConnexion;
     }
 
     public BluetoothGatt getGatt() {
         return this.mGatt;
+    }
+
+    public BluetoothAdapter getAdapter() {
+        return this.mAdapter;
     }
 
     public void setContext(WeakReference<Context> mContext) {
@@ -236,20 +238,5 @@ public class BluetoothLowEnergyTool {
         }
     }
 
-    public boolean getValeurDeChargement() {
-        return this.mValeurDeChargement;
-    }
-
-    public BluetoothAdapter getAdapter() {
-        return this.mAdapter;
-    }
-
-    public void setAdapter(BluetoothAdapter mAdapter) {
-        this.mAdapter = mAdapter;
-    }
-
-    public void setScanner(BluetoothLeScanner mScanner) {
-        this.mScanner = mScanner;
-    }
 }
 

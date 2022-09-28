@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment {
         // Image d'erreur/absence de connexion
         imageConfirmationDeconnection = root.findViewById(R.id.connexionInvalide);
 
-        myBLET = new BluetoothLowEnergyTool(this.getContext(), "94:3C:C6:06:CC:1E");
+        myBLET = new BluetoothLowEnergyTool("94:3C:C6:06:CC:1E", this.getContext());
 
 
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
