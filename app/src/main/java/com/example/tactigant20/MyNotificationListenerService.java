@@ -18,6 +18,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
     private final static String TAG_MNLS = "debug_mnls";
 
     private Context mContext;
+
     public static String mVibrationMode;
 
     @Override
