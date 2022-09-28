@@ -38,8 +38,8 @@ public class BluetoothLowEnergyTool {
     private boolean mValeurDeChargement = false;
     private boolean mValeurDeConnexion = false;
     private BluetoothGatt mGatt;
-    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-    private BluetoothLeScanner mScanner = mAdapter.getBluetoothLeScanner();
+    private BluetoothAdapter mAdapter;
+    private BluetoothLeScanner mScanner;
 
     private final BluetoothGattCallback mBluetoothGattCallback;
 
@@ -188,6 +188,8 @@ public class BluetoothLowEnergyTool {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
         this.mValeurDeChargement = true;
+        this.mAdapter = BluetoothAdapter.getDefaultAdapter();
+        this.mScanner = mAdapter.getBluetoothLeScanner();
         if (this.mScanner != null) {
             String[] peripheralAddresses = new String[]{this.mAdresseMAC}; // MAC du dispositif
 

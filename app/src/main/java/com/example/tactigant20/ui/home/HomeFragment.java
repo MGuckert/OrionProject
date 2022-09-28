@@ -86,10 +86,7 @@ public class HomeFragment extends Fragment {
                     new ActivityResultContracts.StartActivityForResult(), result -> {});
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult.launch(enableBtIntent);
-            //TODO : solve not work after Bluetooth Activate Intent
         }
-        myBLET.setAdapter(BluetoothAdapter.getDefaultAdapter());
-        myBLET.setScanner(myBLET.getAdapter().getBluetoothLeScanner());
 
         CustomUIThread myCustomUIThread = new CustomUIThread();
         myCustomUIThread.start();
