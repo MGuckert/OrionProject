@@ -1,4 +1,4 @@
-package com.example.tactigant20.model;
+package com.example.tactigant20;
 
 import android.app.Notification;
 import android.bluetooth.BluetoothGatt;
