@@ -1,4 +1,4 @@
-package com.example.tactigant20;
+package com.example.tactigant20.model;
 
 import static android.content.Context.MODE_APPEND;
 import static android.content.Context.MODE_PRIVATE;
@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 
 public class VibrationsTool {
 
-    private WeakReference<Context> mContext;
+    private final WeakReference<Context> mContext;
 
     public VibrationsTool(Context mContext) {
         this.mContext = new WeakReference<>(mContext); // En pratique toujours MainActivity

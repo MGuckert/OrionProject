@@ -20,7 +20,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.model.AppInfo;
+import com.example.tactigant20.model.BluetoothLowEnergyTool;
 import com.example.tactigant20.model.SwipeAdapter;
+import com.example.tactigant20.model.VibrationsTool;
 import com.example.tactigant20.ui.home.HomeFragment;
 import com.example.tactigant20.ui.notifications.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem prevMenuItem;
 
     private static VibrationsTool myVibrationsTool;
+    private static BluetoothLowEnergyTool myBLET;
 
     private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         myVibrationsTool = new VibrationsTool(this);
+        myBLET = new BluetoothLowEnergyTool("94:3C:C6:06:CC:1E", this);
 
         // Création de la toolbar
         Toolbar topAppBar=findViewById(R.id.topAppBar);
@@ -251,5 +255,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static VibrationsTool getMyVibrationsTool() {
         return myVibrationsTool;
+    }
+
+    public static BluetoothLowEnergyTool getMyBLET() {
+        return myBLET;
     }
 }

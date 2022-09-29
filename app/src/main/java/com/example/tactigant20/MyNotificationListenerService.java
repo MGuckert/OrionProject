@@ -8,9 +8,6 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.tactigant20.MainActivity;
-import com.example.tactigant20.ui.home.HomeFragment;
-
 //pour que cela fonctionne correctement il semble qu'il faille autoriser l'application à obtenir toutes les notifications
 //pour cela taper dans la barre de recherche des paramètres android "accéder aux notifications"
 public class MyNotificationListenerService extends NotificationListenerService {
@@ -34,8 +31,8 @@ public class MyNotificationListenerService extends NotificationListenerService {
         Notification notif = sbn.getNotification();
         String category = notif.category;
         mVibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
-        BluetoothGatt gatt = HomeFragment.getMyBLET().getGatt();
-        HomeFragment.getMyBLET().setMode("Ecriture");
+        BluetoothGatt gatt = MainActivity.getMyBLET().getGatt();
+        MainActivity.getMyBLET().setMode("Ecriture");
         if(category != null) {
             if (!category.equals("sys")) { //attention risque de NullPointerException !!!
                 Log.d(TAG_MNLS, "DEBUG 2");

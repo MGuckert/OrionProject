@@ -21,9 +21,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentHomeBinding;
-import com.example.tactigant20.model.BluetoothLowEnergyTool;
 
 public class HomeFragment extends Fragment {
 
@@ -34,16 +34,16 @@ public class HomeFragment extends Fragment {
     private ImageView imageConfirmationConnection;
     private ImageView imageConfirmationDeconnection;
 
-    private static BluetoothLowEnergyTool myBLET;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        myBLET = new BluetoothLowEnergyTool("94:3C:C6:06:CC:1E", this.getContext());
+
 
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
-        if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
+        if (MainActivity.getMyBLET().getAdapter() == null || !MainActivity.getMyBLET().getAdapter().isEnabled()) {
             ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(), result -> {});
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void cScanButton(View v) {
         Log.d(TAG_HOME, "Bouton Scan pressé");
-        myBLET.scan();
+        MainActivity.getMyBLET().scan();
     }
 
     private void cBluetoothSettingsButton(View v) {
@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment {
 
     private void cDeconnectionButton(View v) {
         Log.d(TAG_HOME, "Bouton déconnexion pressé");
-        myBLET.disconnect();
+        MainActivity.getMyBLET().disconnect();
     }
 
     @SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
@@ -120,14 +120,14 @@ public class HomeFragment extends Fragment {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (myBLET.getValeurDeChargement()) {
+                if (MainActivity.getMyBLET().getValeurDeChargement()) {
                     new Handler(Looper.getMainLooper()).post(() -> {
                         texteDeChargement.setVisibility(View.VISIBLE);
                         imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
                         imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
                     });
                 } else {
-                    if (myBLET.getValeurDeConnexion()) {
+                    if (MainActivity.getMyBLET().getValeurDeConnexion()) {
                         new Handler(Looper.getMainLooper()).post(() -> {
                             texteDeChargement.setVisibility(View.INVISIBLE);
                             imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
@@ -146,7 +146,5 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public static BluetoothLowEnergyTool getMyBLET() {
-        return myBLET;
-    }
+
 }
