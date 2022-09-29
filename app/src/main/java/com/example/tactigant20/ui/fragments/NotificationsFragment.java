@@ -1,12 +1,12 @@
-package com.example.tactigant20.ui.notifications;
+package com.example.tactigant20.ui.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.MainActivity;
@@ -35,7 +36,6 @@ public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
 
-    private FragmentNotificationsBinding binding;
     private List<AppInfo> appList;
     private ListView appListView;
     private int currentItemPosition;
@@ -50,9 +50,7 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        //NotificationsViewModel notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
-
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        com.example.tactigant20.databinding.FragmentNotificationsBinding binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         appListView = root.findViewById(R.id.appList);
@@ -70,15 +68,6 @@ public class NotificationsFragment extends Fragment {
         });
         return root;
     }
-
-    @Override
-    public void onDestroyView() {
-
-        super.onDestroyView();
-        binding = null;
-    }
-
-
 
     public int getCurrentItemPosition() {
         return currentItemPosition;
@@ -108,7 +97,7 @@ public class NotificationsFragment extends Fragment {
             super.onPreExecute();
         }
 
-        @SuppressLint("NewApi")
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected List<AppInfo> doInBackground(Integer... params) {
 

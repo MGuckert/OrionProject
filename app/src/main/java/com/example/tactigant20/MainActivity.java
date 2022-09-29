@@ -3,6 +3,7 @@ package com.example.tactigant20;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -23,12 +26,12 @@ import com.example.tactigant20.model.AppInfo;
 import com.example.tactigant20.model.BluetoothLowEnergyTool;
 import com.example.tactigant20.model.SwipeAdapter;
 import com.example.tactigant20.model.VibrationsTool;
-import com.example.tactigant20.ui.home.HomeFragment;
-import com.example.tactigant20.ui.notifications.NotificationsFragment;
+import com.example.tactigant20.ui.fragments.HomeFragment;
+import com.example.tactigant20.ui.fragments.NotificationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
 import com.example.tactigant20.ui.settings.InfoActivity;
 import com.example.tactigant20.ui.settings.SettingsActivity;
-import com.example.tactigant20.ui.vibrations.VibrationsFragment;
+import com.example.tactigant20.ui.fragments.VibrationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -43,10 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private final HomeFragment homeFragment = new HomeFragment();
     private final NotificationsFragment notificationsFragment = new NotificationsFragment();
     private MenuItem prevMenuItem;
-
-    private static VibrationsTool myVibrationsTool;
-    private static BluetoothLowEnergyTool myBLET;
-
     private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
         int itemId = item.getItemId();
@@ -61,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     };
 
+    private static VibrationsTool myVibrationsTool;
+    private static BluetoothLowEnergyTool myBLET;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         createNotificationChannel();
@@ -70,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
 
         myVibrationsTool = new VibrationsTool(this);
         myBLET = new BluetoothLowEnergyTool(ADRESSE, this);
+
+        // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
+        if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
+            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(), result -> {});
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult.launch(enableBtIntent);
+        }
 
         // Création de la toolbar
         Toolbar topAppBar=findViewById(R.id.topAppBar);
@@ -169,16 +179,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /*
-    public static void cancelNotification(Context ctx, int notifyId) {
-        // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
-        String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
-        nMgr.cancel(notifyId);
-    }
-
-     */
-
     private void createNotificationChannel() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -193,32 +193,6 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
-
-
-
-
-/*
-    private void stockage(String s, int mode) {
-        // On vient éditer le fichier "enregistrement"
-        //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
-        //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput("enregistrement.txt", mode);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            assert fos != null;
-            fos.write(s.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
- */
 
     //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
     public void onRadioButtonClicked(View v) {

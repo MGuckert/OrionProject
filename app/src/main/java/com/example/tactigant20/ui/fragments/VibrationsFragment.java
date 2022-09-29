@@ -1,4 +1,4 @@
-package com.example.tactigant20.ui.vibrations;
+package com.example.tactigant20.ui.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +18,6 @@ public class VibrationsFragment extends Fragment {
 
     private static final String TAG_VIBRAS = "debug_vibras_fragment";
 
-    private FragmentVibrationsBinding binding;
     private ImageView modeVibrationImage;
 
     @Override
@@ -29,7 +28,7 @@ public class VibrationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentVibrationsBinding.inflate(inflater, container, false);
+        com.example.tactigant20.databinding.FragmentVibrationsBinding binding = FragmentVibrationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         modeVibrationImage = root.findViewById(R.id.modeVibrationImage);
@@ -61,9 +60,4 @@ public class VibrationsFragment extends Fragment {
         modeVibrationImage.setImageResource(R.drawable.wip_mode_3);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 }
