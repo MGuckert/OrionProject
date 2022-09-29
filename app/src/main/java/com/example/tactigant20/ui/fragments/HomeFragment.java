@@ -1,6 +1,5 @@
-package com.example.tactigant20.ui.home;
+package com.example.tactigant20.ui.fragments;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,8 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -34,21 +31,9 @@ public class HomeFragment extends Fragment {
     private ImageView imageConfirmationConnection;
     private ImageView imageConfirmationDeconnection;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
-        if (MainActivity.getMyBLET().getAdapter() == null || !MainActivity.getMyBLET().getAdapter().isEnabled()) {
-            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(), result -> {});
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult.launch(enableBtIntent);
-        }
 
     }
 
@@ -56,8 +41,6 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        // HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         com.example.tactigant20.databinding.FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

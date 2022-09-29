@@ -126,4 +126,34 @@ public class VibrationsTool {
         }
     }
 
+    /*
+    private void stockage(String s, int mode) {
+        // On vient éditer le fichier "enregistrement"
+        //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
+        //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput("enregistrement.txt", mode);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            assert fos != null;
+            fos.write(s.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+        /*
+    public static void cancelNotification(Context ctx, int notifyId) {
+        // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
+        nMgr.cancel(notifyId);
+    }
+
+     */
+
 }
