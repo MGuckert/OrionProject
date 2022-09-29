@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_MAIN = "debug_main_activity";
 
+    private static final String ADRESSE = "94:3C:C6:06:CC:1E";
+
     private ViewPager2 myViewPager2;
     private final VibrationsFragment vibrationsFragment = new VibrationsFragment();
     private final HomeFragment homeFragment = new HomeFragment();
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         myVibrationsTool = new VibrationsTool(this);
-        myBLET = new BluetoothLowEnergyTool("94:3C:C6:06:CC:1E", this);
+        myBLET = new BluetoothLowEnergyTool(ADRESSE, this);
 
         // Création de la toolbar
         Toolbar topAppBar=findViewById(R.id.topAppBar);

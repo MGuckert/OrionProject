@@ -37,7 +37,7 @@ public class BluetoothLowEnergyTool {
     private final ScanCallback mScanCallback;
     private final BluetoothGattCallback mBluetoothGattCallback;
 
-    private String mMode ="";
+    private String mMode = "";
     private WeakReference<Context> mContext;
     private boolean mValeurDeChargement = false;
     private boolean mValeurDeConnexion = false;
