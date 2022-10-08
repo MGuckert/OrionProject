@@ -39,8 +39,7 @@ public class BluetoothLowEnergyTool {
 
     private String mMode = "";
     private WeakReference<Context> mContext;
-    private boolean mValeurDeChargement = false;
-    private boolean mValeurDeConnexion = false;
+    private ValeurDeConnexion mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
     private BluetoothGatt mGatt;
     private BluetoothAdapter mAdapter;
     private BluetoothLeScanner mScanner;
@@ -54,7 +53,6 @@ public class BluetoothLowEnergyTool {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
-                mValeurDeChargement = false;
                 BluetoothDevice device = result.getDevice();
                 try {
                     Log.d(TAG_BLE, "Obtention de l'appareil BLE : " + device.getName());
@@ -67,8 +65,8 @@ public class BluetoothLowEnergyTool {
 
             @Override
             public void onScanFailed(int errorCode) {
-                mValeurDeChargement = false;
                 Log.e(TAG_BLE, "ERREUR de scan | code : "+ errorCode);
+                mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
             }
         };
 
@@ -79,12 +77,12 @@ public class BluetoothLowEnergyTool {
                 if(status == GATT_SUCCESS) {
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
                         // On s'est connecté à un appareil
-                        mValeurDeConnexion = true;
+                        mValeurDeConnexion = ValeurDeConnexion.CONNECTE;
                         Log.d(TAG_BLE, "CONNECTE");
 
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                         // On s'est déconnecté d'un appareil
-                        mValeurDeConnexion = false;
+                        mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
                         try {
                             gatt.close();
                         } catch (SecurityException e) {
@@ -99,6 +97,8 @@ public class BluetoothLowEnergyTool {
                         gatt.close();
                     } catch (SecurityException e) {
                         e.printStackTrace();
+                    } finally {
+                        mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
                     }
                 }}
 
@@ -147,7 +147,6 @@ public class BluetoothLowEnergyTool {
                     Log.e(TAG_BLE, String.format(Locale.FRENCH,"ERREUR de lecture pour la caractéristique : %s ; statut : %d (onCharacteristicRead)", characteristic.getUuid(), status));
                     return;
                 }
-
                 // Traitement de la caractéristique pour la rendre lisible (byte -> String)
                 byte[] value = characteristic.getValue();
                 String s = new String(value, StandardCharsets.UTF_8);
@@ -164,33 +163,8 @@ public class BluetoothLowEnergyTool {
         };
     }
 
-    public WeakReference<Context> getContext() {
-        return this.mContext;
-    }
-
-    public boolean getValeurDeChargement() {
-        return this.mValeurDeChargement;
-    }
-
-    public boolean getValeurDeConnexion() {
-        return this.mValeurDeConnexion;
-    }
-
-    public BluetoothGatt getGatt() {
-        return this.mGatt;
-    }
-
-    public BluetoothAdapter getAdapter() {
-        return this.mAdapter;
-    }
-
-    public void setContext(WeakReference<Context> mContext) {
-        this.mContext = mContext;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
-        this.mValeurDeChargement = true;
         this.mAdapter = BluetoothAdapter.getDefaultAdapter();
         this.mScanner = mAdapter.getBluetoothLeScanner();
         if (this.mScanner != null) {
@@ -216,10 +190,10 @@ public class BluetoothLowEnergyTool {
                     .build();
             try {
                 this.mScanner.startScan(filters, scanSettings, mScanCallback);
+                this.mValeurDeConnexion = ValeurDeConnexion.CHARGEMENT;
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
-
             Log.d(TAG_BLE, "Scan lancé");
         } else {
             Log.e(TAG_BLE, "ERREUR : Impossible d'obtenir un scanner");
@@ -227,20 +201,43 @@ public class BluetoothLowEnergyTool {
     }
 
     public void disconnect() {
-        this.mValeurDeChargement = false;
-        if (this.mValeurDeConnexion) {
-            this.mValeurDeConnexion = false;
+        if (!(this.mValeurDeConnexion == ValeurDeConnexion.DECONNECTE)) {
             try {
                 this.mGatt.disconnect();
                 this.mScanner.stopScan(mScanCallback);
+                mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public WeakReference<Context> getContext() {
+        return this.mContext;
+    }
+
+    public ValeurDeConnexion getValeurDeConnexion() {
+        return this.mValeurDeConnexion;
+    }
+
+    public BluetoothGatt getGatt() {
+        return this.mGatt;
+    }
+
+    public BluetoothAdapter getAdapter() {
+        return this.mAdapter;
+    }
+
+    public void setContext(WeakReference<Context> mContext) {
+        this.mContext = mContext;
+    }
+
     public void setMode(String mMode) {
         this.mMode = mMode;
+    }
+
+    public enum ValeurDeConnexion {
+        DECONNECTE, CHARGEMENT, CONNECTE
     }
 }
 

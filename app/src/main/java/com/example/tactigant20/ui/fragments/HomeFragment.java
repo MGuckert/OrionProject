@@ -26,10 +26,9 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG_HOME = "debug_home_fragment";
 
+    private ImageView imageConfirmationConnexion;
+    private ImageView imageConfirmationDeconnexion;
     private TextView texteDeChargement;
-
-    private ImageView imageConfirmationConnection;
-    private ImageView imageConfirmationDeconnection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,10 +59,10 @@ public class HomeFragment extends Fragment {
         texteDeChargement = root.findViewById(R.id.texteDeChargement);
 
         // Image de confirmation de connexion
-        imageConfirmationConnection = root.findViewById(R.id.connexionValide);
+        imageConfirmationConnexion = root.findViewById(R.id.connexionValide);
 
         // Image d'erreur/absence de connexion
-        imageConfirmationDeconnection = root.findViewById(R.id.connexionInvalide);
+        imageConfirmationDeconnexion = root.findViewById(R.id.connexionInvalide);
 
 
         CustomUIThread myCustomUIThread = new CustomUIThread();
@@ -99,31 +98,32 @@ public class HomeFragment extends Fragment {
             while(true) {
                 //Log.d(TAG_HOME, "\nmValeurDeChargement : " + myBLET.getValeurDeChargement() +"\nmValeurDeConnection : " + myBLET.getValeurDeConnexion());
             try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (MainActivity.getMyBLET().getValeurDeChargement()) {
+            switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
+                case DECONNECTE:
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        texteDeChargement.setVisibility(View.VISIBLE);
-                        imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
-                        imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
+                        imageConfirmationConnexion.setVisibility(View.INVISIBLE);
+                        imageConfirmationDeconnexion.setVisibility(View.VISIBLE);
+                        texteDeChargement.setVisibility(View.INVISIBLE);
                     });
-                } else {
-                    if (MainActivity.getMyBLET().getValeurDeConnexion()) {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            texteDeChargement.setVisibility(View.INVISIBLE);
-                            imageConfirmationDeconnection.setVisibility(View.INVISIBLE);
-                            imageConfirmationConnection.setVisibility(View.VISIBLE);
-                        });
-
-                    } else {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            texteDeChargement.setVisibility(View.INVISIBLE);
-                            imageConfirmationConnection.setVisibility(View.INVISIBLE);
-                            imageConfirmationDeconnection.setVisibility(View.VISIBLE);
-                        });
-                    }
+                    break;
+                case CHARGEMENT:
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        imageConfirmationConnexion.setVisibility(View.INVISIBLE);
+                        imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
+                        texteDeChargement.setVisibility(View.VISIBLE);
+                    });
+                    break;
+                case CONNECTE:
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        imageConfirmationConnexion.setVisibility(View.VISIBLE);
+                        imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
+                        texteDeChargement.setVisibility(View.INVISIBLE);
+                    });
+                    break;
                 }
             }
         }
