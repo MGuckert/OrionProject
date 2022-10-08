@@ -188,7 +188,6 @@ public class BluetoothLowEnergyTool {
         this.mContext = mContext;
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
         this.mValeurDeChargement = true;
