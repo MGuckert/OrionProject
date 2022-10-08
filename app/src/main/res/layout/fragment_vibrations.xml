@@ -6,7 +6,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    tools:context=".ui.vibrations.VibrationsFragment">
+    tools:context=".ui.fragments.VibrationsFragment">
 
     <ImageView
         android:id="@+id/modeVibrationImage"
@@ -78,40 +78,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:text="@string/description_du_mode_3"
-                android:layout_gravity="center"/>
-
-            <Button
-                android:id="@+id/buttonMode4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="@string/mode_4"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:id="@+id/textDescMode4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:text="@string/description_du_mode_4"
-                android:layout_gravity="center"/>
-
-            <Button
-                android:id="@+id/buttonMode5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="@string/mode_5"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:id="@+id/textDescMode5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:text="@string/description_du_mode_5"
                 android:layout_gravity="center"/>
 
         </LinearLayout>

@@ -4,14 +4,8 @@
     <string name="title_vibrations">Vibrations</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_help">HelpActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="mode_1">Mode 1</string>
     <string name="description_du_mode_1">Description du Mode 1</string>
     <string name="mode_2">Mode 2</string>
@@ -22,10 +16,6 @@
     <string name="mdr_t_as_cru_quoi_j_ai_la_flemme">WIP aide</string>
     <string name="vibrations">Vibrations</string>
     <string name="button_home">Bluetooth</string>
-    <string name="mode_4">Mode 4</string>
-    <string name="description_du_mode_4">Description du mode 4</string>
-    <string name="mode_5">Mode 5</string>
-    <string name="description_du_mode_5">Description du mode 5</string>
     <string name="help">Help</string>
     <string name="infos">Infos</string>
     <string name="settings">Paramètres</string>

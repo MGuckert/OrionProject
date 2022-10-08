@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/navigation_vibrations"
         android:icon="@mipmap/ic_vibration_foreground"
-        android:title="@string/vibrations" />
+        android:title="@string/title_vibrations" />
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"

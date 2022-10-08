@@ -1,6 +1,5 @@
 package com.example.tactigant20;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
@@ -9,46 +8,43 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.example.tactigant20.ui.home.HomeFragment;
-import com.example.tactigant20.ui.notifications.NotificationsFragment;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 //pour que cela fonctionne correctement il semble qu'il faille autoriser l'application à obtenir toutes les notifications
 //pour cela taper dans la barre de recherche des paramètres android "accéder aux notifications"
 public class MyNotificationListenerService extends NotificationListenerService {
-    private Context context;
-    private final static String TAG_MNLS = "NotificationInfo";
-    private BluetoothGatt gatt;
-    public static String vibrationMode;
+
+    private final static String TAG_MNLS = "debug_mnls";
+
+    private Context mContext;
+    private static String mVibrationMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
+        mContext = getApplicationContext();
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        Log.d(TAG_MNLS, "DEBUG 1");
         super.onNotificationPosted(sbn);
         String packageName = sbn.getPackageName();
         Notification notif = sbn.getNotification();
         String category = notif.category;
-        vibrationMode = NotificationsFragment.loadVibrationMode(packageName, getApplicationContext());
-        gatt = HomeFragment.GetGatt();
-        HomeFragment.Mode = "Ecriture";
-        if(category != null)
-            if (!category.equals("sys")) {//attention risque de NullPointerException !!!
-                showToast("Notification reçu : " + packageName + " Vibration mode : " + vibrationMode);
-                gatt.discoverServices();
+        mVibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
+        BluetoothGatt gatt = MainActivity.getMyBLET().getGatt();
+        MainActivity.getMyBLET().setMode("Ecriture");
+        if(category != null) {
+            if (!category.equals("sys")) { //attention risque de NullPointerException !!!
+                Log.d(TAG_MNLS, "DEBUG 2");
+                showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
+                try {
+                    gatt.discoverServices();
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
             }
+        }
+
         Log.d(TAG_MNLS, "notificationPosted");
         Log.i(TAG_MNLS, "package name : "+packageName);
         Log.i(TAG_MNLS,"notification : "+notif);
@@ -60,5 +56,11 @@ public class MyNotificationListenerService extends NotificationListenerService {
         super.onNotificationRemoved(sbn);
     }
 
-    public void showToast(String msg){Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();}
+    public static String getVibrationMode() {
+        return mVibrationMode;
+    }
+
+    public void showToast(String msg) {
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+    }
 }
