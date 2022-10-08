@@ -1,13 +1,12 @@
-package com.example.tactigant20.ui.notifications;
+package com.example.tactigant20.ui.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,17 +16,17 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
+import com.example.tactigant20.model.AppAdapter;
+import com.example.tactigant20.model.AppInfo;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,7 +36,6 @@ public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
 
-    private FragmentNotificationsBinding binding;
     private List<AppInfo> appList;
     private ListView appListView;
     private int currentItemPosition;
@@ -52,9 +50,7 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        //NotificationsViewModel notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
-
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        com.example.tactigant20.databinding.FragmentNotificationsBinding binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         appListView = root.findViewById(R.id.appList);
@@ -71,46 +67,6 @@ public class NotificationsFragment extends Fragment {
             createNewVibrationModeDialog(currentItem);
         });
         return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-
-        super.onDestroyView();
-        binding = null;
-    }
-
-    public static String loadVibrationMode(String notifName, Context context) {
-        //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier
-        // "vibration_modes_data.txt", et "UNKNOWN" si aucune donnée pour cette application n'a été sauvegardée.
-        FileInputStream inputStream = null;
-        try {
-            inputStream = context.openFileInput("vibration_modes_data.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (inputStream != null) {
-            InputStreamReader inputReader = new InputStreamReader(inputStream);
-            BufferedReader buffReader = new BufferedReader(inputReader);
-
-            String line = null;
-            do { //On lit le fichier ligne par ligne, en comparant le début de chaque ligne avec "notifName" :
-                // s'il est identique, on est sur la bonne ligne, et on peut renvoyer le mode de vibration écrit !
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.err.println(line);
-                int n = notifName.length();
-                if ( line != null && n < line.length()) {
-                    if (line.substring(0, n).equals(notifName)) {
-                        return line.substring(line.length()-1);
-                    }
-                }
-            } while (line != null);
-        }
-        return "UNKNOWN";
     }
 
     public int getCurrentItemPosition() {
@@ -134,6 +90,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     class LoadAppInfoTask extends AsyncTask<Integer,Integer, List<AppInfo>> {
 
         @Override
@@ -141,7 +98,7 @@ public class NotificationsFragment extends Fragment {
             super.onPreExecute();
         }
 
-        @SuppressLint("NewApi")
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected List<AppInfo> doInBackground(Integer... params) {
 
@@ -169,7 +126,7 @@ public class NotificationsFragment extends Fragment {
                     if (getContext() == null) {
                         Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
                     } else {
-                        String mode = loadVibrationMode(app.getInfo().packageName, getContext());
+                        String mode = MainActivity.getMyVibrationsTool().loadVibrationMode(app.getInfo().packageName, getContext());
                         if (mode.equals("UNKNOWN"))
                             app.setVibrationMode("N");
                         else
@@ -211,6 +168,7 @@ public class NotificationsFragment extends Fragment {
     public void createNewVibrationModeDialog(AppInfo appInfo) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getContext());
         final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
+
         RadioGroup vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
         switch (appInfo.getVibrationMode()) {
             case "N":
