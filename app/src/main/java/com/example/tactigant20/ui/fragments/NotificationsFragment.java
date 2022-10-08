@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 
@@ -22,7 +21,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
-import com.example.tactigant20.databinding.FragmentHomeBinding;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
@@ -92,6 +90,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     class LoadAppInfoTask extends AsyncTask<Integer,Integer, List<AppInfo>> {
 
         @Override
