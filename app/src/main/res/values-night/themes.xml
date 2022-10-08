@@ -6,7 +6,7 @@
             <item name="android:windowBackground">@color/dark</item>
             <item name="colorPrimary"> @color/dark_grey</item>
             <item name="colorOnPrimary">@color/orange_beige</item>
-                <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
+            <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
         </style>
 
     <style name="Theme.TactiGant20.NoActionBar">
