@@ -205,7 +205,7 @@ public class BluetoothLowEnergyTool {
     }
 
     public void disconnect() {
-        if (!(this.mValeurDeConnexion == ValeurDeConnexion.DECONNECTE)) {
+        if (this.mGatt != null) {
             try {
                 this.mGatt.disconnect();
                 this.mScanner.stopScan(mScanCallback);
