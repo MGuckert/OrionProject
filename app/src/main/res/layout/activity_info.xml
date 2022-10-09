@@ -6,13 +6,67 @@
     android:layout_height="match_parent"
     tools:context=".ui.settings.InfoActivity">
 
+
     <TextView
-        android:id="@+id/infotext"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/oui_ben_la_aussi_j_ai_eu_la_flemme"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="72dp"
+        android:layout_marginTop="16dp"
+        android:text="À propos"
+        android:textSize="50dp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:text="      Orion est un projet étudiant développé par 12 élèves de l'École Centrale de Lille, en collaboration avec l'Institut d'Électronique, de Micro-électronique et de nanotechnologie. Ce projet est basé sur une technologie de retour tactile de pointe développée par l'IEMN."
+        android:textSize="20dp"
+        android:justificationMode="inter_word"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="198dp"
+        android:layout_height="145dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="104dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/Orion_logo" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="766dp"
+        android:layout_height="404dp"
+        android:layout_marginTop="448dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.074"
+        app:srcCompat="@mipmap/IEMN_logo_foreground" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="558dp"
+        android:layout_height="420dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@mipmap/Centrale_logo_foreground" />5dp"
+        tools:layout_editor_absoluteY="198dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
