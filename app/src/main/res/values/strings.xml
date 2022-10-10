@@ -1,13 +1,8 @@
 <resources>
-    <string name="app_name">TactiGant 2.0</string>
-    <string name="title_home">Home</string>
+    <string name="app_name">Orion</string>
+    <string name="title_home">Accueil</string>
     <string name="title_vibrations">Vibrations</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_activity_help">HelpActivity</string>
-
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
     <string name="mode_1">Mode 1</string>
     <string name="description_du_mode_1">Description du Mode 1</string>
     <string name="mode_2">Mode 2</string>
@@ -16,24 +11,17 @@
     <string name="description_du_mode_3">Description du Mode 3</string>
     <string name="oui_ben_la_aussi_j_ai_eu_la_flemme">WIP infos</string>
     <string name="mdr_t_as_cru_quoi_j_ai_la_flemme">WIP aide</string>
-    <string name="vibrations">Vibrations</string>
-    <string name="button_home">Bluetooth</string>
-
     <string name="help">Help</string>
     <string name="infos">Infos</string>
-    <string name="settings">Settings</string>
-    <string name="Appsettings">App_settings</string>
+    <string name="settings">Paramètres</string>
     <string name="service_name">service_name</string>
     <string name="app_title">App title</string>
-    <string name="com_package_app">com.package.app</string>
     <string name="app_icon">app icon</string>
     <string name="text_settings">Settings WIP</string>
     <string name="vibration_mode">Vibration Mode</string>
-    <string name="scan">Scan</string>
+    <string name="scan">Connexion</string>
     <string name="chargement">Chargement…</string>
-    <string name="lecture">Lecture</string>
-    <string name="led">Led</string>
-    <string name="disconnect">Disconnect</string>
+    <string name="disconnect">Déconnexion</string>
     <string name="n_a">N/A</string>
     <string name="modes_de_vibration">Modes de vibration</string>
 </resources>

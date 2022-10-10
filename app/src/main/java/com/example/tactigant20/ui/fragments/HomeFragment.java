@@ -95,35 +95,36 @@ public class HomeFragment extends Fragment {
         public void run() {
             Log.d(TAG_HOME, "Lancement du thread");
 
-            while(true) {
+            while (true) {
                 //Log.d(TAG_HOME, "\nmValeurDeChargement : " + myBLET.getValeurDeChargement() +"\nmValeurDeConnection : " + myBLET.getValeurDeConnexion());
-            try {
-                    Thread.sleep(2000);
+                try {
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
-                case DECONNECTE:
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        imageConfirmationConnexion.setVisibility(View.INVISIBLE);
-                        imageConfirmationDeconnexion.setVisibility(View.VISIBLE);
-                        texteDeChargement.setVisibility(View.INVISIBLE);
-                    });
-                    break;
-                case CHARGEMENT:
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        imageConfirmationConnexion.setVisibility(View.INVISIBLE);
-                        imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
-                        texteDeChargement.setVisibility(View.VISIBLE);
-                    });
-                    break;
-                case CONNECTE:
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        imageConfirmationConnexion.setVisibility(View.VISIBLE);
-                        imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
-                        texteDeChargement.setVisibility(View.INVISIBLE);
-                    });
-                    break;
+                switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
+                    case DECONNECTE:
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            imageConfirmationConnexion.setVisibility(View.INVISIBLE);
+                            imageConfirmationDeconnexion.setVisibility(View.VISIBLE);
+                            texteDeChargement.setVisibility(View.INVISIBLE);
+                        });
+                        break;
+                    case CHARGEMENT:
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            imageConfirmationConnexion.setVisibility(View.INVISIBLE);
+                            imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
+                            texteDeChargement.setVisibility(View.VISIBLE);
+                        });
+                        break;
+                    case CONNECTE:
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            imageConfirmationConnexion.setVisibility(View.VISIBLE);
+                            imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
+                            texteDeChargement.setVisibility(View.INVISIBLE);
+                        });
+                        break;
+
                 }
             }
         }

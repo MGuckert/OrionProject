@@ -43,7 +43,11 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
         }
 
         TextView title = v.findViewById(R.id.titleTextView);
-        title.setText(current.getLabel());
+        String titre = current.getLabel();
+        if (titre.length() > 12) {
+            titre = titre.substring(0, 12) + "...";
+        }
+        title.setText(titre);
         TextView vibrationModeTextView = v.findViewById(R.id.vibrationModeTextView);
         if (current.getVibrationMode().equals("N"))
             vibrationModeTextView.setText("N/A");

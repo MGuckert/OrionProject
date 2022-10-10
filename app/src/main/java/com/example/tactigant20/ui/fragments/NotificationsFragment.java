@@ -2,7 +2,6 @@ package com.example.tactigant20.ui.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -24,6 +22,7 @@ import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
+import com.example.tactigant20.ui.VibrationModeDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,12 +34,27 @@ import java.util.List;
 public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
-
-    private List<AppInfo> appList;
+    
+    private static List<AppInfo> appList;
+    private static int currentItemPosition;
+    private static AppAdapter adapter;
     private ListView appListView;
-    private int currentItemPosition;
-    private AppAdapter adapter;
-    private AlertDialog dialog;
+
+    public static int getCurrentItemPosition() {
+        return currentItemPosition;
+    }
+
+    public static AppInfo getCurrentItem() {
+        return appList.get(currentItemPosition);
+    }
+
+    public static AppAdapter getAdapter() {
+        return adapter;
+    }
+
+    public static void setFromIndex(int position, AppInfo appInfo) {
+        appList.set(position, appInfo);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,32 +80,19 @@ public class NotificationsFragment extends Fragment {
             System.err.println(currentItem.getLabel());
             createNewVibrationModeDialog(currentItem);
         });
+
         return root;
     }
 
-    public int getCurrentItemPosition() {
-        return currentItemPosition;
-    }
-
-    public AppInfo getCurrentItem() {
-        return appList.get(currentItemPosition);
-    }
-
-    public AppAdapter getAdapter() {
-        return adapter;
-    }
-
-    public AlertDialog getDialog() {
-        return dialog;
-    }
-
-    public void setFromIndex(int position, AppInfo appInfo) {
-        appList.set(position, appInfo);
+    //Fonction créant la fenêtre pop-up qui permet de choisir son mode de vibration
+    public void createNewVibrationModeDialog(AppInfo appInfo) {
+        final VibrationModeDialog dialog = new VibrationModeDialog(this.getContext(), appInfo);
+        dialog.show();
     }
 
     //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
     @SuppressWarnings({"StaticFieldLeak", "deprecation"})
-    class LoadAppInfoTask extends AsyncTask<Integer,Integer, List<AppInfo>> {
+    class LoadAppInfoTask extends AsyncTask<Integer, Integer, List<AppInfo>> {
 
         @Override
         protected void onPreExecute() {
@@ -106,16 +107,16 @@ public class NotificationsFragment extends Fragment {
 
             List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
             System.err.println(infos.size());
-            File vibration_modes_data = new File(requireContext().getFilesDir(),"vibration_modes_data.txt");
+            File vibration_modes_data = new File(requireContext().getFilesDir(), "vibration_modes_data.txt");
             if (!vibration_modes_data.exists()) {
                 try {
-                    requireContext().openFileOutput("vibration_modes_data.txt",MODE_PRIVATE);
+                    requireContext().openFileOutput("vibration_modes_data.txt", MODE_PRIVATE);
                 } catch (FileNotFoundException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
 
-            for (ApplicationInfo info:infos) {
+            for (ApplicationInfo info : infos) {
                 if (filter(info)) {
                     AppInfo app = new AppInfo();
                     app.setInfo(info);
@@ -144,9 +145,10 @@ public class NotificationsFragment extends Fragment {
         @Override
         protected void onPostExecute(List<AppInfo> appInfos) {
             super.onPostExecute(appInfos);
-            adapter = new AppAdapter(getContext(),appInfos);
+            adapter = new AppAdapter(getContext(), appInfos);
             appListView.setAdapter(adapter);
         }
+
         //Fonction filtrant les applications affichées dans la liste (applis de base + toutes les applis installées par l'utilisateur
         protected boolean filter(ApplicationInfo appInfo) {
             return (appInfo.packageName.equals("com.google.android.apps.docs") ||
@@ -164,28 +166,5 @@ public class NotificationsFragment extends Fragment {
                     ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
         }
     }
-    //Fonction créant la fenêtre pop-up qui permet de choisir son mode de vibration
-    public void createNewVibrationModeDialog(AppInfo appInfo) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getContext());
-        final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
 
-        RadioGroup vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
-        switch (appInfo.getVibrationMode()) {
-            case "N":
-                vibrationModeRadioGroup.check(R.id.radioButtonNA);
-                break;
-            case "1":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode1);
-                break;
-            case "2":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode2);
-                break;
-            case "3":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode3);
-                break;
-        }
-        dialogBuilder.setView(vibrationModeDialog);
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
 }

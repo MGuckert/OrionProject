@@ -7,7 +7,6 @@
     tools:context=".ui.settings.InfoActivity">
 
     <TextView
-        android:id="@+id/infotext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/oui_ben_la_aussi_j_ai_eu_la_flemme"

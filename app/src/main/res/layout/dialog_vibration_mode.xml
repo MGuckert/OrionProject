@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:id="@+id/vibrationModeRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <RadioButton
+            android:id="@+id/radioButtonNA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/n_a" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMode1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mode_1" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMode2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mode_2" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMode3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mode_3" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/modes_de_vibration"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="-16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

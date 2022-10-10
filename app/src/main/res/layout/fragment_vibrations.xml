@@ -39,7 +39,6 @@
                 android:layout_gravity="center" />
 
             <TextView
-                android:id="@+id/textDescMode1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
@@ -56,7 +55,6 @@
                 android:layout_gravity="center"/>
 
             <TextView
-                android:id="@+id/textDescMode2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
@@ -73,7 +71,6 @@
                 android:layout_gravity="center"/>
 
             <TextView
-                android:id="@+id/textDescMode3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"

@@ -165,43 +165,47 @@ public class BluetoothLowEnergyTool {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
-        this.mAdapter = BluetoothAdapter.getDefaultAdapter();
-        this.mScanner = mAdapter.getBluetoothLeScanner();
-        if (this.mScanner != null) {
-            String[] peripheralAddresses = new String[]{this.mAdresseMAC}; // MAC du dispositif
+        if (!(mValeurDeConnexion == ValeurDeConnexion.CONNECTE)) {
+            this.mAdapter = BluetoothAdapter.getDefaultAdapter();
+            this.mScanner = mAdapter.getBluetoothLeScanner();
+            if (this.mScanner != null) {
+                String[] peripheralAddresses = new String[]{this.mAdresseMAC}; // MAC du dispositif
 
-            // Liste des filtres
-            List<ScanFilter> filters;
-            // Toujours vrai ?
-            filters = new ArrayList<>();
-            for (String address : peripheralAddresses) {
-                ScanFilter filter = new ScanFilter.Builder()
-                        .setDeviceAddress(address)
+                // Liste des filtres
+                List<ScanFilter> filters;
+                // Toujours vrai ?
+                filters = new ArrayList<>();
+                for (String address : peripheralAddresses) {
+                    ScanFilter filter = new ScanFilter.Builder()
+                            .setDeviceAddress(address)
+                            .build();
+                    filters.add(filter);
+                }
+                // Paramètres de scan
+                ScanSettings scanSettings = new ScanSettings.Builder()
+                        .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+                        .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+                        .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
+                        .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
+                        .setReportDelay(0L)
                         .build();
-                filters.add(filter);
+                try {
+                    this.mScanner.startScan(filters, scanSettings, mScanCallback);
+                    this.mValeurDeConnexion = ValeurDeConnexion.CHARGEMENT;
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG_BLE, "Scan lancé");
+            } else {
+                Log.e(TAG_BLE, "ERREUR : Impossible d'obtenir un scanner");
             }
-            // Paramètres de scan
-            ScanSettings scanSettings = new ScanSettings.Builder()
-                    .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-                    .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                    .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
-                    .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
-                    .setReportDelay(0L)
-                    .build();
-            try {
-                this.mScanner.startScan(filters, scanSettings, mScanCallback);
-                this.mValeurDeConnexion = ValeurDeConnexion.CHARGEMENT;
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-            Log.d(TAG_BLE, "Scan lancé");
         } else {
-            Log.e(TAG_BLE, "ERREUR : Impossible d'obtenir un scanner");
+            Log.w(TAG_BLE, "Veuillez vous déconnecter avant de relancer un scan");
         }
     }
 
     public void disconnect() {
-        if (!(this.mValeurDeConnexion == ValeurDeConnexion.DECONNECTE)) {
+        if (this.mGatt != null) {
             try {
                 this.mGatt.disconnect();
                 this.mScanner.stopScan(mScanCallback);
