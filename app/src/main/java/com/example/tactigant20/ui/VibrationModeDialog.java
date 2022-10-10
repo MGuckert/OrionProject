@@ -87,7 +87,7 @@ public class VibrationModeDialog extends Dialog {
 
         NotificationsFragment.setFromIndex(NotificationsFragment.getCurrentItemPosition(), currentItem);
         NotificationsFragment.getAdapter().notifyDataSetChanged();
-        MainActivity.getMyVibrationsTool().saveVibrationMode(currentItem.getInfo().packageName,currentItem.getVibrationMode());
+        MainActivity.getMyVibrationsTool().saveVibrationMode(currentItem.getInfo().packageName, currentItem.getVibrationMode());
         this.dismiss();
     }
 
