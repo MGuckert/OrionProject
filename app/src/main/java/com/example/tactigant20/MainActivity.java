@@ -1,6 +1,5 @@
 package com.example.tactigant20;
 
-import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
@@ -10,8 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.RadioButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,16 +19,15 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
-import com.example.tactigant20.model.AppInfo;
 import com.example.tactigant20.model.BluetoothLowEnergyTool;
 import com.example.tactigant20.model.SwipeAdapter;
 import com.example.tactigant20.model.VibrationsTool;
 import com.example.tactigant20.ui.fragments.HomeFragment;
 import com.example.tactigant20.ui.fragments.NotificationsFragment;
+import com.example.tactigant20.ui.fragments.VibrationsFragment;
 import com.example.tactigant20.ui.settings.HelpActivity;
 import com.example.tactigant20.ui.settings.InfoActivity;
 import com.example.tactigant20.ui.settings.SettingsActivity;
-import com.example.tactigant20.ui.fragments.VibrationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -194,41 +190,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
-    public void onRadioButtonClicked(View v) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) v).isChecked();
-        // Check which radio button was clicked
-        AppInfo currentItem = this.notificationsFragment.getCurrentItem();
-        Dialog dialog = this.notificationsFragment.getDialog();
-        int boutonRadio = v.getId();
-        if (boutonRadio == R.id.radioButtonNA) {
-            if (checked) {
-                currentItem.setVibrationMode("N");
-            }
-        }
-        if (boutonRadio == R.id.radioButtonMode1) {
-            if (checked) {
-                currentItem.setVibrationMode("1");
-            }
-        }
-        if (boutonRadio == R.id.radioButtonMode2) {
-            if (checked) {
-                currentItem.setVibrationMode("2");
-            }
-        }
-        if (boutonRadio == R.id.radioButtonMode3) {
-            if (checked) {
-                currentItem.setVibrationMode("3");
-            }
-        }
-
-        this.notificationsFragment.setFromIndex(this.notificationsFragment.getCurrentItemPosition(), currentItem);
-        this.notificationsFragment.getAdapter().notifyDataSetChanged();
-        myVibrationsTool.saveVibrationMode(currentItem.getInfo().packageName,currentItem.getVibrationMode());
-        dialog.dismiss();
-    }
-
     public static VibrationsTool getMyVibrationsTool() {
         return myVibrationsTool;
     }
@@ -236,4 +197,5 @@ public class MainActivity extends AppCompatActivity {
     public static BluetoothLowEnergyTool getMyBLET() {
         return myBLET;
     }
+
 }

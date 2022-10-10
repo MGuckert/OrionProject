@@ -2,7 +2,6 @@ package com.example.tactigant20.ui.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -24,6 +22,7 @@ import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
+import com.example.tactigant20.ui.VibrationModeDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,11 +35,10 @@ public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
 
-    private List<AppInfo> appList;
+    private static List<AppInfo> appList;
     private ListView appListView;
-    private int currentItemPosition;
-    private AppAdapter adapter;
-    private AlertDialog dialog;
+    private static int currentItemPosition;
+    private static AppAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,27 +64,30 @@ public class NotificationsFragment extends Fragment {
             System.err.println(currentItem.getLabel());
             createNewVibrationModeDialog(currentItem);
         });
+
         return root;
     }
 
-    public int getCurrentItemPosition() {
+    public static int getCurrentItemPosition() {
         return currentItemPosition;
     }
 
-    public AppInfo getCurrentItem() {
+    public static AppInfo getCurrentItem() {
         return appList.get(currentItemPosition);
     }
 
-    public AppAdapter getAdapter() {
+    public static AppAdapter getAdapter() {
         return adapter;
     }
 
-    public AlertDialog getDialog() {
-        return dialog;
+    public static void setFromIndex(int position, AppInfo appInfo) {
+        appList.set(position, appInfo);
     }
 
-    public void setFromIndex(int position, AppInfo appInfo) {
-        appList.set(position, appInfo);
+    //Fonction créant la fenêtre pop-up qui permet de choisir son mode de vibration
+    public void createNewVibrationModeDialog(AppInfo appInfo) {
+        final VibrationModeDialog dialog = new VibrationModeDialog(this.getContext(), appInfo);
+        dialog.show();
     }
 
     //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
@@ -164,28 +165,7 @@ public class NotificationsFragment extends Fragment {
                     ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
         }
     }
-    //Fonction créant la fenêtre pop-up qui permet de choisir son mode de vibration
-    public void createNewVibrationModeDialog(AppInfo appInfo) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getContext());
-        final View vibrationModeDialog = getLayoutInflater().inflate(R.layout.vibration_popup_menu, null);
 
-        RadioGroup vibrationModeRadioGroup = vibrationModeDialog.findViewById(R.id.vibrationModeRadioGroup);
-        switch (appInfo.getVibrationMode()) {
-            case "N":
-                vibrationModeRadioGroup.check(R.id.radioButtonNA);
-                break;
-            case "1":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode1);
-                break;
-            case "2":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode2);
-                break;
-            case "3":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode3);
-                break;
-        }
-        dialogBuilder.setView(vibrationModeDialog);
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
+
+
 }
