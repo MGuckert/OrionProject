@@ -124,6 +124,7 @@ public class HomeFragment extends Fragment {
                             texteDeChargement.setVisibility(View.INVISIBLE);
                         });
                         break;
+
                 }
             }
         }

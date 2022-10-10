@@ -34,7 +34,7 @@ import java.util.List;
 public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
-
+    
     private static List<AppInfo> appList;
     private static int currentItemPosition;
     private static AppAdapter adapter;
@@ -166,6 +166,5 @@ public class NotificationsFragment extends Fragment {
                     ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
         }
     }
-
 
 }
