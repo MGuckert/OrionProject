@@ -36,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_MAIN = "debug_main_activity";
 
     private static final String ADRESSE = "94:3C:C6:06:CC:1E";
-
-    private ViewPager2 myViewPager2;
+    private static VibrationsTool myVibrationsTool;
+    private static BluetoothLowEnergyTool myBLET;
     private final VibrationsFragment vibrationsFragment = new VibrationsFragment();
     private final HomeFragment homeFragment = new HomeFragment();
     private final NotificationsFragment notificationsFragment = new NotificationsFragment();
-    private MenuItem prevMenuItem;
+    private ViewPager2 myViewPager2;
     private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
         int itemId = item.getItemId();
@@ -55,12 +55,18 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     };
+    private MenuItem prevMenuItem;
 
-    private static VibrationsTool myVibrationsTool;
-    private static BluetoothLowEnergyTool myBLET;
+    public static VibrationsTool getMyVibrationsTool() {
+        return myVibrationsTool;
+    }
+
+    public static BluetoothLowEnergyTool getMyBLET() {
+        return myBLET;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         createNotificationChannel();
         super.onCreate(savedInstanceState);
         com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -72,13 +78,14 @@ public class MainActivity extends AppCompatActivity {
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
         if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
             ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(), result -> {});
+                    new ActivityResultContracts.StartActivityForResult(), result -> {
+                    });
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult.launch(enableBtIntent);
         }
 
         // Création de la toolbar
-        Toolbar topAppBar=findViewById(R.id.topAppBar);
+        Toolbar topAppBar = findViewById(R.id.topAppBar);
         setSupportActionBar(topAppBar);
 
         // Création du système de swipe
@@ -101,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     bottomNav.getMenu().getItem(0).setChecked(false);
                 }
-                Log.d("page",   ""+position);
+                Log.d("page", "" + position);
                 bottomNav.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNav.getMenu().getItem(position);
 
@@ -110,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         });
         myViewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         myViewPager2.setAdapter(mySwipeAdapter);
-        myViewPager2.setCurrentItem(1,false); // On commence sur HomeFragment
+        myViewPager2.setCurrentItem(1, false); // On commence sur HomeFragment
 
         // Paramètres de la notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
@@ -138,17 +145,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch(id) { // "switch" au cas où on en rajoute
+        switch (id) { // "switch" au cas où on en rajoute
             case (R.id.action_help):
-                Log.d(TAG_MAIN,"Action : action_help");
+                Log.d(TAG_MAIN, "Action : action_help");
                 openHelp();
                 return true;
             case (R.id.action_info):
-                Log.d(TAG_MAIN,"Action : action_info");
+                Log.d(TAG_MAIN, "Action : action_info");
                 openInfo();
                 return true;
             case (R.id.action_settings):
-                Log.d(TAG_MAIN,"Action : action_settings");
+                Log.d(TAG_MAIN, "Action : action_settings");
                 openSettings();
                 return true;
             default:
@@ -188,14 +195,6 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-    }
-
-    public static VibrationsTool getMyVibrationsTool() {
-        return myVibrationsTool;
-    }
-
-    public static BluetoothLowEnergyTool getMyBLET() {
-        return myBLET;
     }
 
 }
