@@ -20,7 +20,6 @@ public class VibrationModeDialog extends Dialog {
     public VibrationModeDialog(Context context, AppInfo mAppInfo) {
         super(context);
         this.mAppInfo = mAppInfo;
-
     }
 
     @Override
@@ -29,7 +28,7 @@ public class VibrationModeDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_vibration_mode);
 
-        // Bouttons du dialog de notifications
+        // Boutons du dialog de notifications
         RadioGroup vibrationModeRadioGroup = findViewById(R.id.vibrationModeRadioGroup);
         RadioButton NARadioButton = findViewById(R.id.radioButtonNA);
         NARadioButton.setOnClickListener(this::onRadioButtonClicked);
