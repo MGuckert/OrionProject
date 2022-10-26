@@ -165,7 +165,8 @@ public class BluetoothLowEnergyTool {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
-        if (!(mValeurDeConnexion == ValeurDeConnexion.CONNECTE)) {
+        if (mValeurDeConnexion == ValeurDeConnexion.DECONNECTE) {
+
             this.mAdapter = BluetoothAdapter.getDefaultAdapter();
             this.mScanner = mAdapter.getBluetoothLeScanner();
             if (this.mScanner != null) {
@@ -205,15 +206,19 @@ public class BluetoothLowEnergyTool {
     }
 
     public void disconnect() {
+        try {
+        this.mScanner.stopScan(mScanCallback);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
         if (this.mGatt != null) {
             try {
                 this.mGatt.disconnect();
-                this.mScanner.stopScan(mScanCallback);
-                mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
         }
+        this.mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
     }
 
     public WeakReference<Context> getContext() {
@@ -245,3 +250,5 @@ public class BluetoothLowEnergyTool {
     }
 }
 
+// TODO : permissions
+// TODO : un seul bouton ?

@@ -43,8 +43,8 @@ public class MyNotificationListenerService extends NotificationListenerService {
                     }
                 }
             }
-            Log.d(TAG_MNLS, "notificationPosted");
-            Log.i(TAG_MNLS, "package name : " + packageName);
+            Log.i(TAG_MNLS, "Notification postée");
+            // Log.i(TAG_MNLS, "package name : " + packageName);
             Log.i(TAG_MNLS, "notification : " + notif);
             Log.i(TAG_MNLS, "category : " + category);
         }
