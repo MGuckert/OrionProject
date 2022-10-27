@@ -1,8 +1,10 @@
 package com.example.tactigant20;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult.launch(enableBtIntent);
         }
+        //TODO : BL check not only on startup
+/*
+        boolean isNotificationServiceRunning = isNotificationServiceRunning();
+        if(!isNotificationServiceRunning){
+            startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+        }*/
 
         // Création de la toolbar
         Toolbar topAppBar = findViewById(R.id.topAppBar);
@@ -182,4 +190,13 @@ public class MainActivity extends AppCompatActivity {
         myNotificationTool.clearNotification();
         super.onDestroy();
     }
+
+    private boolean isNotificationServiceRunning() {
+        ContentResolver contentResolver = getContentResolver();
+        String enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners");
+        String packageName = getPackageName();
+        return (enabledNotificationListeners != null && enabledNotificationListeners.contains(packageName));
+    }
+
 }
+

@@ -1,6 +1,8 @@
 package com.example.tactigant20.ui.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,13 +18,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentHomeBinding;
+import com.google.android.material.snackbar.Snackbar;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG_HOME = "debug_home_fragment";
 
@@ -76,7 +80,23 @@ public class HomeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void cScanButton(View v) {
         Log.d(TAG_HOME, "Bouton Scan pressé");
-        MainActivity.getMyBLET().scan();
+        if (ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            MainActivity.getMyBLET().scan();
+        } else {
+            requestLocationPermission(v);
+        }
+    }
+
+    private void requestLocationPermission(View v) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this.requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            Snackbar.make(v, "Localisation requise",
+                    Snackbar.LENGTH_INDEFINITE).setAction("ACCORDER", view -> ActivityCompat.requestPermissions(requireActivity(),
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                            0)).show();
+
+        }
     }
 
     private void cBluetoothSettingsButton(View v) {
