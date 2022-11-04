@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,7 +108,6 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
 
     @SuppressWarnings({"BusyWait"})
     public class CustomUIThread extends Thread {
-
         private Boolean running = false;
 
         @Override
@@ -119,35 +116,35 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
             this.running = true;
             while (running) {
                 try {
-                    Thread.sleep(1500);
+                    requireActivity().runOnUiThread(() -> {
+                        if (MainActivity.getMyBLET() != null) {
+                            switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
+                                case DECONNECTE:
+                                    UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                                    break;
+                                case CHARGEMENT:
+                                    UIUpdate(R.string.disconnection, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
+                                    break;
+                                case CONNECTE:
+                                    UIUpdate(R.string.disconnection, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                                    break;
+                            }
+                        } else {
+                            UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                        }
+                    });
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                if (MainActivity.getMyBLET() != null) {
-                    switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
-                        case DECONNECTE:
-                            UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
-                            break;
-                        case CHARGEMENT:
-                            UIUpdate(R.string.disconnection, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
-                            break;
-                        case CONNECTE:
-                            UIUpdate(R.string.disconnection, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
-                            break;
-                    }
-                } else {
-                    UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 }
             }
         }
 
         public void UIUpdate(int EtatdeConnexion, int visibiliteICC, int visibiliteICD, int visibiliteTDC) {
-            new Handler(Looper.getMainLooper()).post(() -> {
                 connectionButton.setText(EtatdeConnexion);
                 imageConfirmationConnexion.setVisibility(visibiliteICC);
                 imageConfirmationDeconnexion.setVisibility(visibiliteICD);
                 texteDeChargement.setVisibility(visibiliteTDC);
-            });
         }
 
         public void setRunning(Boolean running) {
