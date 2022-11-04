@@ -110,7 +110,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
 
     @SuppressWarnings({"BusyWait"})
     public class CustomUIThread extends Thread {
-        //TODO: mettre en pause le thread en dehors de HomeFragment
+
         private Boolean running = false;
 
         @Override
