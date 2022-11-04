@@ -141,10 +141,10 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
         }
 
         public void UIUpdate(int EtatdeConnexion, int visibiliteICC, int visibiliteICD, int visibiliteTDC) {
-                connectionButton.setText(EtatdeConnexion);
-                imageConfirmationConnexion.setVisibility(visibiliteICC);
-                imageConfirmationDeconnexion.setVisibility(visibiliteICD);
-                texteDeChargement.setVisibility(visibiliteTDC);
+            connectionButton.setText(EtatdeConnexion);
+            imageConfirmationConnexion.setVisibility(visibiliteICC);
+            imageConfirmationDeconnexion.setVisibility(visibiliteICD);
+            texteDeChargement.setVisibility(visibiliteTDC);
         }
 
         public void setRunning(Boolean running) {
