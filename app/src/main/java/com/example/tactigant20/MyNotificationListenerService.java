@@ -34,10 +34,10 @@ public class MyNotificationListenerService extends NotificationListenerService {
             BluetoothGatt gatt = MainActivity.getMyBLET().getGatt();
             MainActivity.getMyBLET().setMode("Ecriture");
             if (category != null) {
-                if (!category.equals("sys")) { //attention risque de NullPointerException !!!
+                if (!category.equals("sys")) {
                     showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
                     try {
-                        gatt.discoverServices();
+                        gatt.discoverServices(); // TODO: erreur
                     } catch (SecurityException e) {
                         e.printStackTrace();
                     }

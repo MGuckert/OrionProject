@@ -1,8 +1,10 @@
 package com.example.tactigant20;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         return myBLET;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +93,14 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult.launch(enableBtIntent);
         }
 
-        //TODO : create ask + explain dialog for permissions & cau
-        //TODO : perm acces notifications ?
-
-        boolean isNotificationServiceRunning = isNotificationServiceRunning();
-        if(!isNotificationServiceRunning){
-            startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+        if(!isNotificationServiceRunning()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Information");
+            builder.setMessage(this.getResources().getString(R.string.textePermNotif));
+            builder.setPositiveButton("OK", (dialog, which) -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
+            builder.setNegativeButton("Non", (dialog, which) -> dialog.cancel());
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
 
         // Création de la toolbar
@@ -185,11 +191,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
+        myNotificationTool.clearNotification();
         myVibrationsTool = null;
         myBLET = null;
-        HomeFragment.getMtHFCustomUIThread().setRunning(false);
-        NotificationTool.getCustomUIThread().setRunning(false);
-        myNotificationTool.clearNotification();
+        HomeFragment.getMyHFCustomUIThread().setRunning(false);
+        NotificationTool.getMyNTCustomUIThread().setRunning(false);
         super.onDestroy();
     }
 

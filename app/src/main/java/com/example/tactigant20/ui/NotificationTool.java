@@ -101,7 +101,7 @@ public class NotificationTool{
         }
     }
 
-    public static CustomUIThread getCustomUIThread() {
+    public static CustomUIThread getMyNTCustomUIThread() {
         return myNTCustomUIThread;
     }
 

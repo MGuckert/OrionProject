@@ -85,13 +85,12 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
                 Log.d(TAG_HOME, "Besoin d'activer la localisation");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle("Information");
-                builder.setMessage(requireContext().getResources().getString(R.string.textePerm));
+                builder.setMessage(requireContext().getResources().getString(R.string.textePermLoc));
                 builder.setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0));
                 builder.setNegativeButton("Non", (dialog, which) -> dialog.cancel());
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
-            //TODO : buggué
             MainActivity.getMyBLET().scan();
         } else if (connectionButton.getText().equals(requireContext().getResources().getString(R.string.disconnection))) {
             Log.d(TAG_HOME, "Bouton déconnexion pressé");
@@ -111,7 +110,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
 
     @SuppressWarnings({"BusyWait"})
     public class CustomUIThread extends Thread {
-
+        //TODO: mettre en pause le thread en dehors de HomeFragment
         private Boolean running = false;
 
         @Override
@@ -119,7 +118,6 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
             Log.d(TAG_HOME, "Lancement du thread dans HomeFragment");
             this.running = true;
             while (running) {
-                Log.d(TAG_HOME, "jpppp");
                 try {
                     Thread.sleep(1500);
                 } catch (InterruptedException e) {
@@ -128,22 +126,22 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
                 if (MainActivity.getMyBLET() != null) {
                     switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
                         case DECONNECTE:
-                            UIUpdate(requireActivity().getResources().getString(R.string.connection), View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                            UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                             break;
                         case CHARGEMENT:
-                            UIUpdate(requireActivity().getResources().getString(R.string.disconnection), View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
+                            UIUpdate(R.string.disconnection, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
                             break;
                         case CONNECTE:
-                            UIUpdate(requireActivity().getResources().getString(R.string.disconnection), View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                            UIUpdate(R.string.disconnection, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
                             break;
                     }
                 } else {
-                    UIUpdate(requireActivity().getResources().getString(R.string.connection), View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                    UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 }
             }
         }
 
-        public void UIUpdate(String EtatdeConnexion, int visibiliteICC, int visibiliteICD, int visibiliteTDC) {
+        public void UIUpdate(int EtatdeConnexion, int visibiliteICC, int visibiliteICD, int visibiliteTDC) {
             new Handler(Looper.getMainLooper()).post(() -> {
                 connectionButton.setText(EtatdeConnexion);
                 imageConfirmationConnexion.setVisibility(visibiliteICC);
@@ -157,7 +155,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
         }
         }
 
-        public static CustomUIThread getMtHFCustomUIThread() {
+        public static CustomUIThread getMyHFCustomUIThread() {
             return myHFCustomUIThread;
         }
 
