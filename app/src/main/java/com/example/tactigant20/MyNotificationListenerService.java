@@ -14,9 +14,12 @@ import com.example.tactigant20.model.BluetoothLowEnergyTool;
 public class MyNotificationListenerService extends NotificationListenerService {
 
     private final static String TAG_MNLS = "debug_mnls";
-
-    private Context mContext;
     private static String mVibrationMode;
+    private Context mContext;
+
+    public static String getVibrationMode() {
+        return mVibrationMode;
+    }
 
     @Override
     public void onCreate() {
@@ -58,10 +61,6 @@ public class MyNotificationListenerService extends NotificationListenerService {
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
-    }
-
-    public static String getVibrationMode() {
-        return mVibrationMode;
     }
 
     public void showToast(String msg) {

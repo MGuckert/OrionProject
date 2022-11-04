@@ -36,6 +36,10 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
     private TextView texteDeChargement;
     private Button connectionButton;
 
+    public static CustomUIThread getMyHFCustomUIThread() {
+        return myHFCustomUIThread;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +82,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
     private void cConnectionButton(View v) {
         if (connectionButton.getText().equals(requireContext().getResources().getString(R.string.connection))) {
             Log.d(TAG_HOME, "Bouton Scan pressé");
-            if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                    == PackageManager.PERMISSION_DENIED) {
+            if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
                 Log.d(TAG_HOME, "Besoin d'activer la localisation");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle("Information");
@@ -150,10 +153,6 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
         public void setRunning(Boolean running) {
             this.running = running;
         }
-        }
-
-        public static CustomUIThread getMyHFCustomUIThread() {
-            return myHFCustomUIThread;
-        }
+    }
 
 }

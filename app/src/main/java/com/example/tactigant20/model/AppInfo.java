@@ -12,20 +12,20 @@ public class AppInfo {
         return this.mInfo;
     }
 
-    public String getLabel() {
-        return this.mLabel;
-    }
-
-    public String getVibrationMode() {
-        return this.mVibrationMode;
-    }
-
     public void setInfo(ApplicationInfo mInfo) {
         this.mInfo = mInfo;
     }
 
+    public String getLabel() {
+        return this.mLabel;
+    }
+
     public void setLabel(String mLabel) {
         this.mLabel = mLabel;
+    }
+
+    public String getVibrationMode() {
+        return this.mVibrationMode;
     }
 
     public void setVibrationMode(String mVibrationMode) {

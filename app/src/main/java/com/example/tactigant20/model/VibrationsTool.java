@@ -35,7 +35,8 @@ public class VibrationsTool {
             BufferedReader buffReader = new BufferedReader(inputReader);
 
             String line = null;
-            do { //On lit le fichier ligne par ligne, en comparant le début de chaque ligne avec "notifName" :
+            do
+            { //On lit le fichier ligne par ligne, en comparant le début de chaque ligne avec "notifName" :
                 // s'il est identique, on est sur la bonne ligne, et on peut renvoyer le mode de vibration écrit !
                 try {
                     line = buffReader.readLine();
@@ -44,9 +45,9 @@ public class VibrationsTool {
                 }
                 System.err.println(line);
                 int n = notifName.length();
-                if ( line != null && n < line.length()) {
+                if (line != null && n < line.length()) {
                     if (line.substring(0, n).equals(notifName)) {
-                        return line.substring(line.length()-1);
+                        return line.substring(line.length() - 1);
                     }
                 }
             } while (line != null);
@@ -89,13 +90,11 @@ public class VibrationsTool {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (line != null)
-                        fileData.append(line).append("\n");
+                    if (line != null) fileData.append(line).append("\n");
                 } while (line != null);
                 System.err.println("FileData: \n" + fileData);
-                writeInFile(fileData.toString(),MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
-            }
-            else
+                writeInFile(fileData.toString(), MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
+            } else
                 writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
         }
         try {

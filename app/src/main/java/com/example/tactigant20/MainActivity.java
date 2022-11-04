@@ -77,23 +77,19 @@ public class MainActivity extends AppCompatActivity {
         myVibrationsTool = new VibrationsTool(this);
         myBLET = new BluetoothLowEnergyTool(ADRESSE, this);
 
-        myNotificationTool = new NotificationTool(this,
-                "ID_TACTIGANT",
-                100,
-                "Chaîne de notification Orion");
+        myNotificationTool = new NotificationTool(this, "ID_TACTIGANT", 100, "Chaîne de notification Orion");
 
         myNotificationTool.createNotificationChannel("Batterie : ?%");
 
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
         if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
-            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(), result -> {
-                    });
+            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            });
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult.launch(enableBtIntent);
         }
 
-        if(!isNotificationServiceRunning()){
+        if (!isNotificationServiceRunning()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Information");
             builder.setMessage(this.getResources().getString(R.string.textePermNotif));

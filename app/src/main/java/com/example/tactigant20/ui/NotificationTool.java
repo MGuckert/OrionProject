@@ -14,7 +14,7 @@ import com.example.tactigant20.R;
 
 import java.lang.ref.WeakReference;
 
-public class NotificationTool{
+public class NotificationTool {
 
     private static final String TAG_NT = "debug_NT";
 
@@ -35,13 +35,13 @@ public class NotificationTool{
         this.mDescription = mDescription;
     }
 
+    public static CustomUIThread getMyNTCustomUIThread() {
+        return myNTCustomUIThread;
+    }
+
     public void createNotificationChannel(String text) {
         // Paramètres de la notification
-        mBuilder = new NotificationCompat.Builder(this.mContext.get(), this.mID1)
-                .setSmallIcon(R.drawable.ic_home_black_24dp)
-                .setContentTitle("Déconnecté")
-                .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+        mBuilder = new NotificationCompat.Builder(this.mContext.get(), this.mID1).setSmallIcon(R.drawable.ic_home_black_24dp).setContentTitle("Déconnecté").setContentText(text).setPriority(NotificationCompat.PRIORITY_HIGH);
 
         // Fait apparaitre la notification
         this.myNotificationManager = NotificationManagerCompat.from(this.mContext.get());
@@ -96,13 +96,10 @@ public class NotificationTool{
                 }
             }
         }
+
         public void setRunning(Boolean running) {
             this.running = running;
         }
-    }
-
-    public static CustomUIThread getMyNTCustomUIThread() {
-        return myNTCustomUIThread;
     }
 
 }
