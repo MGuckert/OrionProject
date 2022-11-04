@@ -26,30 +26,32 @@ public class MyNotificationListenerService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        if (MainActivity.getMyBLET().getValeurDeConnexion() == BluetoothLowEnergyTool.ValeurDeConnexion.CONNECTE) {
-            super.onNotificationPosted(sbn);
-            String packageName = sbn.getPackageName();
-            Notification notif = sbn.getNotification();
-            String category = notif.category;
-            mVibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
-            BluetoothGatt gatt = MainActivity.getMyBLET().getGatt();
-            MainActivity.getMyBLET().setMode("Ecriture");
-            if (category != null) {
-                if (!category.equals("sys")) {
-                    showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
-                    try {
-                        gatt.discoverServices();
-                    } catch (SecurityException e) {
-                        e.printStackTrace();
+        if (MainActivity.getMyBLET() != null) {
+            if (MainActivity.getMyBLET().getValeurDeConnexion() == BluetoothLowEnergyTool.ValeurDeConnexion.CONNECTE) {
+                super.onNotificationPosted(sbn);
+                String packageName = sbn.getPackageName();
+                Notification notif = sbn.getNotification();
+                String category = notif.category;
+                mVibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
+                BluetoothGatt gatt = MainActivity.getMyBLET().getGatt();
+                MainActivity.getMyBLET().setMode("Ecriture");
+                if (category != null) {
+                    if (!category.equals("sys")) {
+                        showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
+                        try {
+                            gatt.discoverServices();
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
             /*
             Log.i(TAG_MNLS, "Notification postée");
             Log.i(TAG_MNLS, "package name : " + packageName);
             Log.i(TAG_MNLS, "notification : " + notif);
             Log.i(TAG_MNLS, "category : " + category);
              */
+            }
         }
     }
 
