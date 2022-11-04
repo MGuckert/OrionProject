@@ -65,7 +65,7 @@ public class BluetoothLowEnergyTool {
 
             @Override
             public void onScanFailed(int errorCode) {
-                Log.e(TAG_BLE, "ERREUR de scan | code : "+ errorCode);
+                Log.e(TAG_BLE, "ERREUR de scan | code : " + errorCode);
                 mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
             }
         };
@@ -249,6 +249,3 @@ public class BluetoothLowEnergyTool {
         DECONNECTE, CHARGEMENT, CONNECTE
     }
 }
-
-// TODO : permissions
-// TODO : un seul bouton ?

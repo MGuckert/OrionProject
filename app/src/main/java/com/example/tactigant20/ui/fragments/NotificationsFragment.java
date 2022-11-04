@@ -22,7 +22,6 @@ import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
-import com.example.tactigant20.ui.VibrationModeDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;

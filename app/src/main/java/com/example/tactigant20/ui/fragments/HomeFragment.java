@@ -1,7 +1,9 @@
 package com.example.tactigant20.ui.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.MainActivity;
@@ -33,6 +36,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
     private ImageView imageConfirmationConnexion;
     private ImageView imageConfirmationDeconnexion;
     private TextView texteDeChargement;
+    private Button connectionButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,14 +54,12 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
 
         // Boutons pour le Bluetooth
         // Lance le scan et se connecte à la carte si possible
-        Button scanButton = root.findViewById(R.id.scanButton);
-        scanButton.setOnClickListener(this::cScanButton);
+        // OU se déconnecte
+        connectionButton = root.findViewById(R.id.connectionButton);
+        connectionButton.setOnClickListener(this::cConnectionButton);
         // Ouvre les paramètres Bluetooth
         Button bluetoothSettingsButton = root.findViewById(R.id.bluetoothSettingsButton);
         bluetoothSettingsButton.setOnClickListener(this::cBluetoothSettingsButton);
-        // Se déconnecte de la carte
-        Button deconnectionButton = root.findViewById(R.id.deconnexionButton);
-        deconnectionButton.setOnClickListener(this::cDeconnectionButton);
 
         // Texte de chargement
         texteDeChargement = root.findViewById(R.id.texteDeChargement);
@@ -68,7 +70,6 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
         // Image d'erreur/absence de connexion
         imageConfirmationDeconnexion = root.findViewById(R.id.connexionInvalide);
 
-
         myHFCustomUIThread = new CustomUIThread();
         myHFCustomUIThread.start();
 
@@ -76,10 +77,29 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void cScanButton(View v) {
-        Log.d(TAG_HOME, "Bouton Scan pressé");
-        ActivityCompat.requestPermissions(requireActivity(),
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+    private void cConnectionButton(View v) {
+        if (connectionButton.getText().equals(requireContext().getResources().getString(R.string.connection))) {
+            Log.d(TAG_HOME, "Bouton Scan pressé");
+            if (ContextCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_DENIED) {
+                Log.d(TAG_HOME, "Besoin d'activer la localisation");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle("Information");
+                builder.setMessage(requireContext().getResources().getString(R.string.textePerm));
+                builder.setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0));
+                builder.setNegativeButton("Non", (dialog, which) -> dialog.cancel());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+            //TODO : buggué
+            MainActivity.getMyBLET().scan();
+        } else if (connectionButton.getText().equals(requireContext().getResources().getString(R.string.disconnection))) {
+            Log.d(TAG_HOME, "Bouton déconnexion pressé");
+            MainActivity.getMyBLET().disconnect();
+        } else {
+            Log.e(TAG_HOME, "Etat de connection inconnu");
+        }
+
     }
 
     private void cBluetoothSettingsButton(View v) {
@@ -89,11 +109,6 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
         startActivity(intentOpenBluetoothSettings);
     }
 
-    private void cDeconnectionButton(View v) {
-        Log.d(TAG_HOME, "Bouton déconnexion pressé");
-        MainActivity.getMyBLET().disconnect();
-    }
-
     @SuppressWarnings({"BusyWait"})
     public class CustomUIThread extends Thread {
 
@@ -101,10 +116,10 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
 
         @Override
         public void run() {
-            Log.d(TAG_HOME, "Lancement du thread");
+            Log.d(TAG_HOME, "Lancement du thread dans HomeFragment");
             this.running = true;
             while (running) {
-                //Log.d(TAG_HOME, "\nmValeurDeChargement : " + myBLET.getValeurDeChargement() +"\nmValeurDeConnection : " + myBLET.getValeurDeConnexion());
+                Log.d(TAG_HOME, "jpppp");
                 try {
                     Thread.sleep(1500);
                 } catch (InterruptedException e) {
@@ -113,44 +128,37 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
                 if (MainActivity.getMyBLET() != null) {
                     switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
                         case DECONNECTE:
-                            new Handler(Looper.getMainLooper()).post(() -> {
-                                imageConfirmationConnexion.setVisibility(View.INVISIBLE);
-                                imageConfirmationDeconnexion.setVisibility(View.VISIBLE);
-                                texteDeChargement.setVisibility(View.INVISIBLE);
-                            });
+                            UIUpdate(requireActivity().getResources().getString(R.string.connection), View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                             break;
                         case CHARGEMENT:
-                            new Handler(Looper.getMainLooper()).post(() -> {
-                                imageConfirmationConnexion.setVisibility(View.INVISIBLE);
-                                imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
-                                texteDeChargement.setVisibility(View.VISIBLE);
-                            });
+                            UIUpdate(requireActivity().getResources().getString(R.string.disconnection), View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
                             break;
                         case CONNECTE:
-                            new Handler(Looper.getMainLooper()).post(() -> {
-                                imageConfirmationConnexion.setVisibility(View.VISIBLE);
-                                imageConfirmationDeconnexion.setVisibility(View.INVISIBLE);
-                                texteDeChargement.setVisibility(View.INVISIBLE);
-                            });
+                            UIUpdate(requireActivity().getResources().getString(R.string.disconnection), View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
                             break;
                     }
                 } else {
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        imageConfirmationConnexion.setVisibility(View.INVISIBLE);
-                        imageConfirmationDeconnexion.setVisibility(View.VISIBLE);
-                        texteDeChargement.setVisibility(View.INVISIBLE);
-                    });
+                    UIUpdate(requireActivity().getResources().getString(R.string.connection), View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 }
             }
+        }
+
+        public void UIUpdate(String EtatdeConnexion, int visibiliteICC, int visibiliteICD, int visibiliteTDC) {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                connectionButton.setText(EtatdeConnexion);
+                imageConfirmationConnexion.setVisibility(visibiliteICC);
+                imageConfirmationDeconnexion.setVisibility(visibiliteICD);
+                texteDeChargement.setVisibility(visibiliteTDC);
+            });
         }
 
         public void setRunning(Boolean running) {
             this.running = running;
         }
-    }
+        }
 
-    public static CustomUIThread getMtHFCustomUIThread() {
+        public static CustomUIThread getMtHFCustomUIThread() {
             return myHFCustomUIThread;
-    }
+        }
 
 }

@@ -72,7 +72,7 @@ public class NotificationTool{
 
         @Override
         public void run() {
-            Log.d(TAG_NT, "Lancement du thread");
+            Log.d(TAG_NT, "Lancement du thread dans NotificationTool");
             this.running = true;
             while (running) {
                 try {

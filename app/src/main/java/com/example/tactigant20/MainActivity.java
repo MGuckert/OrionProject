@@ -88,12 +88,14 @@ public class MainActivity extends AppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult.launch(enableBtIntent);
         }
-        //TODO : BL check not only on startup
-/*
+
+        //TODO : create ask + explain dialog for permissions & cau
+        //TODO : perm acces notifications ?
+
         boolean isNotificationServiceRunning = isNotificationServiceRunning();
         if(!isNotificationServiceRunning){
             startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
-        }*/
+        }
 
         // Création de la toolbar
         Toolbar topAppBar = findViewById(R.id.topAppBar);
