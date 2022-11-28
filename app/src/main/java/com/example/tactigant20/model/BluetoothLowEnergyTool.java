@@ -65,7 +65,7 @@ public class BluetoothLowEnergyTool {
 
             @Override
             public void onScanFailed(int errorCode) {
-                Log.e(TAG_BLE, "ERREUR de scan | code : "+ errorCode);
+                Log.e(TAG_BLE, "ERREUR de scan | code : " + errorCode);
                 mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
             }
         };
@@ -74,7 +74,7 @@ public class BluetoothLowEnergyTool {
 
             @Override
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
-                if(status == GATT_SUCCESS) {
+                if (status == GATT_SUCCESS) {
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
                         // On s'est connecté à un appareil
                         mValeurDeConnexion = ValeurDeConnexion.CONNECTE;
@@ -100,7 +100,8 @@ public class BluetoothLowEnergyTool {
                     } finally {
                         mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
                     }
-                }}
+                }
+            }
 
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
@@ -109,7 +110,7 @@ public class BluetoothLowEnergyTool {
                     for (BluetoothGattService service : services) {
                         List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
                         for (BluetoothGattCharacteristic characteristic : characteristics) {
-                            if(mMode.equals("Lecture")) {
+                            if (mMode.equals("Lecture")) {
                                 Log.d(TAG_BLE, "On reçoit quelque chose de la carte !");
                                 characteristic.getValue();
                                 try {
@@ -119,7 +120,7 @@ public class BluetoothLowEnergyTool {
                                 }
                             }
                             if (mMode.equals("Ecriture")) {
-                                switch(MyNotificationListenerService.getVibrationMode()) {
+                                switch (MyNotificationListenerService.getVibrationMode()) {
                                     case "1":
                                         Log.d(TAG_BLE, "On envoie quelque chose à la carte !");
                                         characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
@@ -144,7 +145,7 @@ public class BluetoothLowEnergyTool {
             public void onCharacteristicRead(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic, int status) {
                 // Vérification que ça a fonctionné
                 if (status != GATT_SUCCESS) {
-                    Log.e(TAG_BLE, String.format(Locale.FRENCH,"ERREUR de lecture pour la caractéristique : %s ; statut : %d (onCharacteristicRead)", characteristic.getUuid(), status));
+                    Log.e(TAG_BLE, String.format(Locale.FRENCH, "ERREUR de lecture pour la caractéristique : %s ; statut : %d (onCharacteristicRead)", characteristic.getUuid(), status));
                     return;
                 }
                 // Traitement de la caractéristique pour la rendre lisible (byte -> String)
@@ -165,7 +166,8 @@ public class BluetoothLowEnergyTool {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
-        if (!(mValeurDeConnexion == ValeurDeConnexion.CONNECTE)) {
+        if (mValeurDeConnexion == ValeurDeConnexion.DECONNECTE) {
+
             this.mAdapter = BluetoothAdapter.getDefaultAdapter();
             this.mScanner = mAdapter.getBluetoothLeScanner();
             if (this.mScanner != null) {
@@ -176,19 +178,11 @@ public class BluetoothLowEnergyTool {
                 // Toujours vrai ?
                 filters = new ArrayList<>();
                 for (String address : peripheralAddresses) {
-                    ScanFilter filter = new ScanFilter.Builder()
-                            .setDeviceAddress(address)
-                            .build();
+                    ScanFilter filter = new ScanFilter.Builder().setDeviceAddress(address).build();
                     filters.add(filter);
                 }
                 // Paramètres de scan
-                ScanSettings scanSettings = new ScanSettings.Builder()
-                        .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-                        .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                        .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
-                        .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
-                        .setReportDelay(0L)
-                        .build();
+                ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_POWER).setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES).setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE).setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT).setReportDelay(0L).build();
                 try {
                     this.mScanner.startScan(filters, scanSettings, mScanCallback);
                     this.mValeurDeConnexion = ValeurDeConnexion.CHARGEMENT;
@@ -205,19 +199,27 @@ public class BluetoothLowEnergyTool {
     }
 
     public void disconnect() {
+        try {
+            this.mScanner.stopScan(mScanCallback);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
         if (this.mGatt != null) {
             try {
                 this.mGatt.disconnect();
-                this.mScanner.stopScan(mScanCallback);
-                mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
         }
+        this.mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
     }
 
     public WeakReference<Context> getContext() {
         return this.mContext;
+    }
+
+    public void setContext(WeakReference<Context> mContext) {
+        this.mContext = mContext;
     }
 
     public ValeurDeConnexion getValeurDeConnexion() {
@@ -232,10 +234,6 @@ public class BluetoothLowEnergyTool {
         return this.mAdapter;
     }
 
-    public void setContext(WeakReference<Context> mContext) {
-        this.mContext = mContext;
-    }
-
     public void setMode(String mMode) {
         this.mMode = mMode;
     }
@@ -244,4 +242,3 @@ public class BluetoothLowEnergyTool {
         DECONNECTE, CHARGEMENT, CONNECTE
     }
 }
-

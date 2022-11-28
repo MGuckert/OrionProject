@@ -1,27 +1,28 @@
 package com.example.tactigant20;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.model.BluetoothLowEnergyTool;
 import com.example.tactigant20.model.SwipeAdapter;
 import com.example.tactigant20.model.VibrationsTool;
+import com.example.tactigant20.ui.NotificationTool;
 import com.example.tactigant20.ui.fragments.HomeFragment;
 import com.example.tactigant20.ui.fragments.NotificationsFragment;
 import com.example.tactigant20.ui.fragments.VibrationsFragment;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String ADRESSE = "94:3C:C6:06:CC:1E";
     private static VibrationsTool myVibrationsTool;
     private static BluetoothLowEnergyTool myBLET;
+    private static NotificationTool myNotificationTool;
     private final VibrationsFragment vibrationsFragment = new VibrationsFragment();
     private final HomeFragment homeFragment = new HomeFragment();
     private final NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -65,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         return myBLET;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        createNotificationChannel();
         super.onCreate(savedInstanceState);
         com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -75,13 +77,26 @@ public class MainActivity extends AppCompatActivity {
         myVibrationsTool = new VibrationsTool(this);
         myBLET = new BluetoothLowEnergyTool(ADRESSE, this);
 
+        myNotificationTool = new NotificationTool(this, "ID_TACTIGANT", 100, "Chaîne de notification Orion");
+
+        myNotificationTool.createNotificationChannel("Batterie : ?%");
+
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
         if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
-            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(), result -> {
-                    });
+            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            });
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult.launch(enableBtIntent);
+        }
+
+        if (!isNotificationServiceRunning()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Information");
+            builder.setMessage(this.getResources().getString(R.string.textePermNotif));
+            builder.setPositiveButton("OK", (dialog, which) -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
+            builder.setNegativeButton("Non", (dialog, which) -> dialog.cancel());
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
 
         // Création de la toolbar
@@ -118,18 +133,6 @@ public class MainActivity extends AppCompatActivity {
         myViewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         myViewPager2.setAdapter(mySwipeAdapter);
         myViewPager2.setCurrentItem(1, false); // On commence sur HomeFragment
-
-        // Paramètres de la notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
-                .setSmallIcon(R.drawable.ic_home_black_24dp)
-                .setContentTitle("Status du bracelet : CONNECTED/DISCONNECTED")
-                .setContentText("Batterie: 50 %")
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-        // Fait apparaitre la notification
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(100, builder.build());
 
     }
 
@@ -182,19 +185,22 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void createNotificationChannel() {
+    @Override
+    public void onDestroy() {
+        myNotificationTool.clearNotification();
+        myVibrationsTool = null;
+        myBLET = null;
+        HomeFragment.getMyHFCustomUIThread().setRunning(false);
+        NotificationTool.getMyNTCustomUIThread().setRunning(false);
+        super.onDestroy();
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Tactigant channel";
-            String description = "Tactigant Channel description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+    private boolean isNotificationServiceRunning() {
+        ContentResolver contentResolver = getContentResolver();
+        String enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners");
+        String packageName = getPackageName();
+        return (enabledNotificationListeners != null && enabledNotificationListeners.contains(packageName));
     }
 
 }
+

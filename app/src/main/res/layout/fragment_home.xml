@@ -36,7 +36,7 @@
         android:layout_width="240dp"
         android:layout_height="120dp"
         android:layout_marginTop="80dp"
-        android:text="@string/chargement"
+        android:text="@string/loading"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,24 +45,14 @@
         android:gravity="center" />
 
     <Button
-        android:id="@+id/scanButton"
+        android:id="@+id/connectionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/scan"
+        android:text="@string/connection"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connexionValide" />
-
-    <Button
-        android:id="@+id/deconnexionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/disconnect"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scanButton" />
 
     <Button
         android:id="@+id/bluetoothSettingsButton"
@@ -72,6 +62,6 @@
         android:text="@string/settings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deconnexionButton" />
+        app:layout_constraintTop_toBottomOf="@+id/connectionButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

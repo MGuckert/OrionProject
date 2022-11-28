@@ -9,19 +9,21 @@
     <string name="description_du_mode_2">Description du Mode 2</string>
     <string name="mode_3">Mode 3</string>
     <string name="description_du_mode_3">Description du Mode 3</string>
-    <string name="oui_ben_la_aussi_j_ai_eu_la_flemme">WIP infos</string>
     <string name="mdr_t_as_cru_quoi_j_ai_la_flemme">WIP aide</string>
+    <string name="oui_ben_la_aussi_j_ai_eu_la_flemme">WIP infos</string>
     <string name="help">Help</string>
     <string name="infos">Infos</string>
     <string name="settings">Paramètres</string>
-    <string name="service_name">service_name</string>
+    <string name="service_name">notific\'orion</string>
     <string name="app_title">App title</string>
     <string name="app_icon">app icon</string>
     <string name="text_settings">Settings WIP</string>
     <string name="vibration_mode">Vibration Mode</string>
-    <string name="scan">Connexion</string>
-    <string name="chargement">Chargement…</string>
-    <string name="disconnect">Déconnexion</string>
+    <string name="connection">Connexion</string>
+    <string name="loading">Chargement…</string>
+    <string name="disconnection">Déconnexion</string>
     <string name="n_a">N/A</string>
     <string name="modes_de_vibration">Modes de vibration</string>
+    <string name="textePermLoc">Pour des raisons de sécurité, Android impose à tout utilisateur qui souhaite utiliser la technologie Bluetooth Low Energy (BLE) d\' accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil.\nSur la plupart des smartphones, la géolocalisation n\'a pas besoin d\'être activée, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise à aucun moment cette donnée.</string>
+    <string name="textePermNotif">L\'application Orion doit être autorisée à accéder aux notifications de cet appareil.</string>
 </resources>

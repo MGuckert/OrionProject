@@ -38,7 +38,7 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
         AppInfo current = this.mApps.get(position);
         View v = convertView;
 
-        if (v==null) {
+        if (v == null) {
             v = this.mLayoutInflater.inflate(R.layout.app_item_layout, parent, false);
         }
 
@@ -49,10 +49,8 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
         }
         title.setText(titre);
         TextView vibrationModeTextView = v.findViewById(R.id.vibrationModeTextView);
-        if (current.getVibrationMode().equals("N"))
-            vibrationModeTextView.setText("N/A");
-        else
-            vibrationModeTextView.setText(String.format("Mode %s", current.getVibrationMode()));
+        if (current.getVibrationMode().equals("N")) vibrationModeTextView.setText("N/A");
+        else vibrationModeTextView.setText(String.format("Mode %s", current.getVibrationMode()));
 
         ImageView iconImageView = v.findViewById(R.id.iconImage);
         Drawable icon = current.getInfo().loadIcon(this.mPackageManager);

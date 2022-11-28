@@ -1,4 +1,4 @@
-package com.example.tactigant20.ui;
+package com.example.tactigant20.ui.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.widget.RadioGroup;
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.model.AppInfo;
-import com.example.tactigant20.ui.fragments.NotificationsFragment;
 
 public class VibrationModeDialog extends Dialog {
 
@@ -20,7 +19,6 @@ public class VibrationModeDialog extends Dialog {
     public VibrationModeDialog(Context context, AppInfo mAppInfo) {
         super(context);
         this.mAppInfo = mAppInfo;
-
     }
 
     @Override
@@ -29,7 +27,7 @@ public class VibrationModeDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_vibration_mode);
 
-        // Bouttons du dialog de notifications
+        // Boutons du dialog de notifications
         RadioGroup vibrationModeRadioGroup = findViewById(R.id.vibrationModeRadioGroup);
         RadioButton NARadioButton = findViewById(R.id.radioButtonNA);
         NARadioButton.setOnClickListener(this::onRadioButtonClicked);

@@ -25,8 +25,7 @@ public class VibrationsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         com.example.tactigant20.databinding.FragmentVibrationsBinding binding = FragmentVibrationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
