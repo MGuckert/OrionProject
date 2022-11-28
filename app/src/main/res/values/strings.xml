@@ -24,6 +24,6 @@
     <string name="disconnection">Déconnexion</string>
     <string name="n_a">N/A</string>
     <string name="modes_de_vibration">Modes de vibration</string>
-    <string name="textePermLoc">Pour des raisons de sécurité, Android impose que tout utilisateur souhaitant utiliser la technologie Bluetooth Low Energy (BLE) doit explicitement accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil utilisé.\nSur la plupart des appareils, le positionnement n\'a pas besoin d\'être activé, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise à aucun moment cette donnée.</string>
+    <string name="textePermLoc">Pour des raisons de sécurité, Android impose à tout utilisateur qui souhaite utiliser la technologie Bluetooth Low Energy (BLE) d\' accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil.\nSur la plupart des smartphones, la géolocalisation n\'a pas besoin d\'être activée, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise à aucun moment cette donnée.</string>
     <string name="textePermNotif">L\'application Orion doit être autorisée à accéder aux notifications de cet appareil.</string>
 </resources>
