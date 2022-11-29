@@ -29,7 +29,7 @@
     <string name="question_help_1"><b>Sur quels appareils l\'application <i>Orion</i> fonctionne-t-elle ?</b></string>
     <string name="answer_help_1">\t-> L\'application devrait fonctionner sur tout appareil muni d\'une version du SDK Android supérieure ou égale à 21. Néanmoins, des plantages ont été constatés sur des appareils tournant sous Android 12.</string>
     <string name="question_help_2"><b>De quelles permissions l\'application <i>Orion</i> a-t-elle besoin ?</b></string>
-    <string name="answer_help_2">\t-> <i>Accès aux notifications</i>>, qui peut être accordée depuis le menu \"Accès spécial\" des paramètres du téléphone.\n\n\t-> <i>Localisation</i>\n(<i>ACCESS_COARSE_LOCATION</i>), qui peut être accordée depuis la page de l\'application dans la rubrique \"Applications\" des paramètres du téléphone.\n\n\t-> <i>Afficher notifications</i>, qui peut être accordée depuis la page de l\'application dans la rubrique \"Applications\" des paramètres du téléphone.</string>
+    <string name="answer_help_2">\t-> <i>Accès aux notifications</i>, qui peut être accordée depuis le menu \"Accès spécial\" des paramètres du téléphone.\n\n\t-> <i>Localisation</i>\n(<i>ACCESS_COARSE_LOCATION</i>), qui peut être accordée depuis la page de l\'application dans la rubrique \"Applications\" des paramètres du téléphone.\n\n\t-> <i>Afficher notifications</i>, qui peut être accordée depuis la page de l\'application dans la rubrique \"Applications\" des paramètres du téléphone.</string>
     <string name="text_github">Lien du GitHub :</string>
     <string name="link_github"><a href="https://github.com/MGuckert/TactiGant-2.0">https://github.com/MGuckert/TactiGant-2.0</a></string>
     <string name="title_settings">Paramètres</string>
