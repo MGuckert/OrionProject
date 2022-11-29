@@ -7,7 +7,7 @@
     tools:context=".ui.settings.InfoActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/info_textView"
         android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:text="@string/title_info"
@@ -17,46 +17,46 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/info_imageView"
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/info_textView"
         app:srcCompat="@drawable/logo_orion_transparent"
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/info_textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:justificationMode="inter_word"
-        android:textSize="16sp"
         android:padding="24dp"
         android:text="@string/text_info"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/info_imageView"
         tools:targetApi="o" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/info_imageView3"
         android:layout_width="140dp"
         android:layout_height="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/info_textView2"
         app:srcCompat="@drawable/logo_iemn"
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/info_imageView4"
         android:layout_width="240dp"
         android:layout_height="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/info_imageView3"
         app:srcCompat="@drawable/logo_cl"
         tools:ignore="ContentDescription" />
 
