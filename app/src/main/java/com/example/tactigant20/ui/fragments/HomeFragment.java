@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
                 Log.d(TAG_HOME, "Besoin d'activer la localisation");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle("Information");
-                builder.setMessage(requireContext().getResources().getString(R.string.textePermLoc));
+                builder.setMessage(requireContext().getResources().getString(R.string.text_perm_location));
                 builder.setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0));
                 builder.setNegativeButton("Non", (dialog, which) -> dialog.cancel());
                 AlertDialog alertDialog = builder.create();

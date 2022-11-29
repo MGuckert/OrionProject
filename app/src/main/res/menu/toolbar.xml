@@ -4,15 +4,15 @@
     tools:context="com.example.tactigant20.MainActivity">
 
     <item
-        android:id="@+id/action_help"
+        android:id="@+id/action_info"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/help"
+        android:title="@string/infos"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_info"
+        android:id="@+id/action_help"
         android:icon="@mipmap/ic_aideblanc_foreground"
-        android:title="@string/infos"
+        android:title="@string/help"
         app:showAsAction="ifRoom" />
 
     <item

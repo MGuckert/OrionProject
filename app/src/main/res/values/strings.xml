@@ -9,11 +9,6 @@
     <string name="description_du_mode_2">Description du Mode 2</string>
     <string name="mode_3">Mode 3</string>
     <string name="description_du_mode_3">Description du Mode 3</string>
-    <string name="mdr_t_as_cru_quoi_j_ai_la_flemme">WIP aide</string>
-    <string name="oui_ben_la_aussi_j_ai_eu_la_flemme">WIP infos</string>
-    <string name="help">Help</string>
-    <string name="infos">Infos</string>
-    <string name="settings">Paramètres</string>
     <string name="service_name">notific\'orion</string>
     <string name="app_title">App title</string>
     <string name="app_icon">app icon</string>
@@ -24,6 +19,13 @@
     <string name="disconnection">Déconnexion</string>
     <string name="n_a">N/A</string>
     <string name="modes_de_vibration">Modes de vibration</string>
-    <string name="textePermLoc">Pour des raisons de sécurité, Android impose à tout utilisateur qui souhaite utiliser la technologie Bluetooth Low Energy (BLE) d\' accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil.\nSur la plupart des smartphones, la géolocalisation n\'a pas besoin d\'être activée, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise à aucun moment cette donnée.</string>
-    <string name="textePermNotif">L\'application Orion doit être autorisée à accéder aux notifications de cet appareil.</string>
+    <string name="text_perm_location">Pour des raisons de sécurité, Android impose à tout utilisateur qui souhaite utiliser la technologie Bluetooth Low Energy (BLE) d\' accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil.\nSur la plupart des smartphones, la géolocalisation n\'a pas besoin d\'être activée, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise à aucun moment cette donnée.</string>
+    <string name="text_perm_notifications">L\'application Orion doit être autorisée à accéder aux notifications de cet appareil.</string>
+
+    <string name="title_info">À propos</string>
+    <string name="text_info">\t\t\t\tOrion est un projet étudiant conçu par 12 élèves de l\'École Centrale de Lille, en collaboration avec l\'Institut d\'Électronique, de Micro-électronique et de Nanotechnologie (IEMN). L\'objectif de ce projet est de proposer une application concrète à une technologie de retour tactile de pointe développée par ce dernier.\n\t\t\t\tCette application constitue la moitié d\'un prototype, l\'autre moitié étant un bracelet programmable depuis cette même application. La liaison se fait par l\'intermédiaire de la technologie <i>Bluetooth Low Energy</i> (BLE).</string>
+    <string name="text_help">WIP infos</string>
+    <string name="help">Aide</string>
+    <string name="infos">Infos</string>
+    <string name="settings">Paramètres</string>
 </resources>
