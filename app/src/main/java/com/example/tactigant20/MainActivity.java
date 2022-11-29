@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isNotificationServiceRunning()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Information");
-            builder.setMessage(this.getResources().getString(R.string.textePermNotif));
+            builder.setMessage(this.getResources().getString(R.string.text_perm_notifications));
             builder.setPositiveButton("OK", (dialog, which) -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
             builder.setNegativeButton("Non", (dialog, which) -> dialog.cancel());
             AlertDialog alertDialog = builder.create();
