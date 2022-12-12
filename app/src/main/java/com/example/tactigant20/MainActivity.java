@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         myVibrationsTool = new VibrationsTool(this);
-        String MACTEMP =  getSharedPreferences("PREFS", MODE_PRIVATE).getString("PREFS_MAC", getString(R.string.MAC_default));
+        String MACTEMP = getSharedPreferences("PREFS", MODE_PRIVATE).getString("PREFS_MAC", getString(R.string.MAC_default));
         myBLET = new BluetoothLowEnergyTool(MACTEMP, this);
 
         myNotificationTool = new NotificationTool(this, "ID_TACTIGANT", 100, "Chaîne de notification Orion");

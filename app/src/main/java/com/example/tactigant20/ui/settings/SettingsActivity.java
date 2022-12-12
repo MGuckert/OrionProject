@@ -39,10 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (Pattern.matches("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", NewMAC)) {
             settingsEditText.setText(NewMAC);
             MainActivity.getMyBLET().setAdresseMAC(NewMAC);
-            getSharedPreferences("PREFS", MODE_PRIVATE)
-                    .edit()
-                    .putString("PREFS_MAC", NewMAC)
-                    .apply();
+            getSharedPreferences("PREFS", MODE_PRIVATE).edit().putString("PREFS_MAC", NewMAC).apply();
             Log.d(TAG_SETTINGS, "Sauvegarde de la MAC " + NewMAC);
             Toast.makeText(this, "Nouvelle MAC : " + NewMAC, Toast.LENGTH_SHORT).show();
         } else {

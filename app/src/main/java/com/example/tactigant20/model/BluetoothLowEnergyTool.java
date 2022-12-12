@@ -120,11 +120,11 @@ public class BluetoothLowEnergyTool {
                             if (mMode.equals("Ecriture")) {
                                 switch (MyNotificationListenerService.getVibrationMode()) {
                                     case "1":
-                                        SendData(gatt, characteristic,"Allume 1");
+                                        SendData(gatt, characteristic, "Allume 1");
                                     case "2":
-                                        SendData(gatt, characteristic,"Allume 2");
+                                        SendData(gatt, characteristic, "Allume 2");
                                     case "3":
-                                        SendData(gatt, characteristic,"Allume 3");
+                                        SendData(gatt, characteristic, "Allume 3");
                                         break;
                                 }
                             }
