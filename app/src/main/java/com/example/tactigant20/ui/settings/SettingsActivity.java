@@ -35,7 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
         String MACTemp = settingsEditText.getText().toString().toUpperCase();
         if (Pattern.matches("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", MACTemp)) {
             settingsEditText.setText(MACTemp);
-            Toast.makeText(this, "Nouvelle adresse MAC : " + MACTemp, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nouvelle MAC : " + MACTemp, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, getString(R.string.MAC_error), Toast.LENGTH_SHORT).show();
         }

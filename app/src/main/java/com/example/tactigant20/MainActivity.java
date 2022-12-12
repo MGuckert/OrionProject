@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_MAIN = "debug_main_activity";
 
-    private static final String ADRESSE = "94:3C:C6:06:CC:1E";
+    private static final String ADRESSE = "84:F7:03:60:7E:46";
     private static VibrationsTool myVibrationsTool;
     private static BluetoothLowEnergyTool myBLET;
     private static NotificationTool myNotificationTool;

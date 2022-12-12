@@ -33,7 +33,7 @@ public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
 
-    private final String mAdresseMAC;
+    private String mAdresseMAC;
     private final ScanCallback mScanCallback;
     private final BluetoothGattCallback mBluetoothGattCallback;
 
