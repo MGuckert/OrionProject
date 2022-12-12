@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_MAIN = "debug_main_activity";
 
-    private static final String ADRESSE = "94:3C:C6:06:CC:1E";
     private static VibrationsTool myVibrationsTool;
     private static BluetoothLowEnergyTool myBLET;
     private static NotificationTool myNotificationTool;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private final HomeFragment homeFragment = new HomeFragment();
     private final NotificationsFragment notificationsFragment = new NotificationsFragment();
     private ViewPager2 myViewPager2;
+
     private final NavigationBarView.OnItemSelectedListener navListener = item -> {
 
         int itemId = item.getItemId();
@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         myVibrationsTool = new VibrationsTool(this);
-        myBLET = new BluetoothLowEnergyTool(ADRESSE, this);
+        String MACTEMP = getSharedPreferences("PREFS", MODE_PRIVATE).getString("PREFS_MAC", getString(R.string.MAC_default));
+        myBLET = new BluetoothLowEnergyTool(MACTEMP, this);
 
         myNotificationTool = new NotificationTool(this, "ID_TACTIGANT", 100, "Chaîne de notification Orion");
 

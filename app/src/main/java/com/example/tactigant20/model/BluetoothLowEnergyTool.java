@@ -32,11 +32,9 @@ import java.util.Locale;
 public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
-
-    private final String mAdresseMAC;
     private final ScanCallback mScanCallback;
     private final BluetoothGattCallback mBluetoothGattCallback;
-
+    private String mAdresseMAC;
     private String mMode = "";
     private WeakReference<Context> mContext;
     private ValeurDeConnexion mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
@@ -122,21 +120,28 @@ public class BluetoothLowEnergyTool {
                             if (mMode.equals("Ecriture")) {
                                 switch (MyNotificationListenerService.getVibrationMode()) {
                                     case "1":
-                                        Log.d(TAG_BLE, "On envoie quelque chose à la carte !");
-                                        characteristic.setValue("Allume"); // On envoie cette chaîne à la carte
-                                        characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-                                        try {
-                                            gatt.writeCharacteristic(characteristic);
-                                        } catch (SecurityException e) {
-                                            e.printStackTrace();
-                                        }
+                                        SendData(gatt, characteristic, "Allume 1");
                                     case "2":
+                                        SendData(gatt, characteristic, "Allume 2");
                                     case "3":
+                                        SendData(gatt, characteristic, "Allume 3");
                                         break;
                                 }
                             }
                         }
                     }
+                }
+            }
+
+            // Centralise l'envoi d'ordres à la carte
+            public void SendData(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, String message) {
+                Log.d(TAG_BLE, "On envoie quelque chose à la carte !");
+                characteristic.setValue(message); // On envoie cette chaîne à la carte
+                characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+                try {
+                    gatt.writeCharacteristic(characteristic);
+                } catch (SecurityException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -232,6 +237,10 @@ public class BluetoothLowEnergyTool {
 
     public BluetoothAdapter getAdapter() {
         return this.mAdapter;
+    }
+
+    public void setAdresseMAC(String mAdresseMAC) {
+        this.mAdresseMAC = mAdresseMAC;
     }
 
     public void setMode(String mMode) {

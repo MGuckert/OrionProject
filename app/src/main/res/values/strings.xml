@@ -18,7 +18,7 @@
     <string name="disconnection">Déconnexion</string>
     <string name="n_a">N/A</string>
     <string name="modes_de_vibration">Modes de vibration</string>
-    <string name="text_perm_location">Pour des raisons de sécurité, Android impose à tout utilisateur qui souhaite utiliser la technologie Bluetooth Low Energy (BLE) d\' accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil.\nSur la plupart des smartphones, la géolocalisation n\'a pas besoin d\'être activée, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise à aucun moment cette donnée.</string>
+    <string name="text_perm_location">Pour des raisons de sécurité, Android impose à tout utilisateur qui souhaite utiliser la technologie Bluetooth Low Energy (BLE) d\' accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil.\nSur certains smartphones, la géolocalisation n\'a pas besoin d\'être activée, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise ni ne stocke à aucun moment cette donnée.</string>
     <string name="text_perm_notifications">L\'application Orion doit être autorisée à accéder aux notifications de cet appareil.</string>
     <string name="help">Aide</string>
     <string name="infos">Infos</string>
@@ -33,5 +33,9 @@
     <string name="text_github">Lien du GitHub :</string>
     <string name="link_github"><a href="https://github.com/MGuckert/TactiGant-2.0">https://github.com/MGuckert/TactiGant-2.0</a></string>
     <string name="title_settings">Paramètres</string>
-    <string name="text_settings">Il n\'y a pas encore de paramètres modifiables.</string>
+    <string name="text_settings">Adresse MAC de la carte :</string>
+    <string name="MAC_placeholder">xx:xx:xx:xx:xx:xx</string>
+    <string name="ok">OK</string>
+    <string name="MAC_error">Veuillez entrer une adresse MAC valide</string>
+    <string name="MAC_default">84:F7:03:60:7E:46</string>
 </resources>
