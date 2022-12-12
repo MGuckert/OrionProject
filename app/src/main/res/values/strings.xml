@@ -34,7 +34,8 @@
     <string name="link_github"><a href="https://github.com/MGuckert/TactiGant-2.0">https://github.com/MGuckert/TactiGant-2.0</a></string>
     <string name="title_settings">Paramètres</string>
     <string name="text_settings">Adresse MAC de la carte :</string>
-    <string name="default_MAC">xx:xx:xx:xx:xx:xx</string>
+    <string name="MAC_placeholder">xx:xx:xx:xx:xx:xx</string>
     <string name="ok">OK</string>
     <string name="MAC_error">Veuillez entrer une adresse MAC valide</string>
+    <string name="MAC_default">84:F7:03:60:7E:46</string>
 </resources>

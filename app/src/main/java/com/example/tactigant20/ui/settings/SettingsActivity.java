@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 
 import java.util.regex.Pattern;
@@ -32,10 +33,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void cSettingsButton(View v) {
-        String MACTemp = settingsEditText.getText().toString().toUpperCase();
-        if (Pattern.matches("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", MACTemp)) {
-            settingsEditText.setText(MACTemp);
-            Toast.makeText(this, "Nouvelle MAC : " + MACTemp, Toast.LENGTH_SHORT).show();
+        String NewMAC = settingsEditText.getText().toString().toUpperCase();
+        if (Pattern.matches("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", NewMAC)) {
+            settingsEditText.setText(NewMAC);
+            MainActivity.getMyBLET().setAdresseMAC(NewMAC);
+            Toast.makeText(this, "Nouvelle MAC : " + NewMAC, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, getString(R.string.MAC_error), Toast.LENGTH_SHORT).show();
         }

@@ -32,11 +32,9 @@ import java.util.Locale;
 public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
-
-    private String mAdresseMAC;
     private final ScanCallback mScanCallback;
     private final BluetoothGattCallback mBluetoothGattCallback;
-
+    private String mAdresseMAC;
     private String mMode = "";
     private WeakReference<Context> mContext;
     private ValeurDeConnexion mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
@@ -232,6 +230,10 @@ public class BluetoothLowEnergyTool {
 
     public BluetoothAdapter getAdapter() {
         return this.mAdapter;
+    }
+
+    public void setAdresseMAC(String mAdresseMAC) {
+        this.mAdresseMAC = mAdresseMAC;
     }
 
     public void setMode(String mMode) {
