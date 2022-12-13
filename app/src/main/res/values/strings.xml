@@ -38,4 +38,5 @@
     <string name="ok">OK</string>
     <string name="MAC_error">Veuillez entrer une adresse MAC valide</string>
     <string name="MAC_default">84:F7:03:60:7E:46</string>
+    <string name="mode_sombre">Mode sombre</string>
 </resources>

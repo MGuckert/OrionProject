@@ -55,4 +55,15 @@
         app:layout_constraintTop_toTopOf="@+id/settings_editText"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="TextContrastCheck" />
+
+    <Switch
+        android:id="@+id/dark_mode_switch"
+        android:layout_width="154dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="256dp"
+        android:text="@string/mode_sombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.062"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
