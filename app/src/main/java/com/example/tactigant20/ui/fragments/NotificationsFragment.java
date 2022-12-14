@@ -38,6 +38,7 @@ public class NotificationsFragment extends Fragment {
     private static int currentItemPosition;
     private static AppAdapter adapter;
     private ListView appListView;
+    private long lastCheckedTimeStamp;
 
     public static int getCurrentItemPosition() {
         return currentItemPosition;
@@ -58,6 +59,28 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        File vibration_modes_data = new File(requireContext().getFilesDir(), "vibration_modes_data.txt");
+        long lastModified = vibration_modes_data.lastModified();
+        if (lastModified > lastCheckedTimeStamp) {
+            adapter.notifyDataSetChanged();
+            lastCheckedTimeStamp = lastModified;
+            for (int i=0; i<appListView.getCount();i++) {
+                AppInfo app = (AppInfo) appListView.getItemAtPosition(i);
+                if (getContext() == null) {
+                    Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
+                } else {
+                    String mode = MainActivity.getMyVibrationsTool().loadVibrationMode(app.getInfo().packageName, getContext());
+                    if (mode.equals("UNKNOWN")) app.setVibrationMode("N");
+                    else app.setVibrationMode(mode);
+                    appList.add(app);
+                }
+            }
+        }
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,7 +113,7 @@ public class NotificationsFragment extends Fragment {
 
     //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
     @SuppressWarnings({"StaticFieldLeak", "deprecation"})
-    class LoadAppInfoTask extends AsyncTask<Integer, Integer, List<AppInfo>> {
+    public class LoadAppInfoTask extends AsyncTask<Integer, Integer, List<AppInfo>> {
 
         @Override
         protected void onPreExecute() {
@@ -104,7 +127,6 @@ public class NotificationsFragment extends Fragment {
             PackageManager packageManager = requireContext().getPackageManager();
 
             List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            System.err.println(infos.size());
             File vibration_modes_data = new File(requireContext().getFilesDir(), "vibration_modes_data.txt");
             if (!vibration_modes_data.exists()) {
                 try {

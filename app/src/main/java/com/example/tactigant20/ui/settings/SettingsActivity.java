@@ -1,14 +1,19 @@
 package com.example.tactigant20.ui.settings;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -17,8 +22,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
+import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.ui.fragments.HomeFragment;
+import com.example.tactigant20.ui.fragments.NotificationsFragment;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -39,9 +50,11 @@ public class SettingsActivity extends AppCompatActivity {
         Button settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(this::cSettingsButton);
 
+        Button resetButton = findViewById(R.id.reset_button);
+        resetButton.setOnClickListener(this::cResetButton);
 
         //Switch mode sombre
-        Switch darkModeSwitch = findViewById(R.id.dark_mode_switch);
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch darkModeSwitch = findViewById(R.id.dark_mode_switch);
 
         darkModeSwitch.setChecked(isDarkModeEnabled());
         darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -51,6 +64,34 @@ public class SettingsActivity extends AppCompatActivity {
                 disableDarkMode();
             }
         });
+    }
+
+    private void cResetButton(View v) {
+        Dialog confirmDialog = new Dialog(this);
+        // Set the title and content of the Dialog
+        confirmDialog.setTitle("Confirm Action");
+        confirmDialog.setContentView(R.layout.confirm_reset_dialog);
+        // Show the Dialog
+        confirmDialog.show();
+        Button yesButton = confirmDialog.findViewById(R.id.yes_button);
+        yesButton.setOnClickListener(view -> {
+            File file = new File(v.getContext().getFilesDir(), "vibration_modes_data.txt");
+            if (file.exists() && !file.isDirectory()) {
+                try {
+                    FileWriter fileWriter = new FileWriter(file);
+                    PrintWriter printWriter = new PrintWriter(fileWriter);
+                    printWriter.print("");
+                    printWriter.close();
+                } catch (IOException e) {
+                    Toast.makeText(this, "Erreur lors de la modification du fichier", Toast.LENGTH_SHORT).show();
+                }
+            }
+            confirmDialog.dismiss();
+            Toast.makeText(v.getContext(), "Modes de vibration réinitialisés", Toast.LENGTH_SHORT).show();
+        });
+
+        Button noButton = confirmDialog.findViewById(R.id.no_button);
+        noButton.setOnClickListener(view -> confirmDialog.dismiss());
     }
 
     private void cSettingsButton(View v) {
