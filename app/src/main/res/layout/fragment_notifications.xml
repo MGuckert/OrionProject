@@ -6,11 +6,44 @@
     android:orientation="vertical"
     tools:context=".ui.fragments.NotificationsFragment">
 
+
     <ListView
+        android:id="@+id/appList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        android:layout_marginBottom="?actionBarSize"
-        android:id="@+id/appList" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="103dp"
+        android:layout_marginBottom="?actionBarSize" />
+
+    <EditText
+        android:id="@+id/app_search_bar"
+        android:layout_width="317dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="57dp"
+        android:hint="@string/search_app"
+        android:autofillHints=""
+        android:inputType="text"/>
+
+    <TextView
+        android:id="@+id/no_results_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_results_app"
+        android:visibility="gone"
+        android:textSize="17sp"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_alignTop="@+id/app_search_bar"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="7dp"
+        android:layout_toEndOf="@+id/app_search_bar"
+        android:text="@string/delete"
+        android:textSize="11sp" />
 
 </RelativeLayout>

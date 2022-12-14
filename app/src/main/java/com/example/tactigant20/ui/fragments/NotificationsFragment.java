@@ -7,11 +7,18 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -19,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
+import com.example.tactigant20.databinding.FragmentHomeBinding;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
@@ -29,12 +37,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
 
     private static List<AppInfo> appList;
+    private static List<AppInfo> filteredAppsList;
     private static int currentItemPosition;
     private static AppAdapter adapter;
     private ListView appListView;
@@ -57,9 +67,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);}
 
     @Override
     public void onResume() {
@@ -69,15 +77,13 @@ public class NotificationsFragment extends Fragment {
         if (lastModified > lastCheckedTimeStamp) {
             adapter.notifyDataSetChanged();
             lastCheckedTimeStamp = lastModified;
-            for (int i=0; i<appListView.getCount();i++) {
-                AppInfo app = (AppInfo) appListView.getItemAtPosition(i);
+            for (AppInfo app : appList) {
                 if (getContext() == null) {
                     Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
                 } else {
                     String mode = MainActivity.getMyVibrationsTool().loadVibrationMode(app.getInfo().packageName, getContext());
                     if (mode.equals("UNKNOWN")) app.setVibrationMode("N");
                     else app.setVibrationMode(mode);
-                    appList.add(app);
                 }
             }
         }
@@ -101,6 +107,51 @@ public class NotificationsFragment extends Fragment {
             System.err.println(currentItem.getLabel());
             createNewVibrationModeDialog(currentItem);
         });
+
+
+        EditText editText = root.findViewById(R.id.app_search_bar);
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
+        editText.setInputType(editText.getInputType() & ~InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            public void filterListviewItems(String s) {
+                filteredAppsList = new ArrayList<>();
+                s = s.toLowerCase();
+                int n = s.length();
+                for (AppInfo app : appList) {
+                    String name = app.getLabel().toLowerCase();
+                    if (n < name.length() && name.substring(0,n).equals(s))
+                        filteredAppsList.add(app);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence == null) {
+                    filteredAppsList = appList;
+                }
+                else {
+                    filterListviewItems(charSequence.toString());
+                }
+                appListView.setAdapter(new AppAdapter(getContext(), filteredAppsList));
+                TextView noResults = root.findViewById(R.id.no_results_text);
+                if (filteredAppsList.isEmpty())
+                    noResults.setVisibility(View.VISIBLE);
+                else
+                    noResults.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        Button deleteButton = root.findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(view -> editText.setText(""));
 
         return root;
     }
@@ -169,7 +220,10 @@ public class NotificationsFragment extends Fragment {
 
         //Fonction filtrant les applications affichées dans la liste (applis de base + toutes les applis installées par l'utilisateur
         protected boolean filter(ApplicationInfo appInfo) {
-            return (appInfo.packageName.equals("com.google.android.apps.docs") || appInfo.packageName.equals("com.google.android.gm") || appInfo.packageName.equals("com.google.android.googlequicksearchbox") || appInfo.packageName.equals("com.google.android.calendar") || appInfo.packageName.equals("com.google.android.chrome") || appInfo.packageName.equals("com.google.android.apps.deskclock") || appInfo.packageName.equals("com.google.android.apps.maps") || appInfo.packageName.equals("com.google.android.apps.messaging") || appInfo.packageName.equals("com.android.phone") || appInfo.packageName.equals("com.google.android.apps.photos") || appInfo.packageName.equals("com.google.android.apps.youtube") || appInfo.packageName.equals("com.google.android.apps.youtube.music") || ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
+            if (appInfo.packageName.equals("com.example.tactigant20"))
+                return false;
+            else
+                return (appInfo.packageName.equals("com.google.android.apps.docs") || appInfo.packageName.equals("com.google.android.gm") || appInfo.packageName.equals("com.google.android.googlequicksearchbox") || appInfo.packageName.equals("com.google.android.calendar") || appInfo.packageName.equals("com.google.android.chrome") || appInfo.packageName.equals("com.google.android.apps.deskclock") || appInfo.packageName.equals("com.google.android.apps.maps") || appInfo.packageName.equals("com.google.android.apps.messaging") || appInfo.packageName.equals("com.android.phone") || appInfo.packageName.equals("com.google.android.apps.photos") || appInfo.packageName.equals("com.google.android.apps.youtube") || appInfo.packageName.equals("com.google.android.apps.youtube.music") || ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
         }
     }
 

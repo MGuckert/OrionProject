@@ -43,4 +43,8 @@
     <string name="reset_vibrations_mode">Êtes-vous sûr de vouloir réinitialiser les modes de vibrations ?</string>
     <string name="non">Non</string>
     <string name="oui">Oui</string>
+    <string name="search_app">Rechercher une application</string>
+    <string name="no_results_app">Aucune application ne correspond à votre recherche.</string>
+    <string name="clear">Clear</string>
+    <string name="delete">Effacer</string>
 </resources>
