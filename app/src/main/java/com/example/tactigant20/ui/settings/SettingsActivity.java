@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.model.AppAdapter;
+import com.example.tactigant20.model.AppInfo;
 import com.example.tactigant20.ui.fragments.HomeFragment;
 import com.example.tactigant20.ui.fragments.NotificationsFragment;
 
@@ -30,6 +32,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class SettingsActivity extends AppCompatActivity {

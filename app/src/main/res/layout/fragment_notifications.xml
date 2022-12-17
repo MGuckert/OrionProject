@@ -29,9 +29,9 @@
         android:id="@+id/no_results_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@id/appList"
         android:text="@string/no_results_app"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:textSize="17sp"
         android:textAlignment="center"/>
 

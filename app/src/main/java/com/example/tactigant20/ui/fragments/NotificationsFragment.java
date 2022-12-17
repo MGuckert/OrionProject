@@ -11,14 +11,15 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -26,7 +27,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
-import com.example.tactigant20.databinding.FragmentHomeBinding;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
@@ -37,18 +37,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
 
     private static List<AppInfo> appList;
-    private static List<AppInfo> filteredAppsList;
+    private static List<AppInfo> searchedAppsList;
     private static int currentItemPosition;
     private static AppAdapter adapter;
     private ListView appListView;
     private long lastCheckedTimeStamp;
+    private View root;
 
     public static int getCurrentItemPosition() {
         return currentItemPosition;
@@ -75,7 +75,8 @@ public class NotificationsFragment extends Fragment {
         File vibration_modes_data = new File(requireContext().getFilesDir(), "vibration_modes_data.txt");
         long lastModified = vibration_modes_data.lastModified();
         if (lastModified > lastCheckedTimeStamp) {
-            adapter.notifyDataSetChanged();
+            if (adapter != null)
+                adapter.notifyDataSetChanged();
             lastCheckedTimeStamp = lastModified;
             for (AppInfo app : appList) {
                 if (getContext() == null) {
@@ -92,7 +93,7 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         com.example.tactigant20.databinding.FragmentNotificationsBinding binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
 
         appListView = root.findViewById(R.id.appList);
         appListView.setTextFilterEnabled(true);
@@ -119,30 +120,30 @@ public class NotificationsFragment extends Fragment {
             }
 
             public void filterListviewItems(String s) {
-                filteredAppsList = new ArrayList<>();
+                searchedAppsList = new ArrayList<>();
                 s = s.toLowerCase();
                 int n = s.length();
                 for (AppInfo app : appList) {
                     String name = app.getLabel().toLowerCase();
                     if (n < name.length() && name.substring(0,n).equals(s))
-                        filteredAppsList.add(app);
+                        searchedAppsList.add(app);
                 }
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence == null) {
-                    filteredAppsList = appList;
+                    searchedAppsList = appList;
                 }
                 else {
                     filterListviewItems(charSequence.toString());
                 }
-                appListView.setAdapter(new AppAdapter(getContext(), filteredAppsList));
+                appListView.setAdapter(new AppAdapter(getContext(), searchedAppsList));
                 TextView noResults = root.findViewById(R.id.no_results_text);
-                if (filteredAppsList.isEmpty())
-                    noResults.setVisibility(View.VISIBLE);
-                else
-                    noResults.setVisibility(View.GONE);
+                if (searchedAppsList.isEmpty()) {
+                    Toast toast = Toast.makeText(getContext(), "Aucune application ne correspond à votre recherche.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
 
             @Override
@@ -218,7 +219,7 @@ public class NotificationsFragment extends Fragment {
             appListView.setAdapter(adapter);
         }
 
-        //Fonction filtrant les applications affichées dans la liste (applis de base + toutes les applis installées par l'utilisateur
+        //Fonction filtrant les applications affichées dans la liste (applis de base + toutes les applis installées par l'utilisateur, sauf Orion)
         protected boolean filter(ApplicationInfo appInfo) {
             if (appInfo.packageName.equals("com.example.tactigant20"))
                 return false;
