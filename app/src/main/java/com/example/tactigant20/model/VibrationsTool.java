@@ -4,6 +4,7 @@ import static android.content.Context.MODE_APPEND;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -43,7 +44,6 @@ public class VibrationsTool {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.err.println(line);
                 int n = notifName.length();
                 if (line != null && n < line.length()) {
                     if (line.substring(0, n).equals(notifName)) {
@@ -92,7 +92,6 @@ public class VibrationsTool {
                     }
                     if (line != null) fileData.append(line).append("\n");
                 } while (line != null);
-                System.err.println("FileData: \n" + fileData);
                 writeInFile(fileData.toString(), MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
             } else
                 writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
@@ -103,7 +102,7 @@ public class VibrationsTool {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        Log.e("Modes de vibration", "Mode de vibration enregistré : " + vibrationMode);
     }
 
     private void writeInFile(String s, int mode) {

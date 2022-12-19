@@ -31,6 +31,8 @@ import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -44,30 +46,43 @@ public class NotificationsFragment extends Fragment {
 
     private static List<AppInfo> appList;
     private static List<AppInfo> searchedAppsList;
+    private static int initialItemPosition;
     private static int currentItemPosition;
     private static AppAdapter adapter;
     private ListView appListView;
     private long lastCheckedTimeStamp;
-    private View root;
 
     public static int getCurrentItemPosition() {
         return currentItemPosition;
     }
 
     public static AppInfo getCurrentItem() {
-        return appList.get(currentItemPosition);
+        return appList.get(initialItemPosition);
     }
 
     public static AppAdapter getAdapter() {
         return adapter;
     }
 
-    public static void setFromIndex(int position, AppInfo appInfo) {
-        appList.set(position, appInfo);
+    public static void setFromIndex(AppInfo appInfo) {
+        appList.set(initialItemPosition, appInfo);
+        searchedAppsList.set(currentItemPosition,appInfo);
+    }
+
+    public static int getInitialItemPosition(String appLabel) {
+        int i = 0;
+        if (!appList.isEmpty()) {
+            while (i<appList.size() && !appList.get(i).getLabel().equals(appLabel))
+                i++;
+        }
+        return i;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);}
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        lastCheckedTimeStamp = 0;
+    }
 
     @Override
     public void onResume() {
@@ -93,10 +108,12 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         com.example.tactigant20.databinding.FragmentNotificationsBinding binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-        root = binding.getRoot();
+        View root = binding.getRoot();
 
         appListView = root.findViewById(R.id.appList);
         appListView.setTextFilterEnabled(true);
+        TextView noResultsFound = root.findViewById(R.id.no_results_text);
+        appListView.setEmptyView(noResultsFound);
         appList = new ArrayList<>();
         LoadAppInfoTask task = new LoadAppInfoTask();
         task.execute();
@@ -105,8 +122,10 @@ public class NotificationsFragment extends Fragment {
             System.err.println(i);
             currentItemPosition = i;
             AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
+            initialItemPosition = getInitialItemPosition(currentItem.getLabel());
             System.err.println(currentItem.getLabel());
             createNewVibrationModeDialog(currentItem);
+            getAdapter().notifyDataSetChanged();
         });
 
 
@@ -138,12 +157,9 @@ public class NotificationsFragment extends Fragment {
                 else {
                     filterListviewItems(charSequence.toString());
                 }
-                appListView.setAdapter(new AppAdapter(getContext(), searchedAppsList));
-                TextView noResults = root.findViewById(R.id.no_results_text);
-                if (searchedAppsList.isEmpty()) {
-                    Toast toast = Toast.makeText(getContext(), "Aucune application ne correspond à votre recherche.", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
+                adapter = new AppAdapter(getContext(), searchedAppsList);
+                appListView.setAdapter(adapter);
+                getAdapter().notifyDataSetChanged();
             }
 
             @Override
@@ -215,7 +231,8 @@ public class NotificationsFragment extends Fragment {
         @Override
         protected void onPostExecute(List<AppInfo> appInfos) {
             super.onPostExecute(appInfos);
-            adapter = new AppAdapter(getContext(), appInfos);
+            searchedAppsList = appList;
+            adapter = new AppAdapter(getContext(), searchedAppsList);
             appListView.setAdapter(adapter);
         }
 

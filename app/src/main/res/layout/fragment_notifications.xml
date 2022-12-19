@@ -7,13 +7,28 @@
     tools:context=".ui.fragments.NotificationsFragment">
 
 
-    <ListView
-        android:id="@+id/appList"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="103dp"
-        android:layout_marginBottom="?actionBarSize" />
+        android:layout_marginBottom="?attr/actionBarSize">
+
+        <ListView
+            android:id="@+id/appList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/no_results_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_results_app"
+            android:textAlignment="center"
+            android:textSize="17sp"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <EditText
         android:id="@+id/app_search_bar"
@@ -24,16 +39,6 @@
         android:hint="@string/search_app"
         android:autofillHints=""
         android:inputType="text"/>
-
-    <TextView
-        android:id="@+id/no_results_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/appList"
-        android:text="@string/no_results_app"
-        android:visibility="invisible"
-        android:textSize="17sp"
-        android:textAlignment="center"/>
 
     <Button
         android:id="@+id/delete_button"

@@ -3,6 +3,7 @@ package com.example.tactigant20.ui.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.RadioButton;
@@ -82,10 +83,10 @@ public class VibrationModeDialog extends Dialog {
                 currentItem.setVibrationMode("3");
             }
         }
-
-        NotificationsFragment.setFromIndex(NotificationsFragment.getCurrentItemPosition(), currentItem);
-        NotificationsFragment.getAdapter().notifyDataSetChanged();
+        Log.e("Modes de vibration", "Mode de vibration choisi : " + currentItem.getVibrationMode());
+        NotificationsFragment.setFromIndex(currentItem);
         MainActivity.getMyVibrationsTool().saveVibrationMode(currentItem.getInfo().packageName, currentItem.getVibrationMode());
+        NotificationsFragment.getAdapter().notifyDataSetChanged();
         this.dismiss();
     }
 
