@@ -40,6 +40,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Classe qui représente le fragment affichant la liste des applications et leur mode de vibration.
+ * Cette classe permet également de mettre à jour les modes de vibration des applications.
+ */
 public class NotificationsFragment extends Fragment {
 
     private static final String TAG_NOTIFS = "debug_notifs_fragment";
@@ -51,10 +55,6 @@ public class NotificationsFragment extends Fragment {
     private static AppAdapter adapter;
     private ListView appListView;
     private long lastCheckedTimeStamp;
-
-    public static int getCurrentItemPosition() {
-        return currentItemPosition;
-    }
 
     public static AppInfo getCurrentItem() {
         return appList.get(initialItemPosition);
@@ -69,6 +69,12 @@ public class NotificationsFragment extends Fragment {
         searchedAppsList.set(currentItemPosition,appInfo);
     }
 
+    /**
+     * Fonction permettant d'obtenir la position de l'élément avec pour label appLabel dans la liste appList
+     *
+     * @param appLabel Label de l'objet AppInfo à rechercher
+     * @return l'indice de l'élément ayant pour label appLabel dans appList
+     */
     public static int getInitialItemPosition(String appLabel) {
         int i = 0;
         if (!appList.isEmpty()) {
@@ -78,12 +84,21 @@ public class NotificationsFragment extends Fragment {
         return i;
     }
 
+    /**
+     * Fonction qui est appelée lors de la création du fragment.
+     *
+     * @param savedInstanceState l'état de l'instance du fragment sauvegardé
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lastCheckedTimeStamp = 0;
     }
 
+    /**
+     * Fonction qui est appelée lorsque le fragment est remis en avant-plan.
+     * Cette fonction met à jour les modes de vibration des applications si le fichier de données des modes de vibration a été modifié.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -105,6 +120,16 @@ public class NotificationsFragment extends Fragment {
         }
     }
 
+    /**
+     * Fonction qui est appelée lors de la création de la vue du fragment. Elle initialise la liste des applications et leur mode de vibration,
+     * définit le onItemClickListener, et met en place les autres éléments de la vue.
+     *
+     * @param inflater l'objet qui peut être utilisé pour créer la vue du fragment à partir d'un layout XML
+     * @param container le container parent de la vue à créer
+     * @param savedInstanceState l'état de l'instance du fragment sauvegardé
+     *
+     * @return la vue du fragment créée
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         com.example.tactigant20.databinding.FragmentNotificationsBinding binding = FragmentNotificationsBinding.inflate(inflater, container, false);
@@ -209,9 +234,6 @@ public class NotificationsFragment extends Fragment {
                     AppInfo app = new AppInfo();
                     app.setInfo(info);
                     app.setLabel((String) info.loadLabel(packageManager));
-                    //On cherche si le fichier "vibration_modes_data.txt" existe : si c'est le cas, alors on essaie de lire les données
-                    //Sinon, on affecte aucun ("N/A", correspondant à "N" dans le code) mode de vibration à l'application
-                    //On lit les données du fichier pour trouver l'application correspondante
                     if (getContext() == null) {
                         Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
                     } else {
