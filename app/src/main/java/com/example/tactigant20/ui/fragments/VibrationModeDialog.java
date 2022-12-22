@@ -12,6 +12,9 @@ import android.widget.RadioGroup;
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.model.AppInfo;
+import com.example.tactigant20.model.VibrationsTool;
+
+import org.json.JSONException;
 
 public class VibrationModeDialog extends Dialog {
 
@@ -58,9 +61,7 @@ public class VibrationModeDialog extends Dialog {
 
     //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
     public void onRadioButtonClicked(View v) {
-        // Is the button now checked?
         boolean checked = ((RadioButton) v).isChecked();
-        // Check which radio button was clicked
         AppInfo currentItem = NotificationsFragment.getCurrentItem();
         int boutonRadio = v.getId();
         if (boutonRadio == R.id.radioButtonNA) {
@@ -83,11 +84,13 @@ public class VibrationModeDialog extends Dialog {
                 currentItem.setVibrationMode("3");
             }
         }
-        Log.e("Modes de vibration", "Mode de vibration choisi : " + currentItem.getVibrationMode());
         NotificationsFragment.setFromIndex(currentItem);
-        MainActivity.getMyVibrationsTool().saveVibrationMode(currentItem.getInfo().packageName, currentItem.getVibrationMode());
+        try {
+            MainActivity.getMyVibrationsTool().saveVibrationMode(currentItem.getInfo().packageName, currentItem.getVibrationMode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         NotificationsFragment.getAdapter().notifyDataSetChanged();
         this.dismiss();
     }
-
 }

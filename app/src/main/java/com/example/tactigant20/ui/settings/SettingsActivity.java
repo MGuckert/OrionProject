@@ -28,6 +28,9 @@ import com.example.tactigant20.model.AppInfo;
 import com.example.tactigant20.ui.fragments.HomeFragment;
 import com.example.tactigant20.ui.fragments.NotificationsFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -78,17 +81,17 @@ public class SettingsActivity extends AppCompatActivity {
         confirmDialog.show();
         Button yesButton = confirmDialog.findViewById(R.id.yes_button);
         yesButton.setOnClickListener(view -> {
-            File file = new File(v.getContext().getFilesDir(), "vibration_modes_data.txt");
+            File file = new File(v.getContext().getFilesDir(), "vibration_modes_data.json");
             if (file.exists() && !file.isDirectory()) {
                 try {
                     FileWriter fileWriter = new FileWriter(file);
-                    PrintWriter printWriter = new PrintWriter(fileWriter);
-                    printWriter.print("");
-                    printWriter.close();
+                    fileWriter.write(new JSONObject().toString());
+                    fileWriter.close();
                 } catch (IOException e) {
-                    Toast.makeText(this, "Erreur lors de la modification du fichier", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
             }
+            NotificationsFragment.setDataReinitialised(true);
             confirmDialog.dismiss();
             Toast.makeText(v.getContext(), "Modes de vibration réinitialisés", Toast.LENGTH_SHORT).show();
         });

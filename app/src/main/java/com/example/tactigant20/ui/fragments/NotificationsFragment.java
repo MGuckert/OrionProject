@@ -1,7 +1,5 @@
 package com.example.tactigant20.ui.fragments;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -11,7 +9,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -30,15 +26,17 @@ import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
-
-import org.w3c.dom.Text;
+import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Classe qui représente le fragment affichant la liste des applications et leur mode de vibration.
@@ -54,7 +52,7 @@ public class NotificationsFragment extends Fragment {
     private static int currentItemPosition;
     private static AppAdapter adapter;
     private ListView appListView;
-    private long lastCheckedTimeStamp;
+    private static boolean dataReinitialised;
 
     public static AppInfo getCurrentItem() {
         return appList.get(initialItemPosition);
@@ -63,6 +61,8 @@ public class NotificationsFragment extends Fragment {
     public static AppAdapter getAdapter() {
         return adapter;
     }
+
+    public static void setDataReinitialised(boolean bool) { dataReinitialised = bool; }
 
     public static void setFromIndex(AppInfo appInfo) {
         appList.set(initialItemPosition, appInfo);
@@ -92,31 +92,22 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lastCheckedTimeStamp = 0;
     }
 
     /**
      * Fonction qui est appelée lorsque le fragment est remis en avant-plan.
-     * Cette fonction met à jour les modes de vibration des applications si le fichier de données des modes de vibration a été modifié.
+     * Cette fonction est utilisée pour réinitialiser les modes de vibration et mettre à jour l'affichage lorsque le bouton du même nom
+     * est cliqué dans les paramètres
      */
     @Override
     public void onResume() {
         super.onResume();
-        File vibration_modes_data = new File(requireContext().getFilesDir(), "vibration_modes_data.txt");
-        long lastModified = vibration_modes_data.lastModified();
-        if (lastModified > lastCheckedTimeStamp) {
-            if (adapter != null)
-                adapter.notifyDataSetChanged();
-            lastCheckedTimeStamp = lastModified;
+        if (dataReinitialised) {
             for (AppInfo app : appList) {
-                if (getContext() == null) {
-                    Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
-                } else {
-                    String mode = MainActivity.getMyVibrationsTool().loadVibrationMode(app.getInfo().packageName, getContext());
-                    if (mode.equals("UNKNOWN")) app.setVibrationMode("N");
-                    else app.setVibrationMode(mode);
-                }
+                    app.setVibrationMode("N");
             }
+            dataReinitialised = false;
+            getAdapter().notifyDataSetChanged();
         }
     }
 
@@ -144,11 +135,9 @@ public class NotificationsFragment extends Fragment {
         task.execute();
 
         appListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            System.err.println(i);
             currentItemPosition = i;
             AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
             initialItemPosition = getInitialItemPosition(currentItem.getLabel());
-            System.err.println(currentItem.getLabel());
             createNewVibrationModeDialog(currentItem);
             getAdapter().notifyDataSetChanged();
         });
@@ -198,13 +187,21 @@ public class NotificationsFragment extends Fragment {
         return root;
     }
 
-    //Fonction créant la fenêtre pop-up qui permet de choisir son mode de vibration
+    /**
+     * Fonction créant une fenêtre de dialogue permettant de choisir le mode de vibration pour l'application spécifiée.
+     *
+     * @param appInfo l'application pour laquelle le mode de vibration doit être choisi.
+     */
     public void createNewVibrationModeDialog(AppInfo appInfo) {
         final VibrationModeDialog dialog = new VibrationModeDialog(this.getContext(), appInfo);
         dialog.show();
     }
 
-    //Classe permettant de générer la liste des applications dans un thread auxiliaire (en arrière-plan)
+    /**
+     * Classe permettant de charger la liste des applications dans un thread auxiliaire (en arrière-plan).
+     * La liste est filtrée pour ne contenir que les applications de base et celles installées par l'utilisateur, à l'exception de l'application Orion.
+     * Les modes de vibration pour chaque application sont chargés depuis un fichier JSON.
+     */
     @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class LoadAppInfoTask extends AsyncTask<Integer, Integer, List<AppInfo>> {
 
@@ -218,30 +215,20 @@ public class NotificationsFragment extends Fragment {
         protected List<AppInfo> doInBackground(Integer... params) {
 
             PackageManager packageManager = requireContext().getPackageManager();
-
             List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            File vibration_modes_data = new File(requireContext().getFilesDir(), "vibration_modes_data.txt");
-            if (!vibration_modes_data.exists()) {
-                try {
-                    requireContext().openFileOutput("vibration_modes_data.txt", MODE_PRIVATE);
-                } catch (FileNotFoundException | NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-
+            JSONObject root = MainActivity.getMyVibrationsTool().loadVibrationModes(requireContext());
             for (ApplicationInfo info : infos) {
                 if (filter(info)) {
                     AppInfo app = new AppInfo();
                     app.setInfo(info);
                     app.setLabel((String) info.loadLabel(packageManager));
-                    if (getContext() == null) {
-                        Log.e(TAG_NOTIFS, "getContext() renvoie null dans NotificationsFragment");
+                    String mode = root.optString(info.packageName, "UNKNOWN");
+                    if (mode.equals("UNKNOWN")) {
+                        app.setVibrationMode("N");
                     } else {
-                        String mode = MainActivity.getMyVibrationsTool().loadVibrationMode(app.getInfo().packageName, getContext());
-                        if (mode.equals("UNKNOWN")) app.setVibrationMode("N");
-                        else app.setVibrationMode(mode);
-                        appList.add(app);
+                        app.setVibrationMode(mode);
                     }
+                    appList.add(app);
                 }
             }
 
@@ -258,12 +245,34 @@ public class NotificationsFragment extends Fragment {
             appListView.setAdapter(adapter);
         }
 
-        //Fonction filtrant les applications affichées dans la liste (applis de base + toutes les applis installées par l'utilisateur, sauf Orion)
+        /**
+         * Fonction filtrant les applications affichées dans la liste pour ne contenir que les applications de base et celles installées par l'utilisateur, à l'exception de l'application Orion.
+         * @param appInfo l'application à filtrer
+         * @return vrai si l'application doit être incluse dans la liste, faux sinon.
+         */
         protected boolean filter(ApplicationInfo appInfo) {
-            if (appInfo.packageName.equals("com.example.tactigant20"))
+            Set<String> allowedApps = new HashSet<>(Arrays.asList(
+                    "com.google.android.apps.docs",
+                    "com.google.android.gm",
+                    "com.google.android.googlequicksearchbox",
+                    "com.google.android.calendar",
+                    "com.google.android.chrome",
+                    "com.google.android.apps.deskclock",
+                    "com.google.android.apps.maps",
+                    "com.google.android.apps.messaging",
+                    "com.android.phone",
+                    "com.google.android.apps.photos",
+                    "com.google.android.apps.youtube",
+                    "com.google.android.apps.youtube.music"
+            ));
+
+            if (appInfo.packageName.equals("com.example.tactigant20")) {
                 return false;
-            else
-                return (appInfo.packageName.equals("com.google.android.apps.docs") || appInfo.packageName.equals("com.google.android.gm") || appInfo.packageName.equals("com.google.android.googlequicksearchbox") || appInfo.packageName.equals("com.google.android.calendar") || appInfo.packageName.equals("com.google.android.chrome") || appInfo.packageName.equals("com.google.android.apps.deskclock") || appInfo.packageName.equals("com.google.android.apps.maps") || appInfo.packageName.equals("com.google.android.apps.messaging") || appInfo.packageName.equals("com.android.phone") || appInfo.packageName.equals("com.google.android.apps.photos") || appInfo.packageName.equals("com.google.android.apps.youtube") || appInfo.packageName.equals("com.google.android.apps.youtube.music") || ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM));
+            } else if (allowedApps.contains(appInfo.packageName)) {
+                return true;
+            } else {
+                return ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM);
+            }
         }
     }
 
