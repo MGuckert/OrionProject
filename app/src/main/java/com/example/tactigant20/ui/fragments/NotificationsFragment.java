@@ -44,19 +44,11 @@ import java.util.Set;
  */
 public class NotificationsFragment extends Fragment {
 
-    private static final String TAG_NOTIFS = "debug_notifs_fragment";
-
     private static List<AppInfo> appList;
-    private static List<AppInfo> searchedAppsList;
-    private static int initialItemPosition;
-    private static int currentItemPosition;
+    private static List<AppInfo> searchedAppList;
     private static AppAdapter adapter;
     private ListView appListView;
     private static boolean dataReinitialised;
-
-    public static AppInfo getCurrentItem() {
-        return appList.get(initialItemPosition);
-    }
 
     public static AppAdapter getAdapter() {
         return adapter;
@@ -64,25 +56,16 @@ public class NotificationsFragment extends Fragment {
 
     public static void setDataReinitialised(boolean bool) { dataReinitialised = bool; }
 
-    public static void setFromIndex(AppInfo appInfo) {
-        appList.set(initialItemPosition, appInfo);
-        searchedAppsList.set(currentItemPosition,appInfo);
-    }
-
-    /**
-     * Fonction permettant d'obtenir la position de l'élément avec pour label appLabel dans la liste appList
-     *
-     * @param appLabel Label de l'objet AppInfo à rechercher
-     * @return l'indice de l'élément ayant pour label appLabel dans appList
-     */
-    public static int getInitialItemPosition(String appLabel) {
+    public static void updateItem(AppInfo appInfo) {
+        String appLabel = appInfo.getLabel();
         int i = 0;
         if (!appList.isEmpty()) {
             while (i<appList.size() && !appList.get(i).getLabel().equals(appLabel))
                 i++;
         }
-        return i;
+        appList.set(i, appInfo);
     }
+
 
     /**
      * Fonction qui est appelée lors de la création du fragment.
@@ -135,9 +118,7 @@ public class NotificationsFragment extends Fragment {
         task.execute();
 
         appListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            currentItemPosition = i;
-            AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(currentItemPosition);
-            initialItemPosition = getInitialItemPosition(currentItem.getLabel());
+            AppInfo currentItem = (AppInfo) appListView.getItemAtPosition(i);
             createNewVibrationModeDialog(currentItem);
             getAdapter().notifyDataSetChanged();
         });
@@ -153,25 +134,25 @@ public class NotificationsFragment extends Fragment {
             }
 
             public void filterListviewItems(String s) {
-                searchedAppsList = new ArrayList<>();
+                searchedAppList = new ArrayList<>();
                 s = s.toLowerCase();
                 int n = s.length();
                 for (AppInfo app : appList) {
                     String name = app.getLabel().toLowerCase();
                     if (n < name.length() && name.substring(0,n).equals(s))
-                        searchedAppsList.add(app);
+                        searchedAppList.add(app);
                 }
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence == null) {
-                    searchedAppsList = appList;
+                    searchedAppList = appList;
                 }
                 else {
                     filterListviewItems(charSequence.toString());
                 }
-                adapter = new AppAdapter(getContext(), searchedAppsList);
+                adapter = new AppAdapter(getContext(), searchedAppList);
                 appListView.setAdapter(adapter);
                 getAdapter().notifyDataSetChanged();
             }
@@ -240,8 +221,8 @@ public class NotificationsFragment extends Fragment {
         @Override
         protected void onPostExecute(List<AppInfo> appInfos) {
             super.onPostExecute(appInfos);
-            searchedAppsList = appList;
-            adapter = new AppAdapter(getContext(), searchedAppsList);
+            searchedAppList = appList;
+            adapter = new AppAdapter(getContext(), searchedAppList);
             appListView.setAdapter(adapter);
         }
 

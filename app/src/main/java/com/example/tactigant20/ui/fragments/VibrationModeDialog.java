@@ -62,7 +62,7 @@ public class VibrationModeDialog extends Dialog {
     //Fonction qui gère le choix d'un mode de vibration dans la fenêtre pop-up du fragment notifications
     public void onRadioButtonClicked(View v) {
         boolean checked = ((RadioButton) v).isChecked();
-        AppInfo currentItem = NotificationsFragment.getCurrentItem();
+        AppInfo currentItem = mAppInfo;
         int boutonRadio = v.getId();
         if (boutonRadio == R.id.radioButtonNA) {
             if (checked) {
@@ -84,7 +84,7 @@ public class VibrationModeDialog extends Dialog {
                 currentItem.setVibrationMode("3");
             }
         }
-        NotificationsFragment.setFromIndex(currentItem);
+        NotificationsFragment.updateItem(currentItem);
         try {
             MainActivity.getMyVibrationsTool().saveVibrationMode(currentItem.getInfo().packageName, currentItem.getVibrationMode());
         } catch (JSONException e) {
