@@ -2,7 +2,9 @@ package com.example.tactigant20.model;
 
 import android.content.pm.ApplicationInfo;
 
-//Objet application (avec ses informations, son nom, et son mode de vibration)
+/**
+ * Classe qui représente une application, ses informations, son nom et son mode de vibration associé.
+ */
 public class AppInfo {
     private ApplicationInfo mInfo;
     private String mLabel;

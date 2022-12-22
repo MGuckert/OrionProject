@@ -4,6 +4,7 @@ import static android.content.Context.MODE_APPEND;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -13,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
+/**
+ * Classe permettant de sauvegarder et de charger les modes de vibrations pour chaque application.
+ */
 public class VibrationsTool {
 
     private final WeakReference<Context> mContext;
@@ -21,6 +25,14 @@ public class VibrationsTool {
         this.mContext = new WeakReference<>(mContext); // En pratique toujours MainActivity
     }
 
+    /**
+     * Méthode permettant de charger le mode de vibration pour l'application spécifiée.
+     *
+     * @param notifName le nom du package de l'application pour laquelle on souhaite charger le mode de vibration
+     * @param context le contexte de l'application
+     *
+     * @return le mode de vibration de l'application, ou "UNKNOWN" si aucune donnée n'a été trouvée pour cette application
+     */
     public String loadVibrationMode(String notifName, Context context) {
         //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier
         // "vibration_modes_data.txt", et "UNKNOWN" si aucune donnée pour cette application n'a été sauvegardée.
@@ -43,7 +55,6 @@ public class VibrationsTool {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.err.println(line);
                 int n = notifName.length();
                 if (line != null && n < line.length()) {
                     if (line.substring(0, n).equals(notifName)) {
@@ -55,6 +66,12 @@ public class VibrationsTool {
         return "UNKNOWN";
     }
 
+    /**
+     * Méthode qui permet de sauvegarder le mode de vibration configuré pour une application donnée à partir du fichier de données.
+     *
+     * @param packageName le nom du package de l'application dont on souhaite sauvegarder un mode de vibration
+     * @param vibrationMode le mode de vibration à sauvegarder
+     */
     public void saveVibrationMode(String packageName, String vibrationMode) {
         //On sauvegarde le mode de vibration "vibrationMode" pour l'application "packageName"
         //On lit d'abord le fichier en ajoutant chaque ligne dans une String "fileData" tant que la ligne correspond à l'app n'a pas été trouvée
@@ -92,7 +109,6 @@ public class VibrationsTool {
                     }
                     if (line != null) fileData.append(line).append("\n");
                 } while (line != null);
-                System.err.println("FileData: \n" + fileData);
                 writeInFile(fileData.toString(), MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
             } else
                 writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
@@ -103,7 +119,7 @@ public class VibrationsTool {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        Log.e("Modes de vibration", "Mode de vibration enregistré : " + vibrationMode);
     }
 
     private void writeInFile(String s, int mode) {

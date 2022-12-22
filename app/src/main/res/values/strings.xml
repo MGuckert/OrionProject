@@ -31,11 +31,20 @@
     <string name="question_help_2"><b>De quelles permissions l\'application <i>Orion</i> a-t-elle besoin ?</b></string>
     <string name="answer_help_2">\t-> <i>Accès aux notifications</i>, qui peut être accordée depuis le menu \"Accès spécial\" des paramètres du téléphone.\n\n\t-> <i>Localisation</i>\n(<i>ACCESS_COARSE_LOCATION</i>), qui peut être accordée depuis la page de l\'application dans la rubrique \"Applications\" des paramètres du téléphone.\n\n\t-> <i>Afficher notifications</i>, qui peut être accordée depuis la page de l\'application dans la rubrique \"Applications\" des paramètres du téléphone.</string>
     <string name="text_github">Lien du GitHub :</string>
-    <string name="link_github"><a href="https://github.com/MGuckert/TactiGant-2.0">https://github.com/MGuckert/TactiGant-2.0</a></string>
+    <string name="link_github"><a href="https://github.com/MGuckert/TactiGant-2.0">https://github.com/MGuckert/OrionProject</a></string>
     <string name="title_settings">Paramètres</string>
     <string name="text_settings">Adresse MAC de la carte :</string>
     <string name="MAC_placeholder">xx:xx:xx:xx:xx:xx</string>
     <string name="ok">OK</string>
     <string name="MAC_error">Veuillez entrer une adresse MAC valide</string>
     <string name="MAC_default">84:F7:03:60:7E:46</string>
+    <string name="mode_sombre">Mode sombre</string>
+    <string name="reset_data">Réinitialiser les modes de vibration</string>
+    <string name="reset_vibrations_mode">Êtes-vous sûr de vouloir réinitialiser les modes de vibrations ?</string>
+    <string name="non">Non</string>
+    <string name="oui">Oui</string>
+    <string name="search_app">Rechercher une application</string>
+    <string name="no_results_app">Aucune application ne correspond à votre recherche.</string>
+    <string name="clear">Clear</string>
+    <string name="delete">Effacer</string>
 </resources>
