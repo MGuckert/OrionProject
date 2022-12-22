@@ -38,6 +38,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * Classe de l'activité de paramètres de l'application. Cette activité permet de changer l'adresse MAC
+ * de la montre connectée à l'application et de réinitialiser les modes de vibration des notifications.
+ * Elle permet également d'activer ou désactiver le mode sombre de l'application.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG_SETTINGS = "debug_settings_activity";
@@ -72,6 +77,13 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Cette méthode permet de réinitialiser les modes de vibrations de toutes les applications enregistrées dans l'application.
+     * Elle affiche une fenêtre de confirmation avant de réinitialiser les données. Si l'utilisateur confirme, elle vide de son contenu le fichier "vibration_modes_data.json"
+     * et met à jour le flag de réinitialisation des données dans le fragment "NotificationsFragment".
+     *
+     * @param v la vue actuelle (un bouton)
+     */
     private void cResetButton(View v) {
         Dialog confirmDialog = new Dialog(this);
         // Set the title and content of the Dialog
@@ -100,6 +112,12 @@ public class SettingsActivity extends AppCompatActivity {
         noButton.setOnClickListener(view -> confirmDialog.dismiss());
     }
 
+    /**
+     * Méthode qui gère le clic sur le bouton de modification de l'adresse MAC.
+     * Elle vérifie la validité de l'adresse MAC saisie, la sauvegarde et affiche un message de confirmation ou d'erreur.
+     *
+     * @param v la vue associée au bouton
+     */
     private void cSettingsButton(View v) {
         String NewMAC = settingsEditText.getText().toString().toUpperCase();
         if (Pattern.matches("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", NewMAC)) {
@@ -113,12 +131,18 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    // Méthode pour vérifier si le mode sombre est activé
+    /**
+     * Méthode qui vérifie si le mode sombre est activé.
+     *
+     * @return true si le mode sombre est activé, false sinon
+     */
     private boolean isDarkModeEnabled() {
         return (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES);
     }
 
-    // Méthode pour activer le mode sombre
+    /**
+     * Méthode qui active le mode sombre.
+     */
     private void enableDarkMode() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         getDelegate().applyDayNight();
@@ -127,7 +151,9 @@ public class SettingsActivity extends AppCompatActivity {
         preferences.edit().putInt("night_mode", AppCompatDelegate.MODE_NIGHT_YES).apply();
     }
 
-    // Méthode pour désactiver le mode sombre
+    /**
+     * Méthode qui désactive le mode sombre.
+     */
     private void disableDarkMode() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         getDelegate().applyDayNight();

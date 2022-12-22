@@ -56,6 +56,11 @@ public class NotificationsFragment extends Fragment {
 
     public static void setDataReinitialised(boolean bool) { dataReinitialised = bool; }
 
+    /**
+     * Cette méthode met à jour l'élément dans la liste appList avec le même label que le paramètre appInfo.
+     *
+     * @param appInfo l'élément à mettre à jour dans la liste appList
+     */
     public static void updateItem(AppInfo appInfo) {
         String appLabel = appInfo.getLabel();
         int i = 0;
@@ -123,15 +128,12 @@ public class NotificationsFragment extends Fragment {
             getAdapter().notifyDataSetChanged();
         });
 
-
         EditText editText = root.findViewById(R.id.app_search_bar);
         editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
         editText.setInputType(editText.getInputType() & ~InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
             public void filterListviewItems(String s) {
                 searchedAppList = new ArrayList<>();
@@ -158,9 +160,7 @@ public class NotificationsFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) { }
         });
         Button deleteButton = root.findViewById(R.id.delete_button);
         deleteButton.setOnClickListener(view -> editText.setText(""));

@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
 import java.util.Scanner;
 
 /**
- * Classe permettant de sauvegarder et de charger les modes de vibrations pour chaque application.
+ * Classe contenant les méthodes permettant de sauvegarder et de charger les modes de vibrations de chaque application.
  */
 public class VibrationsTool {
 
