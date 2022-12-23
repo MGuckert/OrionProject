@@ -39,10 +39,10 @@ public class VibrationsTool {
      * Si le nom de l'application est déjà présent dans le fichier, alors son mode de vibration est mis à jour.
      *
      * @param packageName   le nom du package de l'application pour laquelle on souhaite sauvegarder le mode de vibration
-     * @param vibrationMode le mode de vibration à sauvegarder pour l'application
+     * @param vibrationModeId le mode de vibration à sauvegarder pour l'application
      * @throws JSONException si une erreur se produit lors de la manipulation du fichier au format JSON
      */
-    public void saveAppVibrationModeId(String packageName, String vibrationMode) throws JSONException {
+    public void saveAppVibrationModeId(String packageName, String vibrationModeId) throws JSONException {
         File file = new File(mContext.get().getFilesDir(), "vibration_modes_data.json");
 
         try {
@@ -72,7 +72,7 @@ public class VibrationsTool {
         }
 
         // Ajoute ou met à jour le mode de vibration pour le packageName donné
-        root.put(packageName, vibrationMode);
+        root.put(packageName, vibrationModeId);
 
         //Ecriture de l'objet JSON mis à jour dans le fichier
         try {
@@ -90,7 +90,7 @@ public class VibrationsTool {
      * @param context le contexte de l'application
      * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
-    public JSONObject loadAppsVibrationModesId(Context context) {
+    public JSONObject loadAppsVibrationModes(Context context) {
         File file = new File(context.getFilesDir(), "vibration_modes_data.json");
 
         try {
@@ -126,7 +126,7 @@ public class VibrationsTool {
      * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
     public String loadAppVibrationModeId(String packageName, Context context) {
-        JSONObject root = loadAppsVibrationModesId(context);
+        JSONObject root = loadAppsVibrationModes(context);
         return root.optString(packageName, "N");
     }
 }
