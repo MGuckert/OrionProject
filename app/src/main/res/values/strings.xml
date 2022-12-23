@@ -39,12 +39,12 @@
     <string name="MAC_error">Veuillez entrer une adresse MAC valide</string>
     <string name="MAC_default">84:F7:03:60:7E:46</string>
     <string name="mode_sombre">Mode sombre</string>
-    <string name="reset_data">Réinitialiser les modes de vibration</string>
+    <string name="reset_data">Réinitialiser les modes de vibrations</string>
     <string name="reset_vibrations_mode">Êtes-vous sûr de vouloir réinitialiser les modes de vibrations ?</string>
     <string name="non">Non</string>
     <string name="oui">Oui</string>
     <string name="search_app">Rechercher une application</string>
     <string name="no_results_app">Aucune application ne correspond à votre recherche.</string>
-    <string name="clear">Clear</string>
     <string name="delete">Effacer</string>
+    <string name="mode_reset">Modes de vibrations réinitialisés</string>
 </resources>

@@ -29,25 +29,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Une connexion BLE sous forme d'objet
+ * Cet objet permet de contrôler une connexion BLE pendant l'ensemble de son cycle de vie en gérant l'appairage et la déconnexion, mais aussi l'échange de données entre un serveur et un client
+ *
+ * @author Thibaud P., Roman T.
+ * @since 1.0
+ */
 public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
     private final ScanCallback mScanCallback;
     private final BluetoothGattCallback mBluetoothGattCallback;
+    private final WeakReference<Context> mContext;
     private String mAdresseMAC;
     private String mMode = "";
-    private WeakReference<Context> mContext;
     private ValeurDeConnexion mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
     private BluetoothGatt mGatt;
     private BluetoothAdapter mAdapter;
     private BluetoothLeScanner mScanner;
 
+    /**
+     * Constructeur unique de <i>BluetoothLowEnergyTool</i>
+     *
+     * @param mAdresseMAC l'adresse MAC de l'objet auquel on souhaite se connecter
+     * @param mContext    le contexte dans lequel le <i>BluetoothLowEnergyTool</i> est instancié
+     */
     public BluetoothLowEnergyTool(String mAdresseMAC, Context mContext) {
         this.mAdresseMAC = mAdresseMAC;
 
         this.mContext = new WeakReference<>(mContext);
 
         this.mScanCallback = new ScanCallback() {
+            /**
+             * Fonction appelée lorsqu'un scan réussit
+             * @param callbackType information sur la manière dont la fonction a été appelée
+             * @param result un objet correspondant à l'appareil trouvé
+             * @see <a href="https://developer.android.com/reference/android/bluetooth/le/ScanCallback#onScanResult(int,%20android.bluetooth.le.ScanResult)">Plus d'informations</a>
+             */
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
@@ -61,6 +80,11 @@ public class BluetoothLowEnergyTool {
                 Log.d(TAG_BLE, "Scan réussi");
             }
 
+            /**
+             * Fonction appelée lorsqu'un scan échoue
+             * @param errorCode information sur l'erreur
+             * @see <a href="https://developer.android.com/reference/android/bluetooth/le/ScanCallback#onScanFailed(int)">Plus d'informations</a>
+             */
             @Override
             public void onScanFailed(int errorCode) {
                 Log.e(TAG_BLE, "ERREUR de scan | code : " + errorCode);
@@ -69,7 +93,13 @@ public class BluetoothLowEnergyTool {
         };
 
         this.mBluetoothGattCallback = new BluetoothGattCallback() {
-
+            /**
+             * Fonction appelée à chaque connexion/déconnexion
+             * @param gatt le client GATT
+             * @param status le statut de l'opération
+             * @param newState le nouvel état (connecté/déconnecté)
+             * @see <a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)">Plus d'informations</a>
+             */
             @Override
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
                 if (status == GATT_SUCCESS) {
@@ -101,6 +131,12 @@ public class BluetoothLowEnergyTool {
                 }
             }
 
+            /**
+             * Fonction appelée à chaque tentative d'échange de données via BLE
+             * @param gatt le client GATT concerné
+             * @param status indique si l'opération a réussi
+             * @see <a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onServicesDiscovered(android.bluetooth.BluetoothGatt,%20int)">Plus d'informations</a>
+             */
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -120,11 +156,11 @@ public class BluetoothLowEnergyTool {
                             if (mMode.equals("Ecriture")) {
                                 switch (MyNotificationListenerService.getVibrationMode()) {
                                     case "1":
-                                        SendData(gatt, characteristic, "Allume 1");
+                                        sendData(gatt, characteristic, "Allume 1");
                                     case "2":
-                                        SendData(gatt, characteristic, "Allume 2");
+                                        sendData(gatt, characteristic, "Allume 2");
                                     case "3":
-                                        SendData(gatt, characteristic, "Allume 3");
+                                        sendData(gatt, characteristic, "Allume 3");
                                         break;
                                 }
                             }
@@ -133,19 +169,13 @@ public class BluetoothLowEnergyTool {
                 }
             }
 
-            // Centralise l'envoi d'ordres à la carte
-            public void SendData(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, String message) {
-                Log.d(TAG_BLE, "On envoie quelque chose à la carte !");
-                characteristic.setValue(message); // On envoie cette chaîne à la carte
-                characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-                try {
-                    gatt.writeCharacteristic(characteristic);
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Lecture d'informations depuis la carte
+            /**
+             * Fonction appelée à chaque lecture d'informations depuis l'objet connecté
+             * @param gatt le client GATT concerné
+             * @param characteristic la <i>characteristic</i> reçue
+             * @param status indique si l'opération a réussi
+             * @see <a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt,%20android.bluetooth.BluetoothGattCharacteristic,%20int)">Plus d'informations</a>
+             */
             @Override
             public void onCharacteristicRead(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic, int status) {
                 // Vérification que ça a fonctionné
@@ -160,7 +190,13 @@ public class BluetoothLowEnergyTool {
 
             }
 
-            // Ecriture d'informations vers la carte
+            /**
+             * Fonction appelée à chaque envoi de données vers l'objet connecté
+             * @param gatt le client GATT concerné
+             * @param characteristic la <i>characteristic</i> envoyée
+             * @param status indique si l'opération a réussi
+             * @see <a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onCharacteristicWrite(android.bluetooth.BluetoothGatt,%20android.bluetooth.BluetoothGattCharacteristic,%20int)">Plus d'informations</a>
+             */
             @Override
             public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                 super.onCharacteristicWrite(gatt, characteristic, status);
@@ -169,6 +205,9 @@ public class BluetoothLowEnergyTool {
         };
     }
 
+    /**
+     * Quand cette fonction est appelée, le téléphone de l'utilisateur tente de s'appairer avec l'objet portant l'adresse MAC <i>mAdresseMAC</i>
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
         if (mValeurDeConnexion == ValeurDeConnexion.DECONNECTE) {
@@ -203,6 +242,9 @@ public class BluetoothLowEnergyTool {
         }
     }
 
+    /**
+     * Quand cette fonction est appelée, le téléphone de l'utilisateur coupe toute connexion BLE existante
+     */
     public void disconnect() {
         try {
             this.mScanner.stopScan(mScanCallback);
@@ -219,30 +261,76 @@ public class BluetoothLowEnergyTool {
         this.mValeurDeConnexion = ValeurDeConnexion.DECONNECTE;
     }
 
+    /**
+     * Fonction centralisant l'envoi d'ordres à un appareil BLE
+     *
+     * @param gatt           le client GATT concerné
+     * @param characteristic la <i>characteristic</i> qui porte le message
+     * @param message        la chaîne de caractères à envoyer à la carte
+     */
+    public void sendData(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, String message) {
+        Log.d(TAG_BLE, "On envoie quelque chose à la carte !");
+        characteristic.setValue(message); // On envoie cette chaîne à la carte
+        characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+        try {
+            gatt.writeCharacteristic(characteristic);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Getter pour le contexte d'instanciation du <i>BluetoothLowEnergyTool</i>
+     *
+     * @return le contexte dans lequel cet objet a été instancié
+     */
     public WeakReference<Context> getContext() {
         return this.mContext;
     }
 
-    public void setContext(WeakReference<Context> mContext) {
-        this.mContext = mContext;
-    }
-
+    /**
+     * Getter pour l'état de la connexion
+     *
+     * @return l'état de la connexion (CONNECTÉ/DÉCONNECTÉ/CHARGEMENT)
+     */
     public ValeurDeConnexion getValeurDeConnexion() {
         return this.mValeurDeConnexion;
     }
 
+    /**
+     * Getter pour le GATT
+     *
+     * @return le GATT utilisé par le <i>BluetoothLowEnergyTool</i>
+     */
     public BluetoothGatt getGatt() {
         return this.mGatt;
     }
 
+    /**
+     * Getter pour l'<i>Adapter</i>
+     * L'état de l'<i>Adapter</i> est une information cruciale sur le cycle de vie de la connexion BLE
+     *
+     * @return l'<i>Adapter</i> utilisé par le <i>BluetoothLowEnergyTool</i>
+     */
     public BluetoothAdapter getAdapter() {
         return this.mAdapter;
     }
 
+    /**
+     * Setter pour l'adresse MAC
+     * Permet de changer l'objet auquel on souhaite se connecter
+     *
+     * @param mAdresseMAC l'adresse MAC de l'objet auquel on souhaite se connecter par BLE
+     */
     public void setAdresseMAC(String mAdresseMAC) {
         this.mAdresseMAC = mAdresseMAC;
     }
 
+    /**
+     * Setter pour le mode d'échange de données
+     *
+     * @param mMode le mode d'échange de données ("Lecture"/"Ecriture")
+     */
     public void setMode(String mMode) {
         this.mMode = mMode;
     }
