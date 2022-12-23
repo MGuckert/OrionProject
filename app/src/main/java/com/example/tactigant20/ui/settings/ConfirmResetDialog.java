@@ -65,6 +65,6 @@ public class ConfirmResetDialog extends Dialog {
         }
         NotificationsFragment.setDataReinitialised(true);
         this.dismiss();
-        Toast.makeText(v.getContext(), "Modes de vibration réinitialisés", Toast.LENGTH_SHORT).show();
+        Toast.makeText(v.getContext(), v.getContext().getResources().getString(R.string.mode_reset), Toast.LENGTH_SHORT).show();
     }
 }
