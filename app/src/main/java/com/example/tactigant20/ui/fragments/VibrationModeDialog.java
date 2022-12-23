@@ -23,7 +23,7 @@ public class VibrationModeDialog extends Dialog {
     private final AppInfo mAppInfo;
 
     /**
-     * Constructeur de l'objet VibrationModeDialog.
+     * Constructeur de l'objet <i>VibrationModeDialog</i>
      *
      * @param context  Contexte de l'application
      * @param mAppInfo Objet de type AppInfo contenant les informations sur l'application pour laquelle le mode de vibration est à définir.

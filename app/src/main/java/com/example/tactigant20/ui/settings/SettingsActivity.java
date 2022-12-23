@@ -1,7 +1,6 @@
 package com.example.tactigant20.ui.settings;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,13 +16,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
-import com.example.tactigant20.ui.fragments.NotificationsFragment;
 
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
@@ -54,7 +47,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         //Switch mode sombre
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch darkModeSwitch = findViewById(R.id.dark_mode_switch);
-
         darkModeSwitch.setChecked(isDarkModeEnabled());
         darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -67,37 +59,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     /**
      * Cette méthode permet de réinitialiser les modes de vibrations de toutes les applications enregistrées dans l'application.
-     * Elle affiche une fenêtre de confirmation avant de réinitialiser les données. Si l'utilisateur confirme, elle vide de son contenu le fichier "vibration_modes_data.json"
-     * et met à jour le flag de réinitialisation des données dans le fragment "NotificationsFragment".
+     * Elle affiche une fenêtre de confirmation avant de réinitialiser les données. Si l'utilisateur confirme, elle vide de son contenu le fichier "vibration_modes_data.json" et met à jour le flag de réinitialisation des données dans le fragment "NotificationsFragment".
      *
      * @param v la vue actuelle (un bouton)
      */
     private void cResetButton(View v) {
-        Dialog confirmDialog = new Dialog(this);
-        // Set the title and content of the Dialog
-        confirmDialog.setTitle("Confirm Action");
-        confirmDialog.setContentView(R.layout.confirm_reset_dialog);
-        // Show the Dialog
-        confirmDialog.show();
-        Button yesButton = confirmDialog.findViewById(R.id.yes_button);
-        yesButton.setOnClickListener(view -> {
-            File file = new File(v.getContext().getFilesDir(), "vibration_modes_data.json");
-            if (file.exists() && !file.isDirectory()) {
-                try {
-                    FileWriter fileWriter = new FileWriter(file);
-                    fileWriter.write(new JSONObject().toString());
-                    fileWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            NotificationsFragment.setDataReinitialised(true);
-            confirmDialog.dismiss();
-            Toast.makeText(v.getContext(), "Modes de vibration réinitialisés", Toast.LENGTH_SHORT).show();
-        });
-
-        Button noButton = confirmDialog.findViewById(R.id.no_button);
-        noButton.setOnClickListener(view -> confirmDialog.dismiss());
+        final ConfirmResetDialog dialog = new ConfirmResetDialog(this);
+        dialog.show();
     }
 
     /**
@@ -134,8 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void enableDarkMode() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         getDelegate().applyDayNight();
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit().putInt("night_mode", AppCompatDelegate.MODE_NIGHT_YES).apply();
     }
 
@@ -145,8 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void disableDarkMode() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         getDelegate().applyDayNight();
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit().putInt("night_mode", AppCompatDelegate.MODE_NIGHT_NO).apply();
     }
 }
