@@ -1,22 +1,14 @@
 package com.example.tactigant20.model;
 
-import static android.content.Context.MODE_APPEND;
-import static android.content.Context.MODE_PRIVATE;
-
 import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.util.Scanner;
 
@@ -24,6 +16,8 @@ import java.util.Scanner;
  * Classe contenant les méthodes permettant de sauvegarder et de charger les modes de vibrations de chaque application.
  */
 public class VibrationsTool {
+
+    private static final String TAG_VT = "debug_vibration_tool";
 
     private final WeakReference<Context> mContext;
 
@@ -43,12 +37,14 @@ public class VibrationsTool {
     public void saveVibrationMode(String packageName, String vibrationMode) throws JSONException {
         File file = new File(mContext.get().getFilesDir(),"vibration_modes_data.json");
 
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if(file.createNewFile()) {
+                Log.d(TAG_VT, "Fichier créé");
+            } else {
+                Log.w(TAG_VT, "Le fichier existe déjà");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         //Lecture du fichier et "transformation" en objet JSON
@@ -89,12 +85,14 @@ public class VibrationsTool {
     public JSONObject loadVibrationModes(Context context) {
         File file = new File(context.getFilesDir(),"vibration_modes_data.json");
 
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if(file.createNewFile()) {
+                Log.d(TAG_VT, "Fichier créé");
+            } else {
+                Log.w(TAG_VT, "Le fichier existe déjà");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         JSONObject root = new JSONObject();
