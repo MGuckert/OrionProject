@@ -22,6 +22,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
+
 /**
  * Classe définissant un objet Dialog affichant une fenêtre pop-up permettant à l'utilisateur de choisir un mode de vibration pour une application donnée.
  * Cette fenêtre pop-up est affichée lorsque l'utilisateur clique sur un élément de la liste des applications dans le fragment Notifications.
@@ -32,9 +33,9 @@ public class VibrationModeDialog extends Dialog {
     private VibrationMode selectedVibrationMode;
 
     /**
-     * Constructeur de l'objet VibrationModeDialog.
+     * Constructeur de l'objet <i>VibrationModeDialog</i>
      *
-     * @param context Contexte de l'application
+     * @param context  Contexte de l'application
      * @param mAppInfo Objet de type AppInfo contenant les informations sur l'application pour laquelle le mode de vibration est à définir.
      */
     public VibrationModeDialog(Context context, AppInfo mAppInfo) {

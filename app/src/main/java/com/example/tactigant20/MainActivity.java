@@ -1,7 +1,5 @@
 package com.example.tactigant20;
 
-import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
-
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int nightMode = preferences.getInt("night_mode", AppCompatDelegate.MODE_NIGHT_NO);
         AppCompatDelegate.setDefaultNightMode(nightMode);
-        
+
         super.onCreate(savedInstanceState);
         com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

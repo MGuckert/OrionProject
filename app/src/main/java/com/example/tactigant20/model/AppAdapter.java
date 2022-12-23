@@ -19,6 +19,9 @@ import java.util.List;
 
 /**
  * Classe qui permet de créer une liste d'applications à partir de la liste d'objets AppInfo et du layout d'un item app_item_layout.
+ *
+ * @author Mathis G.
+ * @since 1.0
  */
 public class AppAdapter extends ArrayAdapter<AppInfo> {
 
@@ -27,10 +30,10 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
     private final List<AppInfo> mApps;
 
     /**
-     * Constructeur de l'objet AppAdapter.
+     * Constructeur unique de <i>AppAdapter</i>
      *
-     * @param context le contexte de l'application
-     * @param mApps la liste d'objets AppInfo à afficher
+     * @param context contexte dans lequel l'objet est instancié
+     * @param mApps   la liste d'<i>AppInfo</i> à manipuler
      */
     public AppAdapter(Context context, List<AppInfo> mApps) {
         super(context, R.layout.app_item_layout, mApps);
@@ -42,10 +45,9 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
     /**
      * Fonction qui permet de créer une vue pour chaque élément de la liste d'objets AppInfo.
      *
-     * @param position la position de l'élément dans la liste
+     * @param position    la position de l'élément dans la liste
      * @param convertView la vue à réutiliser, si disponible
-     * @param parent le parent de la vue à créer
-     *
+     * @param parent      le parent de la vue à créer
      * @return la vue pour l'élément de la liste à la position spécifiée
      */
     @NonNull

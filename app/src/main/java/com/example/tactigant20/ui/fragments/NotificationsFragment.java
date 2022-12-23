@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +25,17 @@ import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
+
 import com.example.tactigant20.model.VibrationMode;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -49,14 +47,16 @@ public class NotificationsFragment extends Fragment {
     private static List<AppInfo> appList;
     private static List<AppInfo> searchedAppList;
     private static AppAdapter adapter;
-    private ListView appListView;
     private static boolean dataReinitialised;
+    private ListView appListView;
 
     public static AppAdapter getAdapter() {
         return adapter;
     }
 
-    public static void setDataReinitialised(boolean bool) { dataReinitialised = bool; }
+    public static void setDataReinitialised(boolean bool) {
+        dataReinitialised = bool;
+    }
 
     /**
      * Cette méthode met à jour l'élément dans la liste appList avec le même label que le paramètre appInfo.
@@ -67,7 +67,7 @@ public class NotificationsFragment extends Fragment {
         String appLabel = appInfo.getLabel();
         int i = 0;
         if (!appList.isEmpty()) {
-            while (i<appList.size() && !appList.get(i).getLabel().equals(appLabel))
+            while (i < appList.size() && !appList.get(i).getLabel().equals(appLabel))
                 i++;
         }
         appList.set(i, appInfo);
@@ -106,10 +106,9 @@ public class NotificationsFragment extends Fragment {
      * Fonction qui est appelée lors de la création de la vue du fragment. Elle initialise la liste des applications et leur mode de vibration,
      * définit le onItemClickListener, et met en place les autres éléments de la vue.
      *
-     * @param inflater l'objet qui peut être utilisé pour créer la vue du fragment à partir d'un layout XML
-     * @param container le container parent de la vue à créer
+     * @param inflater           l'objet qui peut être utilisé pour créer la vue du fragment à partir d'un layout XML
+     * @param container          le container parent de la vue à créer
      * @param savedInstanceState l'état de l'instance du fragment sauvegardé
-     *
      * @return la vue du fragment créée
      */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -136,7 +135,8 @@ public class NotificationsFragment extends Fragment {
         editText.setInputType(editText.getInputType() & ~InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             public void filterListviewItems(String s) {
                 searchedAppList = new ArrayList<>();
@@ -144,7 +144,7 @@ public class NotificationsFragment extends Fragment {
                 int n = s.length();
                 for (AppInfo app : appList) {
                     String name = app.getLabel().toLowerCase();
-                    if (n < name.length() && name.substring(0,n).equals(s))
+                    if (n < name.length() && name.substring(0, n).equals(s))
                         searchedAppList.add(app);
                 }
             }
@@ -153,8 +153,7 @@ public class NotificationsFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence == null) {
                     searchedAppList = appList;
-                }
-                else {
+                } else {
                     filterListviewItems(charSequence.toString());
                 }
                 adapter = new AppAdapter(getContext(), searchedAppList);
@@ -163,7 +162,8 @@ public class NotificationsFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) { }
+            public void afterTextChanged(Editable editable) {
+            }
         });
         Button deleteButton = root.findViewById(R.id.delete_button);
         deleteButton.setOnClickListener(view -> editText.setText(""));
@@ -228,6 +228,7 @@ public class NotificationsFragment extends Fragment {
 
         /**
          * Fonction filtrant les applications affichées dans la liste pour ne contenir que les applications de base et celles installées par l'utilisateur, à l'exception de l'application Orion.
+         *
          * @param appInfo l'application à filtrer
          * @return vrai si l'application doit être incluse dans la liste, faux sinon.
          */
