@@ -8,8 +8,13 @@ import android.content.pm.ApplicationInfo;
 public class AppInfo {
     private ApplicationInfo mInfo;
     private String mLabel;
-    private String mVibrationMode;
+    private VibrationMode mVibrationMode;
 
+    public AppInfo() {
+        this.mInfo = null;
+        this.mLabel = "Default Label";
+        this.mVibrationMode = VibrationMode.getDefaultVibrationMode();
+    }
     public ApplicationInfo getInfo() {
         return this.mInfo;
     }
@@ -26,11 +31,11 @@ public class AppInfo {
         this.mLabel = mLabel;
     }
 
-    public String getVibrationMode() {
+    public VibrationMode getVibrationMode() {
         return this.mVibrationMode;
     }
 
-    public void setVibrationMode(String mVibrationMode) {
+    public void setVibrationMode(VibrationMode mVibrationMode) {
         this.mVibrationMode = mVibrationMode;
     }
 }

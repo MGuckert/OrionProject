@@ -5,6 +5,7 @@ import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -26,6 +27,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.tactigant20.databinding.ActivityMainBinding;
 import com.example.tactigant20.model.BluetoothLowEnergyTool;
 import com.example.tactigant20.model.SwipeAdapter;
+import com.example.tactigant20.model.VibrationMode;
 import com.example.tactigant20.model.VibrationsTool;
 import com.example.tactigant20.ui.NotificationTool;
 import com.example.tactigant20.ui.fragments.HomeFragment;
@@ -36,6 +38,8 @@ import com.example.tactigant20.ui.settings.InfoActivity;
 import com.example.tactigant20.ui.settings.SettingsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -146,6 +150,16 @@ public class MainActivity extends AppCompatActivity {
         myViewPager2.setAdapter(mySwipeAdapter);
         myViewPager2.setCurrentItem(1, false); // On commence sur HomeFragment
 
+        Context context = getApplicationContext();
+        List<VibrationMode> vibrationModes = VibrationMode.getSavedVibrationModes(context);
+        if (vibrationModes.isEmpty()) {
+            VibrationMode mode1 = new VibrationMode("Mode 1", "1");
+            VibrationMode mode2 = new VibrationMode("Mode 2", "2");
+            VibrationMode mode3 = new VibrationMode("Mode 3", "3");
+            mode1.saveVibrationMode(context);
+            mode2.saveVibrationMode(context);
+            mode3.saveVibrationMode(context);
+        }
     }
 
     // Création du menu de la toolbar

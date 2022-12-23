@@ -5,55 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RadioGroup
-        android:id="@+id/vibrationModeRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Spinner
+        android:id="@+id/vibrationModeSpinner"
+        android:layout_width="223dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
-
-        <RadioButton
-            android:id="@+id/radioButtonNA"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/n_a" />
-
-        <RadioButton
-            android:id="@+id/radioButtonMode1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/mode_1" />
-
-        <RadioButton
-            android:id="@+id/radioButtonMode2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/mode_2" />
-
-        <RadioButton
-            android:id="@+id/radioButtonMode3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/mode_3" />
-
-    </RadioGroup>
+        app:layout_constraintTop_toBottomOf="@+id/vibrationDialogTitle" />
 
     <TextView
-        android:id="@+id/descriptionTextView"
+        android:id="@+id/vibrationDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="4dp"
         android:text="@string/modes_de_vibration"
-        android:textColor="?attr/colorOnBackground"
         android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="?attr/colorOnBackground"
         android:textSize="22sp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-16dp" />
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/vibration_mode_choice_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="@string/default_vibration_dialog_text"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/vibrationDialogOKButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="144dp"
+        android:text="@string/ok"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
