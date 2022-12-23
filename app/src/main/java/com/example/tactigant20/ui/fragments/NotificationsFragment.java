@@ -200,7 +200,7 @@ public class NotificationsFragment extends Fragment {
 
             PackageManager packageManager = requireContext().getPackageManager();
             List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            JSONObject root = MainActivity.getMyVibrationsTool().loadVibrationModes(requireContext());
+            JSONObject root = MainActivity.getMyVibrationsTool().loadAppsVibrationModesId(requireContext());
             for (ApplicationInfo info : infos) {
                 if (filter(info)) {
                     AppInfo app = new AppInfo();

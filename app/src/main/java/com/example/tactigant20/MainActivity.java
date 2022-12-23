@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         myViewPager2.setAdapter(mySwipeAdapter);
         myViewPager2.setCurrentItem(1, false); // On commence sur HomeFragment
 
+        //Création des 3 modes de vibration prédéfinis (si inexistants)
         Context context = getApplicationContext();
         List<VibrationMode> vibrationModes = VibrationMode.getSavedVibrationModes(context);
         if (vibrationModes.isEmpty()) {

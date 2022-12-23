@@ -14,11 +14,11 @@ import com.example.tactigant20.model.BluetoothLowEnergyTool;
 public class MyNotificationListenerService extends NotificationListenerService {
 
     private final static String TAG_MNLS = "debug_mnls";
-    private static String mVibrationMode;
+    private static String mVibrationModeId;
     private Context mContext;
 
-    public static String getVibrationMode() {
-        return mVibrationMode;
+    public static String getVibrationModeId() {
+        return mVibrationModeId;
     }
 
     @Override
@@ -35,12 +35,12 @@ public class MyNotificationListenerService extends NotificationListenerService {
                 String packageName = sbn.getPackageName();
                 Notification notif = sbn.getNotification();
                 String category = notif.category;
-                mVibrationMode = MainActivity.getMyVibrationsTool().loadVibrationMode(packageName, getApplicationContext());
+                mVibrationModeId = MainActivity.getMyVibrationsTool().loadAppVibrationModeId(packageName, getApplicationContext());
                 BluetoothGatt gatt = MainActivity.getMyBLET().getGatt();
                 MainActivity.getMyBLET().setMode("Ecriture");
                 if (category != null) {
                     if (!category.equals("sys")) {
-                        showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationMode);
+                        showToast("Notification reçue : " + packageName + " Vibration mode : " + mVibrationModeId);
                         try {
                             gatt.discoverServices();
                         } catch (SecurityException e) {

@@ -89,7 +89,7 @@ public class VibrationModeDialog extends Dialog {
             NotificationsFragment.updateItem(mAppInfo);
             Log.e("TAG_DEBUG_2", "mAppInfo.getVibrationMode().getId() : " + mAppInfo.getVibrationMode().getId());
             try {
-                MainActivity.getMyVibrationsTool().saveVibrationMode(mAppInfo.getInfo().packageName, mAppInfo.getVibrationMode().getId());
+                MainActivity.getMyVibrationsTool().saveAppVibrationModeId(mAppInfo.getInfo().packageName, mAppInfo.getVibrationMode().getId());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

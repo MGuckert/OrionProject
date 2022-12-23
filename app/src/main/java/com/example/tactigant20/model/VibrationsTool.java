@@ -42,7 +42,7 @@ public class VibrationsTool {
      * @param vibrationMode le mode de vibration à sauvegarder pour l'application
      * @throws JSONException si une erreur se produit lors de la manipulation du fichier au format JSON
      */
-    public void saveVibrationMode(String packageName, String vibrationMode) throws JSONException {
+    public void saveAppVibrationModeId(String packageName, String vibrationMode) throws JSONException {
         File file = new File(mContext.get().getFilesDir(), "vibration_modes_data.json");
 
         try {
@@ -90,7 +90,7 @@ public class VibrationsTool {
      * @param context le contexte de l'application
      * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
-    public JSONObject loadVibrationModes(Context context) {
+    public JSONObject loadAppsVibrationModesId(Context context) {
         File file = new File(context.getFilesDir(), "vibration_modes_data.json");
 
         try {
@@ -125,8 +125,8 @@ public class VibrationsTool {
      * @param context     le contexte de l'application
      * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
-    public String loadVibrationMode(String packageName, Context context) {
-        JSONObject root = loadVibrationModes(context);
-        return root.optString(packageName, "UNKNOWN");
+    public String loadAppVibrationModeId(String packageName, Context context) {
+        JSONObject root = loadAppsVibrationModesId(context);
+        return root.optString(packageName, "N");
     }
 }
