@@ -14,6 +14,10 @@ import java.util.Scanner;
 
 /**
  * Classe contenant les méthodes permettant de sauvegarder et de charger les modes de vibrations de chaque application.
+ * Cet objet permet de coordonner les notifications reçues avec un mode de vibration
+ *
+ * @author Lucas S.
+ * @since 1.0
  */
 public class VibrationsTool {
 
@@ -21,6 +25,11 @@ public class VibrationsTool {
 
     private final WeakReference<Context> mContext;
 
+    /**
+     * Constructeur unique du <i>VibrationTool</i>
+     *
+     * @param mContext le contexte dans lequel le <i>VibrationTool</i> est instancié
+     */
     public VibrationsTool(Context mContext) {
         this.mContext = new WeakReference<>(mContext); // En pratique toujours MainActivity
     }
@@ -29,16 +38,15 @@ public class VibrationsTool {
      * Méthode qui permet de sauvegarder le mode de vibration configuré pour une application donnée dans un fichier de données au format JSON.
      * Si le nom de l'application est déjà présent dans le fichier, alors son mode de vibration est mis à jour.
      *
-     * @param packageName le nom du package de l'application pour laquelle on souhaite sauvegarder le mode de vibration
+     * @param packageName   le nom du package de l'application pour laquelle on souhaite sauvegarder le mode de vibration
      * @param vibrationMode le mode de vibration à sauvegarder pour l'application
-     *
      * @throws JSONException si une erreur se produit lors de la manipulation du fichier au format JSON
      */
     public void saveVibrationMode(String packageName, String vibrationMode) throws JSONException {
-        File file = new File(mContext.get().getFilesDir(),"vibration_modes_data.json");
+        File file = new File(mContext.get().getFilesDir(), "vibration_modes_data.json");
 
         try {
-            if(file.createNewFile()) {
+            if (file.createNewFile()) {
                 Log.d(TAG_VT, "Fichier créé");
             } else {
                 Log.w(TAG_VT, "Le fichier existe déjà");
@@ -79,14 +87,14 @@ public class VibrationsTool {
     /**
      * Méthode permettant de charger le fichier vibration_modes_data.json dans un objet JSONObject
      *
-     * @param context   le contexte de l'application
+     * @param context le contexte de l'application
      * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
     public JSONObject loadVibrationModes(Context context) {
-        File file = new File(context.getFilesDir(),"vibration_modes_data.json");
+        File file = new File(context.getFilesDir(), "vibration_modes_data.json");
 
         try {
-            if(file.createNewFile()) {
+            if (file.createNewFile()) {
                 Log.d(TAG_VT, "Fichier créé");
             } else {
                 Log.w(TAG_VT, "Le fichier existe déjà");
@@ -111,10 +119,10 @@ public class VibrationsTool {
     }
 
     /**
-     * Méthode utilisant loadVibrationModes et renvoyant le mode de vibration de l'application ayant pour package packageName
+     * Méthode utilisant <i>loadVibrationModes()</i> et renvoyant le mode de vibration de l'application ayant pour package <i>packageName</i>
      *
      * @param packageName le nom du package de l'application
-     * @param context   le contexte de l'application
+     * @param context     le contexte de l'application
      * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
     public String loadVibrationMode(String packageName, Context context) {
