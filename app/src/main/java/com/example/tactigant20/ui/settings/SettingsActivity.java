@@ -3,19 +3,13 @@ package com.example.tactigant20.ui.settings;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,19 +17,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
-import com.example.tactigant20.model.AppAdapter;
-import com.example.tactigant20.model.AppInfo;
-import com.example.tactigant20.ui.fragments.HomeFragment;
 import com.example.tactigant20.ui.fragments.NotificationsFragment;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
