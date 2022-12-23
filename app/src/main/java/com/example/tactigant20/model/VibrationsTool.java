@@ -6,16 +6,22 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
+import java.util.Scanner;
 
 /**
- * Classe permettant de sauvegarder et de charger les modes de vibrations pour chaque application.
+ * Classe contenant les méthodes permettant de sauvegarder et de charger les modes de vibrations de chaque application.
  */
 public class VibrationsTool {
 
@@ -26,149 +32,95 @@ public class VibrationsTool {
     }
 
     /**
-     * Méthode permettant de charger le mode de vibration pour l'application spécifiée.
+     * Méthode qui permet de sauvegarder le mode de vibration configuré pour une application donnée dans un fichier de données au format JSON.
+     * Si le nom de l'application est déjà présent dans le fichier, alors son mode de vibration est mis à jour.
      *
-     * @param notifName le nom du package de l'application pour laquelle on souhaite charger le mode de vibration
-     * @param context le contexte de l'application
+     * @param packageName le nom du package de l'application pour laquelle on souhaite sauvegarder le mode de vibration
+     * @param vibrationMode le mode de vibration à sauvegarder pour l'application
      *
-     * @return le mode de vibration de l'application, ou "UNKNOWN" si aucune donnée n'a été trouvée pour cette application
+     * @throws JSONException si une erreur se produit lors de la manipulation du fichier au format JSON
      */
-    public String loadVibrationMode(String notifName, Context context) {
-        //Fonction renvoyant le mode de vibration de l'application qui a pour package "notifName" sauvegardé dans le fichier
-        // "vibration_modes_data.txt", et "UNKNOWN" si aucune donnée pour cette application n'a été sauvegardée.
-        FileInputStream inputStream = null;
+    public void saveVibrationMode(String packageName, String vibrationMode) throws JSONException {
+        File file = new File(mContext.get().getFilesDir(),"vibration_modes_data.json");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Lecture du fichier et "transformation" en objet JSON
+        JSONObject root = new JSONObject();
         try {
-            inputStream = context.openFileInput("vibration_modes_data.txt");
-        } catch (FileNotFoundException e) {
+            Scanner sc = new Scanner(file);
+            StringBuilder builder = new StringBuilder();
+            while (sc.hasNextLine()) {
+                builder.append(sc.nextLine());
+            }
+            String fileContents = builder.toString();
+            if (!fileContents.isEmpty()) {
+                root = new JSONObject(fileContents);
+            }
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        if (inputStream != null) {
-            InputStreamReader inputReader = new InputStreamReader(inputStream);
-            BufferedReader buffReader = new BufferedReader(inputReader);
 
-            String line = null;
-            do
-            { //On lit le fichier ligne par ligne, en comparant le début de chaque ligne avec "notifName" :
-                // s'il est identique, on est sur la bonne ligne, et on peut renvoyer le mode de vibration écrit !
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                int n = notifName.length();
-                if (line != null && n < line.length()) {
-                    if (line.substring(0, n).equals(notifName)) {
-                        return line.substring(line.length() - 1);
-                    }
-                }
-            } while (line != null);
+        // Ajoute ou met à jour le mode de vibration pour le packageName donné
+        root.put(packageName, vibrationMode);
+
+        //Ecriture de l'objet JSON mis à jour dans le fichier
+        try {
+            FileWriter writer = new FileWriter(file);
+            writer.write(root.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return "UNKNOWN";
     }
 
     /**
-     * Méthode qui permet de sauvegarder le mode de vibration configuré pour une application donnée à partir du fichier de données.
+     * Méthode permettant de charger le fichier vibration_modes_data.json dans un objet JSONObject
      *
-     * @param packageName le nom du package de l'application dont on souhaite sauvegarder un mode de vibration
-     * @param vibrationMode le mode de vibration à sauvegarder
+     * @param context   le contexte de l'application
+     * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
-    public void saveVibrationMode(String packageName, String vibrationMode) {
-        //On sauvegarde le mode de vibration "vibrationMode" pour l'application "packageName"
-        //On lit d'abord le fichier en ajoutant chaque ligne dans une String "fileData" tant que la ligne correspond à l'app n'a pas été trouvée
-        //Si on atteint la fin du fichier, alors on ajoute la ligne adaptée à la fin
-        //Sinon, on remplace la ligne correspondante, puis on rajoute toutes les lignes d'après à fileData; enfin, on utilise writeInFile avec MODE_PRIVATE pour remplacer
-        //le contenu du fichier (seule la ligne correspondante à "packageName" a changé)
-        FileInputStream inputStream = null;
-        try {
-            inputStream = mContext.get().openFileInput("vibration_modes_data.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        StringBuilder fileData = new StringBuilder(); //Chaîne de caractères dans laquelle on stocke les lignes du fichier qu'on ne modifie pas
-        if (inputStream != null) {
-            InputStreamReader inputReader = new InputStreamReader(inputStream);
-            BufferedReader buffReader = new BufferedReader(inputReader);
+    public JSONObject loadVibrationModes(Context context) {
+        File file = new File(context.getFilesDir(),"vibration_modes_data.json");
 
-            String line = null;
-            do {
-                try {
-                    line = buffReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                fileData.append(line).append("\n");
-            } while (line != null && (line.length() <= packageName.length() || !line.startsWith(packageName)));
-            if (line != null) { //Si line n'est pas nulle, c'est que line contient la ligne qui nous intéresse
-                fileData = new StringBuilder(fileData.substring(0, fileData.length() - line.length() - 1)); //On la retire de fileData, et on la remplace par celle avec le bon mode de vibration
-                fileData.append(packageName).append(" : ").append(vibrationMode).append("\n");
-                do { //On récupère alors les autres lignes
-                    try {
-                        line = buffReader.readLine();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (line != null) fileData.append(line).append("\n");
-                } while (line != null);
-                writeInFile(fileData.toString(), MODE_PRIVATE); // On réécrit le fichier en ayant changé la bonne ligne
-            } else
-                writeInFile(packageName + " : " + vibrationMode + "\n", MODE_APPEND); //Sinon, on ajoute simplement la ligne à la fin du fichier
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        JSONObject root = new JSONObject();
         try {
-            assert inputStream != null;
-            inputStream.close();
-        } catch (IOException e) {
+            Scanner sc = new Scanner(file);
+            StringBuilder builder = new StringBuilder();
+            while (sc.hasNextLine()) {
+                builder.append(sc.nextLine());
+            }
+            root = new JSONObject(builder.toString());
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        Log.e("Modes de vibration", "Mode de vibration enregistré : " + vibrationMode);
+
+        return root;
     }
 
-    private void writeInFile(String s, int mode) {
-        // On vient éditer le fichier "vibration_modes_data"
-        //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
-        //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
-        FileOutputStream fos = null;
-        try {
-            fos = mContext.get().openFileOutput("vibration_modes_data.txt", mode);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            assert fos != null;
-            fos.write(s.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /*
-    private void stockage(String s, int mode) {
-        // On vient éditer le fichier "enregistrement"
-        //Si le mode est Context.MODE_PRIVATE : si le fichier existe, il est remplacé, sinon un nouveau fichier est créé.
-        //Si le mode est Context.MODE_APPEND : si le fichier existe alors les données sont ajoutées à la fin du fichier.
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput("enregistrement.txt", mode);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            assert fos != null;
-            fos.write(s.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-        /*
-    public static void cancelNotification(Context ctx, int notifyId) {
-        // Permet de supprimer la notif. Mettre ctx=this et notifyId=100
-        String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
-        nMgr.cancel(notifyId);
-    }
-
+    /**
+     * Méthode utilisant loadVibrationModes et renvoyant le mode de vibration de l'application ayant pour package packageName
+     *
+     * @param packageName le nom du package de l'application
+     * @param context   le contexte de l'application
+     * @return le JSONObject contenant les données du fichier vibration_modes_data.json
      */
-
+    public String loadVibrationMode(String packageName, Context context) {
+        JSONObject root = loadVibrationModes(context);
+        return root.optString(packageName, "UNKNOWN");
+    }
 }
