@@ -66,7 +66,7 @@ public class VibrationModeDialog extends Dialog {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         vibrationModeSpinner.setAdapter(adapter);
 
-        VibrationMode currentVibrationMode = this.mAppInfo.getVibrationMode();
+        VibrationMode currentVibrationMode = mAppInfo.getVibrationMode();
         vibrationModeSpinner.setSelection(adapter.getPosition(currentVibrationMode));
         selectedVibrationMode = currentVibrationMode;
 
@@ -84,10 +84,8 @@ public class VibrationModeDialog extends Dialog {
 
         Button vibrationDialogOKButton = findViewById(R.id.vibrationDialogOKButton);
         vibrationDialogOKButton.setOnClickListener(view -> {
-            Log.e("TAG_DEBUG", "selectedVibrationMode : " + selectedVibrationMode);
             mAppInfo.setVibrationMode(selectedVibrationMode);
             NotificationsFragment.updateItem(mAppInfo);
-            Log.e("TAG_DEBUG_2", "mAppInfo.getVibrationMode().getId() : " + mAppInfo.getVibrationMode().getId());
             try {
                 MainActivity.getMyVibrationsTool().saveAppVibrationModeId(mAppInfo.getInfo().packageName, mAppInfo.getVibrationMode().getId());
             } catch (JSONException e) {
