@@ -49,4 +49,5 @@
     <string name="default_vibration_dialog_text">Affectez un mode de vibration à app_title :</string>
     <string name="vibration_mode_name">Vibration Mode Name</string>
     <string name="mode_reset">Modes de vibrations réinitialisés</string>
+    <string name="vibrations_logo">Vibrations logo</string>
 </resources>
