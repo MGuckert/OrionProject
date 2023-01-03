@@ -4,15 +4,22 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/light_grey</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="backgroundColor">@color/white</item>
         <item name="colorOnPrimary">@color/orion_red</item>
         <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:spinnerDropDownItemStyle">@style/spinnerTheme</item>
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/orion_red</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:textColor">@color/dark_grey</item>
+    </style>
+
+    <style name="spinnerTheme" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:background">@color/white</item>
     </style>
 
 </resources>

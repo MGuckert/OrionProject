@@ -119,23 +119,25 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
             this.running = true;
             while (running) {
                 try {
-                    requireActivity().runOnUiThread(() -> {
-                        if (MainActivity.getMyBLET() != null) {
-                            switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
-                                case DECONNECTE:
-                                    UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
-                                    break;
-                                case CHARGEMENT:
-                                    UIUpdate(R.string.disconnection, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
-                                    break;
-                                case CONNECTE:
-                                    UIUpdate(R.string.disconnection, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
-                                    break;
+                    if (isAdded()) {
+                        requireActivity().runOnUiThread(() -> {
+                            if (MainActivity.getMyBLET() != null) {
+                                switch (MainActivity.getMyBLET().getValeurDeConnexion()) {
+                                    case DECONNECTE:
+                                        UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                                        break;
+                                    case CHARGEMENT:
+                                        UIUpdate(R.string.disconnection, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
+                                        break;
+                                    case CONNECTE:
+                                        UIUpdate(R.string.disconnection, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                                        break;
+                                }
+                            } else {
+                                UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                             }
-                        } else {
-                            UIUpdate(R.string.connection, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
-                        }
-                    });
+                        });
+                    }
                     Thread.sleep(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

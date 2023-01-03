@@ -26,6 +26,8 @@ import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
 
+import com.example.tactigant20.model.VibrationMode;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -91,8 +93,9 @@ public class NotificationsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (dataReinitialised) {
+            VibrationMode defaultVibrationMode = VibrationMode.getDefaultVibrationMode();
             for (AppInfo app : appList) {
-                app.setVibrationMode("N");
+                    app.setVibrationMode(defaultVibrationMode);
             }
             dataReinitialised = false;
             getAdapter().notifyDataSetChanged();
@@ -197,18 +200,15 @@ public class NotificationsFragment extends Fragment {
 
             PackageManager packageManager = requireContext().getPackageManager();
             List<ApplicationInfo> infos = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            JSONObject root = MainActivity.getMyVibrationsTool().loadVibrationModes(requireContext());
+            JSONObject root = MainActivity.getMyVibrationsTool().loadAppsVibrationModes(requireContext());
             for (ApplicationInfo info : infos) {
                 if (filter(info)) {
                     AppInfo app = new AppInfo();
                     app.setInfo(info);
                     app.setLabel((String) info.loadLabel(packageManager));
-                    String mode = root.optString(info.packageName, "UNKNOWN");
-                    if (mode.equals("UNKNOWN")) {
-                        app.setVibrationMode("N");
-                    } else {
-                        app.setVibrationMode(mode);
-                    }
+                    String vibrationModeId = root.optString(info.packageName, "N");
+                    VibrationMode vibrationMode = VibrationMode.getSavedVibrationModeFromId(getContext(),vibrationModeId);
+                    app.setVibrationMode(vibrationMode);
                     appList.add(app);
                 }
             }

@@ -154,14 +154,14 @@ public class BluetoothLowEnergyTool {
                                 }
                             }
                             if (mMode.equals("Ecriture")) {
-                                switch (MyNotificationListenerService.getVibrationMode()) {
+                                switch (MyNotificationListenerService.getVibrationModeId()) {
                                     case "1":
                                         sendData(gatt, characteristic, "Allume 1");
                                     case "2":
                                         sendData(gatt, characteristic, "Allume 2");
                                     case "3":
                                         sendData(gatt, characteristic, "Allume 3");
-                                        break;
+                                    break;
                                 }
                             }
                         }

@@ -17,7 +17,7 @@
     <string name="loading">Chargement…</string>
     <string name="disconnection">Déconnexion</string>
     <string name="n_a">N/A</string>
-    <string name="modes_de_vibration">Modes de vibration</string>
+    <string name="choix_mode_vibration">Choix du mode de vibration</string>
     <string name="text_perm_location">Pour des raisons de sécurité, Android impose à tout utilisateur qui souhaite utiliser la technologie Bluetooth Low Energy (BLE) d\' accorder à l\'application concernée l\'autorisation d\'accéder à la position générale de l\'appareil.\nSur certains smartphones, la géolocalisation n\'a pas besoin d\'être activée, seule la permission est nécessaire.\nSoyez assuré que l\'application Orion n\'utilise ni ne stocke à aucun moment cette donnée.</string>
     <string name="text_perm_notifications">L\'application Orion doit être autorisée à accéder aux notifications de cet appareil.</string>
     <string name="help">Aide</string>
@@ -39,12 +39,15 @@
     <string name="MAC_error">Veuillez entrer une adresse MAC valide</string>
     <string name="MAC_default">84:F7:03:60:7E:46</string>
     <string name="mode_sombre">Mode sombre</string>
-    <string name="reset_data">Réinitialiser les modes de vibrations</string>
+    <string name="reset_data">Réinitialiser les modes de vibration</string>
     <string name="reset_vibrations_mode">Êtes-vous sûr de vouloir réinitialiser les modes de vibrations ?</string>
     <string name="non">Non</string>
     <string name="oui">Oui</string>
     <string name="search_app">Rechercher une application</string>
     <string name="no_results_app">Aucune application ne correspond à votre recherche.</string>
     <string name="delete">Effacer</string>
+    <string name="default_vibration_dialog_text">Affectez un mode de vibration à app_title :</string>
+    <string name="vibration_mode_name">Vibration Mode Name</string>
     <string name="mode_reset">Modes de vibrations réinitialisés</string>
+    <string name="vibrations_logo">Vibrations logo</string>
 </resources>

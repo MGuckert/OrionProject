@@ -67,9 +67,10 @@ public class AppAdapter extends ArrayAdapter<AppInfo> {
         }
         title.setText(titre);
         TextView vibrationModeTextView = v.findViewById(R.id.vibrationModeTextView);
-        if (current.getVibrationMode().equals("N")) vibrationModeTextView.setText("N/A");
-        else vibrationModeTextView.setText(String.format("Mode %s", current.getVibrationMode()));
-
+        if (current.getVibrationMode() == null)
+            vibrationModeTextView.setText("N/A");
+        else
+            vibrationModeTextView.setText(current.getVibrationMode().getName());
         ImageView iconImageView = v.findViewById(R.id.iconImage);
         Drawable icon = current.getInfo().loadIcon(this.mPackageManager);
 

@@ -1,18 +1,26 @@
 package com.example.tactigant20.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.tactigant20.MainActivity;
 import com.example.tactigant20.R;
 import com.example.tactigant20.model.AppInfo;
+import com.example.tactigant20.model.VibrationMode;
 
 import org.json.JSONException;
+
+import java.util.List;
+
 
 /**
  * Classe définissant un objet Dialog affichant une fenêtre pop-up permettant à l'utilisateur de choisir un mode de vibration pour une application donnée.
@@ -21,6 +29,7 @@ import org.json.JSONException;
 public class VibrationModeDialog extends Dialog {
 
     private final AppInfo mAppInfo;
+    private VibrationMode selectedVibrationMode;
 
     /**
      * Constructeur de l'objet <i>VibrationModeDialog</i>
@@ -39,78 +48,50 @@ public class VibrationModeDialog extends Dialog {
      *
      * @param savedInstanceState État de l'instance sauvegardée
      */
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_vibration_mode);
 
-        // Boutons du dialog de notifications
-        RadioGroup vibrationModeRadioGroup = findViewById(R.id.vibrationModeRadioGroup);
-        RadioButton NARadioButton = findViewById(R.id.radioButtonNA);
-        NARadioButton.setOnClickListener(this::onRadioButtonClicked);
-        RadioButton Mode1RadioButton = findViewById(R.id.radioButtonMode1);
-        Mode1RadioButton.setOnClickListener(this::onRadioButtonClicked);
-        RadioButton Mode2RadioButton = findViewById(R.id.radioButtonMode2);
-        Mode2RadioButton.setOnClickListener(this::onRadioButtonClicked);
-        RadioButton Mode3RadioButton = findViewById(R.id.radioButtonMode3);
-        Mode3RadioButton.setOnClickListener(this::onRadioButtonClicked);
+        TextView vibrationModeChoiceApp = findViewById(R.id.vibration_mode_choice_app);
+        vibrationModeChoiceApp.setText("Affectez un mode de vibration à " + mAppInfo.getLabel() + " : ");
+        //Initialisation du spinner contenant les modes de vibrations
+        Spinner vibrationModeSpinner = findViewById(R.id.vibrationModeSpinner);
+        List<VibrationMode> vibrationModes = VibrationMode.getSavedVibrationModes(getContext());
+        vibrationModes.add(0,new VibrationMode("N/A",""));
+        ArrayAdapter<VibrationMode> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, vibrationModes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        vibrationModeSpinner.setAdapter(adapter);
 
-        switch (this.mAppInfo.getVibrationMode()) {
-            case "N":
-                vibrationModeRadioGroup.check(R.id.radioButtonNA);
-                break;
-            case "1":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode1);
-                break;
-            case "2":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode2);
-                break;
-            case "3":
-                vibrationModeRadioGroup.check(R.id.radioButtonMode3);
-                break;
-        }
+        VibrationMode currentVibrationMode = mAppInfo.getVibrationMode();
+        vibrationModeSpinner.setSelection(adapter.getPosition(currentVibrationMode));
+        selectedVibrationMode = currentVibrationMode;
 
-    }
+        vibrationModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedVibrationMode = vibrationModes.get(i);
+            }
 
-    /**
-     * Cette méthode gère le choix d'un mode de vibration par l'utilisateur dans la fenêtre pop-up.
-     * Si l'utilisateur coche l'un des boutons radio, le mode de vibration de l'application associée est mis à jour et enregistré
-     * dans le fichier de données JSON; la liste des applications est mise à jour et la fenêtre pop-up se ferme.
-     *
-     * @param v La vue du bouton radio qui a été cliqué
-     */
-    public void onRadioButtonClicked(View v) {
-        boolean checked = ((RadioButton) v).isChecked();
-        AppInfo currentItem = mAppInfo;
-        int boutonRadio = v.getId();
-        if (boutonRadio == R.id.radioButtonNA) {
-            if (checked) {
-                currentItem.setVibrationMode("N");
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                selectedVibrationMode = VibrationMode.getDefaultVibrationMode();
             }
-        }
-        if (boutonRadio == R.id.radioButtonMode1) {
-            if (checked) {
-                currentItem.setVibrationMode("1");
+        });
+
+        Button vibrationDialogOKButton = findViewById(R.id.vibrationDialogOKButton);
+        vibrationDialogOKButton.setOnClickListener(view -> {
+            mAppInfo.setVibrationMode(selectedVibrationMode);
+            NotificationsFragment.updateItem(mAppInfo);
+            try {
+                MainActivity.getMyVibrationsTool().saveAppVibrationModeId(mAppInfo.getInfo().packageName, mAppInfo.getVibrationMode().getId());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }
-        if (boutonRadio == R.id.radioButtonMode2) {
-            if (checked) {
-                currentItem.setVibrationMode("2");
-            }
-        }
-        if (boutonRadio == R.id.radioButtonMode3) {
-            if (checked) {
-                currentItem.setVibrationMode("3");
-            }
-        }
-        NotificationsFragment.updateItem(currentItem);
-        try {
-            MainActivity.getMyVibrationsTool().saveVibrationMode(currentItem.getInfo().packageName, currentItem.getVibrationMode());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        NotificationsFragment.getAdapter().notifyDataSetChanged();
-        this.dismiss();
+            NotificationsFragment.getAdapter().notifyDataSetChanged();
+            dismiss();
+        });
     }
 }

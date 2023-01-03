@@ -11,7 +11,13 @@ import android.content.pm.ApplicationInfo;
 public class AppInfo {
     private ApplicationInfo mInfo;
     private String mLabel;
-    private String mVibrationMode;
+    private VibrationMode mVibrationMode;
+
+    public AppInfo() {
+        this.mInfo = null;
+        this.mLabel = "Default Label";
+        this.mVibrationMode = VibrationMode.getDefaultVibrationMode();
+    }
 
     /**
      * Getter pour mInfo
@@ -54,7 +60,7 @@ public class AppInfo {
      *
      * @return le mode de vibration associé à l'application
      */
-    public String getVibrationMode() {
+    public VibrationMode getVibrationMode() {
         return this.mVibrationMode;
     }
 
@@ -63,7 +69,7 @@ public class AppInfo {
      *
      * @param mVibrationMode le mode de vibration qu'on souhaite associer à l'application
      */
-    public void setVibrationMode(String mVibrationMode) {
+    public void setVibrationMode(VibrationMode mVibrationMode) {
         this.mVibrationMode = mVibrationMode;
     }
 }
