@@ -2,42 +2,32 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent">
-
-    <Spinner
-        android:id="@+id/vibrationModeSpinner"
-        style="@android:style/Widget.Holo.Light.Spinner"
-        android:layout_width="223dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="44dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vibrationDialogTitle" />
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
 
     <TextView
         android:id="@+id/vibrationDialogTitle"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="331dp"
+        android:layout_height="47dp"
+        android:gravity="center"
         android:text="@string/choix_mode_vibration"
         android:textAlignment="center"
-        android:textColor="?attr/colorOnBackground"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/vibration_mode_choice_app"
-        android:layout_width="302dp"
-        android:layout_height="22dp"
+        android:layout_width="303dp"
+        android:layout_height="42dp"
         android:layout_marginTop="52dp"
         android:text="@string/default_vibration_dialog_text"
         android:textAlignment="center"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,12 +35,42 @@
         android:id="@+id/vibrationDialogOKButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="128dp"
         android:text="@string/ok"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/vibrationModeSpinner"
+        style="spinnerDropDownItemStyle"
+        android:layout_width="223dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vibrationDialogTitle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <ImageView
+        android:id="@+id/vibrationDialogIcon"
+        android:layout_width="54dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="8dp"
+        app:tint="?attr/colorOnPrimary"
+        android:layout_marginTop="72dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_vibration_foreground"
+        android:contentDescription="@string/vibrations_logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
