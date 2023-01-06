@@ -8,7 +8,7 @@
     <string name="mode_2">Mode 2</string>
     <string name="description_du_mode_2">Le <b>Mode 2</b> correspond à des vibrations simples avec un fondu en entrée et en sortie : l\'intensité des vibrations est croissante puis, après un certain palier, décroissante.</string>
     <string name="mode_3">Mode 3</string>
-    <string name="description_du_mode_3">Le <b>Mode 3</b>  est similaire au <b>Mode 2</b> en ce qui concerne le motif des vibrations. La différence est sur le temps entre chaque vibration qui est deux fois plus rapide pour le <b>Mode 3</b> .</string>
+    <string name="description_du_mode_3">Le <b>Mode 3</b>  est similaire au <b>Mode 2</b> en ce qui concerne le motif des vibrations. La différence est sur le temps entre chaque vibration qui est deux fois plus rapide pour le <b>Mode 3</b>.</string>
     <string name="service_name">notific\'orion</string>
     <string name="app_title">App title</string>
     <string name="app_icon">app icon</string>

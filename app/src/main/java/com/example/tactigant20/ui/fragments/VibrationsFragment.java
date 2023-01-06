@@ -11,11 +11,10 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.tactigant20.R;
-import com.example.tactigant20.databinding.FragmentVibrationsBinding;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.tactigant20.R;
+import com.example.tactigant20.databinding.FragmentVibrationsBinding;
 
 public class VibrationsFragment extends Fragment {
 
@@ -33,10 +32,7 @@ public class VibrationsFragment extends Fragment {
         com.example.tactigant20.databinding.FragmentVibrationsBinding binding = FragmentVibrationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         modeVibrationImage = root.findViewById(R.id.modeVibrationImage);
-        Glide.with(this)
-                .load(R.drawable.mode1)
-                .apply(new RequestOptions().placeholder(R.drawable.placeholder))
-                .into(modeVibrationImage); // Cas par défaut
+        Glide.with(this).load(R.drawable.mode1).apply(new RequestOptions().placeholder(R.drawable.placeholder)).into(modeVibrationImage); // Cas par défaut
 
         // Création des boutons
         Button mode1 = root.findViewById(R.id.buttonMode1);
@@ -51,27 +47,18 @@ public class VibrationsFragment extends Fragment {
 
     private void cMode1Button(View v) {
         Log.d(TAG_VIBRAS, "Mode 1");
-        Glide.with(this)
-                .load(R.drawable.mode1)
-                .apply(new RequestOptions().placeholder(R.drawable.placeholder))
-                .into(modeVibrationImage);
+        Glide.with(this).load(R.drawable.mode1).apply(new RequestOptions().placeholder(R.drawable.placeholder)).into(modeVibrationImage);
     }
 
     private void cMode2Button(View v) {
         Log.d(TAG_VIBRAS, "Mode 2");
-        Glide.with(this)
-                .load(R.drawable.mode2)
-                .apply(new RequestOptions().placeholder(R.drawable.placeholder))
-                .into(modeVibrationImage);
+        Glide.with(this).load(R.drawable.mode2).apply(new RequestOptions().placeholder(R.drawable.placeholder)).into(modeVibrationImage);
 
     }
 
     private void cMode3Button(View v) {
         Log.d(TAG_VIBRAS, "Mode 3");
-        Glide.with(this)
-                .load(R.drawable.mode3)
-                .apply(new RequestOptions().placeholder(R.drawable.placeholder))
-                .into(modeVibrationImage);
+        Glide.with(this).load(R.drawable.mode3).apply(new RequestOptions().placeholder(R.drawable.placeholder)).into(modeVibrationImage);
     }
 
 }
