@@ -4,11 +4,11 @@
     <string name="title_vibrations">Vibrations</string>
     <string name="title_notifications">Notifications</string>
     <string name="mode_1">Mode 1</string>
-    <string name="description_du_mode_1">Description du Mode 1</string>
+    <string name="description_du_mode_1">Le <b>Mode 1</b> correspond à des vibrations simples avec un fondu en sortie : les vibrations ont la même intensité dans un premier temps, puis leur intensité diminue peu à peu jusqu\'à l\'arrêt total des vibrations.</string>
     <string name="mode_2">Mode 2</string>
-    <string name="description_du_mode_2">Description du Mode 2</string>
+    <string name="description_du_mode_2">Le <b>Mode 2</b> correspond à des vibrations simples avec un fondu en entrée et en sortie : l\'intensité des vibrations est croissante puis, après un certain palier, décroissante.</string>
     <string name="mode_3">Mode 3</string>
-    <string name="description_du_mode_3">Description du Mode 3</string>
+    <string name="description_du_mode_3">Le <b>Mode 3</b>  est similaire au <b>Mode 2</b> en ce qui concerne le motif des vibrations. La différence est sur le temps entre chaque vibration qui est deux fois plus rapide pour le <b>Mode 3</b> .</string>
     <string name="service_name">notific\'orion</string>
     <string name="app_title">App title</string>
     <string name="app_icon">app icon</string>
@@ -24,7 +24,7 @@
     <string name="infos">Infos</string>
     <string name="settings">Paramètres</string>
     <string name="title_info">À propos</string>
-    <string name="text_info">\t\t\t\t<i>Orion</i> est un projet étudiant conçu par 12 élèves de l\'École Centrale de Lille, en collaboration avec l\'Institut d\'Électronique, de Micro-électronique et de Nanotechnologie (IEMN). L\'objectif de ce projet est de proposer une application concrète à une technologie de retour tactile de pointe développée par ce dernier.\n\t\t\t\tCette application constitue la moitié d\'un prototype, l\'autre moitié étant un bracelet programmable depuis cette même application. La liaison se fait par l\'intermédiaire de la technologie <i>Bluetooth Low Energy</i> (BLE).</string>
+    <string name="text_info">\t\t\t\t<i>Orion</i> est un projet étudiant conçu par 12 élèves de l\'École Centrale de Lille, en collaboration avec l\'Institut d\'Électronique, de Micro-électronique et de Nanotechnologie (IEMN). L\'objectif de ce projet est de proposer une application concrète à une technologie de retour tactile de pointe développée par ce dernier.\n\t\t\t\tCette application constitue la moitié d\'un prototype, l\'autre moitié étant une montre programmable depuis cette même application. La liaison se fait par l\'intermédiaire de la technologie <i>Bluetooth Low Energy</i> (BLE).</string>
     <string name="title_help">Aide</string>
     <string name="question_help_1"><b>Sur quels appareils l\'application <i>Orion</i> fonctionne-t-elle ?</b></string>
     <string name="answer_help_1">\t-> L\'application devrait fonctionner sur tout appareil muni d\'une version du SDK Android supérieure ou égale à 21. Néanmoins, des plantages ont été constatés sur des appareils tournant sous Android 12.</string>
