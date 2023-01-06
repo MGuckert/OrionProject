@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         myNotificationTool.createNotificationChannel("Batterie : ?%");
 
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
-        /*
+
         if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
             ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             });
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         }
-        */
+
         // Création de la toolbar
         Toolbar topAppBar = findViewById(R.id.topAppBar);
         setSupportActionBar(topAppBar);
