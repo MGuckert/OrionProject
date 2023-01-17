@@ -10,11 +10,11 @@
 
     <ImageView
         android:id="@+id/modeVibrationImage"
-        android:layout_width="250dp"
+        android:layout_width="411dp"
         android:layout_height="250dp"
+        android:layout_gravity="center"
         android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_gravity="center"
         tools:ignore="ContentDescription" />
 
     <ScrollView
