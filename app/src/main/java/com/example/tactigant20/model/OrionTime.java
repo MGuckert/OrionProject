@@ -22,7 +22,6 @@ public class OrionTime {
         miseAJour();
         }
 
-
     public void setHeure(int heure) {
         this.heure = heure;
     }
@@ -35,20 +34,36 @@ public class OrionTime {
         this.conversion = conversion;
     }
 
+    public GregorianCalendar getCalendrier() {
+        return calendrier;
+    }
+
+    public int getHeure() {
+        return heure;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public String getConversion() {
+        return conversion;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void miseAJour() {
-        setHeure(calendrier.get(Calendar.HOUR));
-        setMinute(calendrier.get(Calendar.MINUTE));
-        setConversion(Integer.toString((this.heure%12)*12 + this.minute/5));
-        switch(this.conversion.length()) {
+        setHeure(getCalendrier().get(Calendar.HOUR));
+        setMinute(getCalendrier().get(Calendar.MINUTE));
+        setConversion(Integer.toString((getHeure()%12)*12 + getMinute()/5));
+        switch(getConversion().length()) {
             case 1:
-                this.conversion = "00" + this.conversion;
+                setConversion("00" + getConversion());
                 break;
             case 2:
-                this.conversion = "0" + this.conversion;
+                setConversion("0" + getConversion());
                 break;
         }
-        Log.d(TAG_TIME, "Nouvelle heure : " + conversion);
+        Log.d(TAG_TIME, "Nouvelle heure : " + getConversion());
     }
 
 }
