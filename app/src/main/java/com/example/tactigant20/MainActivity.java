@@ -88,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
         myVibrationsTool = new VibrationsTool(this);
         String MACTEMP = getSharedPreferences("PREFS", MODE_PRIVATE).getString("PREFS_MAC", getString(R.string.MAC_default));
-        myBLET = new BluetoothLowEnergyTool(MACTEMP, this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            myBLET = new BluetoothLowEnergyTool(MACTEMP, this);
+        }
 
         myNotificationTool = new NotificationTool(this, "ID_TACTIGANT", 100, "Chaîne de notification Orion");
 
@@ -96,11 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
 
-        if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
-            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            });
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult.launch(enableBtIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
+                ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                });
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult.launch(enableBtIntent);
+            }
         }
 
         if (!isNotificationServiceRunning()) {
