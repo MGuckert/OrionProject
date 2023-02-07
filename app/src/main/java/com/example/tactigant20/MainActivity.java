@@ -77,14 +77,13 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         //Activation (ou non) du mode sombre)
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int nightMode = preferences.getInt("night_mode", AppCompatDelegate.MODE_NIGHT_NO);
         AppCompatDelegate.setDefaultNightMode(nightMode);
 
         super.onCreate(savedInstanceState);
-        com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         myVibrationsTool = new VibrationsTool(this);
