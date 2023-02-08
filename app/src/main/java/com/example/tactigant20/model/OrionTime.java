@@ -96,6 +96,25 @@ public class OrionTime {
     }
 
     /**
+     * Convertit une paire heure-minute vers le format 'XXX' (dans [0,143])
+     * @param heures l'heure considérée
+     * @param minutes la minute considérée
+     * @return l'heure au format 'XXX' (dans [0,143])
+     */
+    public String conversion(int heures, int minutes) {
+        String temp = Integer.toString((heures%12)*12 + minutes/5);
+        switch(temp.length()) {
+            case 1:
+                temp = "00" + temp;
+                break;
+            case 2:
+                temp = "0" + temp;
+                break;
+        }
+        return temp;
+    }
+
+    /**
      * Met à jour les attributs de l'objet OrionTime
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -103,15 +122,7 @@ public class OrionTime {
         setCalendrier(new GregorianCalendar());
         setHeure(getCalendrier().get(Calendar.HOUR));
         setMinute(getCalendrier().get(Calendar.MINUTE));
-        setConversion(Integer.toString((getHeure()%12)*12 + getMinute()/5));
-        switch(getConversion().length()) {
-            case 1:
-                setConversion("00" + getConversion());
-                break;
-            case 2:
-                setConversion("0" + getConversion());
-                break;
-        }
+        setConversion(conversion(getHeure(), getMinute()));
         Log.d(TAG_TIME, "Nouvelle heure : " + getConversion());
     }
 
