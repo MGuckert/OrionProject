@@ -47,15 +47,15 @@ public class NotificationsFragment extends Fragment {
     private static List<AppInfo> appList;
     private static List<AppInfo> searchedAppList;
     private static AppAdapter adapter;
-    private static boolean dataReinitialised;
+    private static boolean dataReset;
     private ListView appListView;
 
     public static AppAdapter getAdapter() {
         return adapter;
     }
 
-    public static void setDataReinitialised(boolean bool) {
-        dataReinitialised = bool;
+    public static void setDataReset(boolean bool) {
+        dataReset = bool;
     }
 
     /**
@@ -92,12 +92,12 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (dataReinitialised) {
+        if (dataReset) {
             VibrationMode defaultVibrationMode = VibrationMode.getDefaultVibrationMode();
             for (AppInfo app : appList) {
                     app.setVibrationMode(defaultVibrationMode);
             }
-            dataReinitialised = false;
+            dataReset = false;
             getAdapter().notifyDataSetChanged();
         }
     }

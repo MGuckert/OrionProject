@@ -40,6 +40,7 @@ import java.util.Locale;
 public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
+    private final OrionTime mOrionTime = new OrionTime();
     private final ScanCallback mScanCallback;
     private final BluetoothGattCallback mBluetoothGattCallback;
     private final WeakReference<Context> mContext;
@@ -49,7 +50,6 @@ public class BluetoothLowEnergyTool {
     private BluetoothGatt mGatt;
     private BluetoothAdapter mAdapter;
     private BluetoothLeScanner mScanner;
-    private final OrionTime mOrionTime = new OrionTime();
 
     /**
      * Constructeur unique de <i>BluetoothLowEnergyTool</i>

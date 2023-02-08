@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -70,6 +71,7 @@ public class NotificationTool {
 
         private boolean running = false;
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void run() {
             Log.d(TAG_NT, "Lancement du thread dans NotificationTool");

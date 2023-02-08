@@ -2,6 +2,7 @@ package com.example.tactigant20.ui.settings;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -30,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private EditText settingsEditText;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -74,6 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
      *
      * @param v la vue associée au bouton
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void cSettingsButton(View v) {
         String NewMAC = settingsEditText.getText().toString().toUpperCase();
         if (Pattern.matches("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", NewMAC)) {
