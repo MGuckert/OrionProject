@@ -25,7 +25,6 @@ import com.example.tactigant20.R;
 import com.example.tactigant20.databinding.FragmentNotificationsBinding;
 import com.example.tactigant20.model.AppAdapter;
 import com.example.tactigant20.model.AppInfo;
-
 import com.example.tactigant20.model.VibrationMode;
 
 import org.json.JSONObject;
@@ -95,7 +94,7 @@ public class NotificationsFragment extends Fragment {
         if (dataReset) {
             VibrationMode defaultVibrationMode = VibrationMode.getDefaultVibrationMode();
             for (AppInfo app : appList) {
-                    app.setVibrationMode(defaultVibrationMode);
+                app.setVibrationMode(defaultVibrationMode);
             }
             dataReset = false;
             getAdapter().notifyDataSetChanged();
@@ -207,7 +206,7 @@ public class NotificationsFragment extends Fragment {
                     app.setInfo(info);
                     app.setLabel((String) info.loadLabel(packageManager));
                     String vibrationModeId = root.optString(info.packageName, "N");
-                    VibrationMode vibrationMode = VibrationMode.getSavedVibrationModeFromId(getContext(),vibrationModeId);
+                    VibrationMode vibrationMode = VibrationMode.getSavedVibrationModeFromId(getContext(), vibrationModeId);
                     app.setVibrationMode(vibrationMode);
                     appList.add(app);
                 }

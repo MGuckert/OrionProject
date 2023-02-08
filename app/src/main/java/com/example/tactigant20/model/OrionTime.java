@@ -28,37 +28,6 @@ public class OrionTime {
         miseAJour();
     }
 
-    public void setCalendrier(GregorianCalendar mCalendrier) {
-        this.mCalendrier = mCalendrier;
-    }
-
-    /**
-     * Setter pour mHeure
-     *
-     * @param mHeure l'heure actuelle entre 0 et 23 inclus
-     */
-    public void setHeure(int mHeure) {
-        this.mHeure = mHeure;
-    }
-
-    /**
-     * Setter pour mMinute
-     *
-     * @param mMinute la minute actuelle entre 0 et 59 inclus
-     */
-    public void setMinute(int mMinute) {
-        this.mMinute = mMinute;
-    }
-
-    /**
-     * Setter pour mConversion
-     *
-     * @param mConversion l'heure actuelle au format 'XXX' dans [0,143]
-     */
-    public void setConversion(String mConversion) {
-        this.mConversion = mConversion;
-    }
-
     /**
      * Getter pour mCalendrier
      *
@@ -66,6 +35,10 @@ public class OrionTime {
      */
     public GregorianCalendar getCalendrier() {
         return mCalendrier;
+    }
+
+    public void setCalendrier(GregorianCalendar mCalendrier) {
+        this.mCalendrier = mCalendrier;
     }
 
     /**
@@ -78,12 +51,30 @@ public class OrionTime {
     }
 
     /**
+     * Setter pour mHeure
+     *
+     * @param mHeure l'heure actuelle entre 0 et 23 inclus
+     */
+    public void setHeure(int mHeure) {
+        this.mHeure = mHeure;
+    }
+
+    /**
      * Getter pour mMinute
      *
      * @return la minute actuelle entre 0 et 59 inclus
      */
     public int getMinute() {
         return mMinute;
+    }
+
+    /**
+     * Setter pour mMinute
+     *
+     * @param mMinute la minute actuelle entre 0 et 59 inclus
+     */
+    public void setMinute(int mMinute) {
+        this.mMinute = mMinute;
     }
 
     /**
@@ -96,14 +87,24 @@ public class OrionTime {
     }
 
     /**
+     * Setter pour mConversion
+     *
+     * @param mConversion l'heure actuelle au format 'XXX' dans [0,143]
+     */
+    public void setConversion(String mConversion) {
+        this.mConversion = mConversion;
+    }
+
+    /**
      * Convertit une paire heure-minute vers le format 'XXX' (dans [0,143])
-     * @param heures l'heure considérée
+     *
+     * @param heures  l'heure considérée
      * @param minutes la minute considérée
      * @return l'heure au format 'XXX' (dans [0,143])
      */
     public String conversion(int heures, int minutes) {
-        String temp = Integer.toString((heures%12)*12 + minutes/5);
-        switch(temp.length()) {
+        String temp = Integer.toString((heures % 12) * 12 + minutes / 5);
+        switch (temp.length()) {
             case 1:
                 temp = "00" + temp;
                 break;

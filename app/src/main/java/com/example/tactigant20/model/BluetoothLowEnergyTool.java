@@ -163,7 +163,7 @@ public class BluetoothLowEnergyTool {
                                         sendData(gatt, characteristic, "Allume 2," + mOrionTime.getConversion());
                                     case "3":
                                         sendData(gatt, characteristic, "Allume 3," + mOrionTime.getConversion());
-                                    break;
+                                        break;
                                 }
                             }
                         }
