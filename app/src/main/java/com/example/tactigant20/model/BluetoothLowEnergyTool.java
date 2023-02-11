@@ -36,9 +36,11 @@ import java.util.Locale;
  * @author Thibaud P., Roman T.
  * @since 1.0
  */
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class BluetoothLowEnergyTool {
 
     private static final String TAG_BLE = "debug_bluetooth";
+    private final OrionTime mOrionTime = new OrionTime();
     private final ScanCallback mScanCallback;
     private final BluetoothGattCallback mBluetoothGattCallback;
     private final WeakReference<Context> mContext;
@@ -67,7 +69,6 @@ public class BluetoothLowEnergyTool {
              * @param result un objet correspondant à l'appareil trouvé
              * @see <a href="https://developer.android.com/reference/android/bluetooth/le/ScanCallback#onScanResult(int,%20android.bluetooth.le.ScanResult)">Plus d'informations</a>
              */
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 BluetoothDevice device = result.getDevice();
@@ -154,14 +155,15 @@ public class BluetoothLowEnergyTool {
                                 }
                             }
                             if (mMode.equals("Ecriture")) {
+                                mOrionTime.miseAJour();
                                 switch (MyNotificationListenerService.getVibrationModeId()) {
                                     case "1":
-                                        sendData(gatt, characteristic, "Allume 1");
+                                        sendData(gatt, characteristic, "Allume 1," + mOrionTime.getConversion());
                                     case "2":
-                                        sendData(gatt, characteristic, "Allume 2");
+                                        sendData(gatt, characteristic, "Allume 2," + mOrionTime.getConversion());
                                     case "3":
-                                        sendData(gatt, characteristic, "Allume 3");
-                                    break;
+                                        sendData(gatt, characteristic, "Allume 3," + mOrionTime.getConversion());
+                                        break;
                                 }
                             }
                         }
@@ -208,7 +210,6 @@ public class BluetoothLowEnergyTool {
     /**
      * Quand cette fonction est appelée, le téléphone de l'utilisateur tente de s'appairer avec l'objet portant l'adresse MAC <i>mAdresseMAC</i>
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void scan() {
         if (mValeurDeConnexion == ValeurDeConnexion.DECONNECTE) {
 

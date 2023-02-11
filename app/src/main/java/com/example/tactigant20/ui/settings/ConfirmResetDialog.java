@@ -63,7 +63,7 @@ public class ConfirmResetDialog extends Dialog {
                 e.printStackTrace();
             }
         }
-        NotificationsFragment.setDataReinitialised(true);
+        NotificationsFragment.setDataReset(true);
         this.dismiss();
         Toast.makeText(v.getContext(), v.getContext().getResources().getString(R.string.mode_reset), Toast.LENGTH_SHORT).show();
     }

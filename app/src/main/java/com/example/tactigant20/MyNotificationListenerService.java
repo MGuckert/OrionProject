@@ -3,9 +3,12 @@ package com.example.tactigant20;
 import android.app.Notification;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
+import android.os.Build;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.tactigant20.model.BluetoothLowEnergyTool;
 
@@ -27,6 +30,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
         mContext = getApplicationContext();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         if (MainActivity.getMyBLET() != null) {

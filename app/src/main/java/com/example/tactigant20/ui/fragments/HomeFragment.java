@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
         return root;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void cConnectionButton(View v) {
         if (connectionButton.getText().equals(requireContext().getResources().getString(R.string.connection))) {
             Log.d(TAG_HOME, "Bouton Scan pressé");
@@ -113,6 +113,7 @@ public class HomeFragment extends Fragment implements ActivityCompat.OnRequestPe
     public class CustomUIThread extends Thread {
         private Boolean running = false;
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void run() {
             Log.d(TAG_HOME, "Lancement du thread dans HomeFragment");

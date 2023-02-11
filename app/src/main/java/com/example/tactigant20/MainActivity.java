@@ -77,19 +77,20 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         //Activation (ou non) du mode sombre)
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int nightMode = preferences.getInt("night_mode", AppCompatDelegate.MODE_NIGHT_NO);
         AppCompatDelegate.setDefaultNightMode(nightMode);
 
         super.onCreate(savedInstanceState);
-        com.example.tactigant20.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         myVibrationsTool = new VibrationsTool(this);
         String MACTEMP = getSharedPreferences("PREFS", MODE_PRIVATE).getString("PREFS_MAC", getString(R.string.MAC_default));
-        myBLET = new BluetoothLowEnergyTool(MACTEMP, this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            myBLET = new BluetoothLowEnergyTool(MACTEMP, this);
+        }
 
         myNotificationTool = new NotificationTool(this, "ID_TACTIGANT", 100, "Chaîne de notification Orion");
 
@@ -97,11 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
         // On demande à l'utilisateur d'activer le Bluetooth si nécessaire
 
-        if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
-            ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            });
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult.launch(enableBtIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (myBLET.getAdapter() == null || !myBLET.getAdapter().isEnabled()) {
+                ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                });
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult.launch(enableBtIntent);
+            }
         }
 
         if (!isNotificationServiceRunning()) {
