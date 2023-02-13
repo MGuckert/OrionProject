@@ -12,3 +12,7 @@ Cette application constitue la moitié d'un prototype, l'autre moitié étant un
 -> <i>Localisation</i>(<i>ACCESS_COARSE_LOCATION</i>), qui peut être accordée depuis la page de l'application dans la rubrique "Applications" des paramètres du téléphone.
 
 -> <i>Afficher notifications</i>, qui peut être accordée depuis la page de l'application dans la rubrique "Applications" des paramètres du téléphone.
+
+<b>Les fichiers</b>
+
+Tous les fichiers ici font partie du code source de notre application Android, à l'exception du fichier <i>orion_esp32_v2.1.ino</i>, qui contient l'ensemble du code de la carte électronique ESP32 embarquée sur le bracelet Orion.
